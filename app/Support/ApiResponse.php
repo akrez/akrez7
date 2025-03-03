@@ -7,19 +7,19 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Lang;
 
-class ResponseBuilder implements Responsable
+class ApiResponse implements Responsable
 {
     const DEFAULT_STATUS = 200;
 
-    private int $status;
+    protected int $status;
 
-    private ?string $message;
+    protected ?string $message;
 
-    private mixed $data;
+    protected mixed $data;
 
-    private mixed $input;
+    protected mixed $input;
 
-    private ?MessageBag $errors;
+    protected ?MessageBag $errors;
 
     public function __construct()
     {
@@ -106,7 +106,7 @@ class ResponseBuilder implements Responsable
         return $this->getStatus() >= 200 and $this->getStatus() < 300;
     }
 
-    public function toResponse($request): \Illuminate\Http\Response
+    public function toResponse($request)
     {
         return response([
             'status' => $this->getStatus(),
