@@ -152,7 +152,9 @@ return [
     'uppercase' => 'فیلد :attribute باید با حروف بزرگ باشد.',
     'url' => ':Attribute معتبر نمی‌باشد.',
     'uuid' => ':Attribute باید یک UUID معتبر باشد.',
+    'code' => ':Attribute باید حداکثر 32 کاراکتر باشد و فقط می تواند شامل حروف کوچک انگلیسی، اعداد و زیرخط (_) باشد.',
     'attributes' => [
+        'id' => 'شناسه',
         'address' => 'نشانی',
         'affiliate_url' => 'URL وابسته',
         'age' => 'سن',
@@ -278,5 +280,27 @@ return [
         'winner' => 'برنده',
         'work' => 'کار',
         'year' => 'سال',
+        //
+        'product_order' => 'ترتیب',
+        //
+        'short_description' => 'توضیحات مختصر',
+        'code' => 'کد',
+        'tag_name' => 'نام برچسب',
+        'property_key' => 'عنوان ویژگی',
+        'property_value' => 'مقدار ویژگی',
+        'gallery_order' => 'ترتیب',
+        'is_selected' => 'عکس اصلی',
+        'file' => 'فایل',
+        //
+        'contact_link' => 'لینک',
+        'contact_key' => 'عنوان',
+        'contact_value' => 'مقدار',
+        'contact_order' => 'ترتیب',
+        'contact_type' => 'نوع',
+        //
+        'token' => 'توکن',
+        //
+        'guaranty' => 'گارانتی',
+        'color_id' => 'رنگ',
     ],
 ];
