@@ -2,7 +2,10 @@
 
 namespace App\View\Components;
 
-abstract class Input extends Component
+use Closure;
+use Illuminate\View\View;
+
+class Input extends Component
 {
     public $name;
 
@@ -12,11 +15,17 @@ abstract class Input extends Component
 
     public $id;
 
-    public $class;
-
     public $errors;
 
+    public $class;
+
     public $hints;
+
+    public $row;
+
+    public $md;
+
+    public $mt;
 
     public $type;
 
@@ -29,22 +38,33 @@ abstract class Input extends Component
         $value = '',
         $label = null,
         $id = null,
-        $class = null,
         $errors = null,
+        $class = null,
         $hints = [],
+        $row = true,
+        $md = 4,
+        $mt = 2,
         $type = 'text',
         $rows = 4,
         $options = []
     ) {
         $this->name = $name;
         $this->value = old($name, $value);
-        $this->label = ($label === null ? __('validation.attributes.' . $name) : $label);
-        $this->id = ($id === null ? crc32($name . $this->label) : $id);
-        $this->class = 'form-control ' . $class;
-        $this->errors = $errors ? $errors->get($name) : [];
+        $this->label = ($label === null ? __('validation.attributes.'.$name) : $label);
+        $this->id = ($id === null ? crc32($name.$this->label) : $id);
+        $this->errors = ($errors ? $errors->get($name) : []);
+        $this->class = 'form-control '.($this->errors ? 'is-invalid ' : '').$class;
         $this->hints = $hints;
+        $this->row = $row;
+        $this->md = $md;
+        $this->mt = $mt;
         $this->type = $type;
         $this->rows = $rows;
         $this->options = $options;
+    }
+
+    public function render(): View|Closure|string
+    {
+        return view('components.input');
     }
 }
