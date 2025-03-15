@@ -26,6 +26,11 @@ class WebResponse extends ApiResponse
         return $this->successfulRoute;
     }
 
+    public function abortUnSuccessful()
+    {
+        abort_unless($this->isSuccessful(), $this->getStatus(), $this->getMessage());
+    }
+
     public function toResponse($request)
     {
         if (! $this->isSuccessful()) {
@@ -43,5 +48,10 @@ class WebResponse extends ApiResponse
         return redirect()
             ->to($this->getSuccessfulRoute())
             ->with('swal-success', $this->getMessage());
+    }
+
+    public static function new($status = self::DEFAULT_STATUS): static
+    {
+        return (new static)->status($status);
     }
 }

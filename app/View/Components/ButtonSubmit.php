@@ -29,7 +29,7 @@ class ButtonSubmit extends Component
     ) {
         $this->name = $name;
         $this->id = ($id === null ? uniqid(strval($name)) : $id);
-        $this->class = 'btn w-100 ' . ($class === null ? 'btn-primary' : $class);
+        $this->class = 'btn w-100 '.($class === null ? 'btn-primary' : $class);
         $this->row = $row;
         $this->md = $md;
         $this->mt = $mt;
