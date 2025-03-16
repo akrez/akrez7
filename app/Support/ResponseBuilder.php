@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Lang;
 
-class ApiResponse implements Responsable
+class ResponseBuilder implements Responsable
 {
     const DEFAULT_STATUS = 200;
 
@@ -21,6 +21,8 @@ class ApiResponse implements Responsable
 
     protected ?MessageBag $errors;
 
+    protected ?string $successfulRoute;
+
     public function __construct()
     {
         $this->reset();
@@ -33,16 +35,17 @@ class ApiResponse implements Responsable
         $this->data = null;
         $this->input = null;
         $this->errors = null;
+        $this->successfulRoute = null;
 
         return $this;
     }
 
-    public function status(int $status): self
+    public function status(int $status, bool $setMessage = true): self
     {
         $this->status = $status;
 
-        if ($this->getMessage() === null) {
-            $this->message(__('http-statuses.'.$status));
+        if ($setMessage) {
+            $this->message(__('http-statuses.' . $status));
         }
 
         return $this;
@@ -101,19 +104,50 @@ class ApiResponse implements Responsable
         return $this->errors;
     }
 
+    public function successfulRoute(?string $successfulRoute): self
+    {
+        $this->successfulRoute = $successfulRoute;
+
+        return $this;
+    }
+
+    public function getSuccessfulRoute(): ?string
+    {
+        return $this->successfulRoute;
+    }
+
     public function isSuccessful(): bool
     {
         return $this->getStatus() >= 200 and $this->getStatus() < 300;
     }
 
+    public function abortUnSuccessful()
+    {
+        abort_unless($this->isSuccessful(), $this->getStatus(), $this->getMessage());
+    }
+
     public function toResponse($request)
     {
-        return response([
-            'status' => $this->getStatus(),
-            'message' => $this->getMessage(),
-            'data' => $this->getData(),
-            'errors' => ($this->getErrors() instanceof MessageBag ? $this->getErrors()->toArray() : []),
-        ], $this->getStatus());
+        return $this->toWebResponse($request);
+    }
+
+    protected function toWebResponse($request)
+    {
+        if (! $this->isSuccessful()) {
+            return back()
+                ->with('swal-error', $this->getMessage())
+                ->withInput($request->input())
+                ->withErrors($this->getErrors());
+        }
+
+        if ($this->getSuccessfulRoute() === null) {
+            return back()
+                ->with('swal-success', $this->getMessage());
+        }
+
+        return redirect()
+            ->to($this->getSuccessfulRoute())
+            ->with('swal-success', $this->getMessage());
     }
 
     public static function new($status = self::DEFAULT_STATUS): static
