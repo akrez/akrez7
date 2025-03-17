@@ -17,11 +17,11 @@ class ActiveBlog
 
     public function find(?User $user): ?Blog
     {
-        if (!$user) {
+        if (! $user) {
             return null;
         }
 
-        if (!$user->active_blog) {
+        if (! $user->active_blog) {
             return null;
         }
 

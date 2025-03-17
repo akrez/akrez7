@@ -45,7 +45,7 @@ class ResponseBuilder implements Responsable
         $this->status = $status;
 
         if ($setMessage) {
-            $this->message(__('http-statuses.' . $status));
+            $this->message(__('http-statuses.'.$status));
         }
 
         return $this;
