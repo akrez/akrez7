@@ -22,7 +22,7 @@ class BlogController extends Controller
     {
         $blogs = $this->blogService->getUserBlogs(Auth::id())->getData('blogs');
 
-        return view('blogs.index', [
+        return view('blog.index', [
             'blogs' => $blogs,
         ]);
     }
@@ -34,7 +34,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('blogs.create');
+        return view('blog.create');
     }
 
     /**
@@ -64,7 +64,7 @@ class BlogController extends Controller
         $blog = $this->blogService->getUserBlog(Auth::id(), $id);
         $blog->abortUnSuccessful();
 
-        return view('blogs.edit', [
+        return view('blog.edit', [
             'blog' => $blog->getData('blog'),
         ]);
     }
