@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Data\Blog\StoreBlogData;
 use App\Data\Blog\UpdateBlogData;
-use App\Enums\BlogStatus;
+use App\Enums\BlogStatusEnum;
 use App\Models\Blog;
 use App\Support\ResponseBuilder;
 
@@ -81,7 +81,7 @@ class BlogService
     {
         $blog = Blog::query()
             ->where('id', $id)
-            ->where('blog_status', BlogStatus::ACTIVE->value)
+            ->where('blog_status', BlogStatusEnum::ACTIVE->value)
             ->first();
 
         return ResponseBuilder::new($blog ? 200 : 404)->data([

@@ -3,7 +3,7 @@
 namespace App\Data\Blog;
 
 use App\Data\Data;
-use App\Enums\BlogStatus;
+use App\Enums\BlogStatusEnum;
 use Illuminate\Validation\Rule;
 
 class StoreBlogData extends Data
@@ -21,7 +21,7 @@ class StoreBlogData extends Data
             'name' => 'required|max:64',
             'short_description' => 'required|max:120',
             'description' => 'required|max:512',
-            'blog_status' => [Rule::in(BlogStatus::values())],
+            'blog_status' => [Rule::in(BlogStatusEnum::values())],
         ];
     }
 }

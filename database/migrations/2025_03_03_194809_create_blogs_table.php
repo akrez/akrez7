@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\BlogStatus;
+use App\Enums\BlogStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('description', 512)->nullable();
             $table->unsignedBigInteger('created_by', 512)->index();
             $table->enum('blog_status', [
-                BlogStatus::ACTIVE->value,
-                BlogStatus::DEACTIVE->value,
+                BlogStatusEnum::ACTIVE->value,
+                BlogStatusEnum::DEACTIVE->value,
             ])->nullable();
             $table->timestamps();
         });
