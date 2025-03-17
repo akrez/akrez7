@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum BlogStatus: string
+enum BlogStatusEnum: string
 {
     use Enum;
 
