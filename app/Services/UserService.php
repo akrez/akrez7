@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Support\WebResponse;
+use App\Support\ResponseBuilder;
 
 class UserService
 {
@@ -16,7 +16,7 @@ class UserService
     {
         $user->active_blog = $blogId;
 
-        return WebResponse::new($user->save() ? 200 : 500);
+        return ResponseBuilder::new($user->save() ? 200 : 500);
     }
 
     public function getSuperAdminRoleName()

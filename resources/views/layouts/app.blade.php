@@ -20,7 +20,7 @@
         @endif
         @yield('content')
     </div>
-    <script>
+    <script type="module">
         @if (session('swal-success'))
             Swal.fire(
                 {{ Illuminate\Support\Js::from([
@@ -30,6 +30,8 @@
                     'showCloseButton' => true,
                     'showConfirmButton' => false,
                     'timerProgressBar' => true,
+                    'toast' => true,
+                    'position' => 'bottom',
                 ]) }}
             );
         @endif

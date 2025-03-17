@@ -6,7 +6,7 @@ use App\Data\Blog\StoreBlogData;
 use App\Data\Blog\UpdateBlogData;
 use App\Enums\BlogStatus;
 use App\Models\Blog;
-use App\Support\WebResponse;
+use App\Support\ResponseBuilder;
 
 class BlogService
 {
@@ -15,40 +15,40 @@ class BlogService
         return app(self::class);
     }
 
-    public function storeBlog(int $userId, StoreBlogData $blogData): WebResponse
+    public function storeBlog(int $userId, StoreBlogData $blogData): ResponseBuilder
     {
-        $webResponse = WebResponse::new()->input($blogData);
+        $responseBuilder = ResponseBuilder::new()->input($blogData);
 
         $validation = $blogData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $webResponse->status(422)->errors($validation->errors());
+            return $responseBuilder->status(422)->errors($validation->errors());
         }
 
         $blog = Blog::create(['created_by' => $userId] + $validation->getData());
         if (! $blog) {
-            return $webResponse->status(500);
+            return $responseBuilder->status(500);
         }
 
-        return $webResponse->status(201)->data($blog)->message(__(':name is created successfully', [
+        return $responseBuilder->status(201)->data($blog)->message(__(':name is created successfully', [
             'name' => __('Blog'),
         ]));
     }
 
-    public function updateBlog(Blog $blog, UpdateBlogData $blogData): WebResponse
+    public function updateBlog(Blog $blog, UpdateBlogData $blogData): ResponseBuilder
     {
-        $webResponse = WebResponse::new()->input($blogData);
+        $responseBuilder = ResponseBuilder::new()->input($blogData);
 
         $validation = $blogData->validate(false);
         if ($validation->errors()->isNotEmpty()) {
-            return $webResponse->status(422)->errors($validation->errors());
+            return $responseBuilder->status(422)->errors($validation->errors());
         }
 
         $isSuccessful = $blog->update($validation->getData());
         if (! $isSuccessful) {
-            return $webResponse->status(500);
+            return $responseBuilder->status(500);
         }
 
-        return $webResponse->data($blog)->status(200)->message(__(':name is updated successfully', [
+        return $responseBuilder->data($blog)->status(200)->message(__(':name is updated successfully', [
             'name' => __('Blog'),
         ]));
     }
@@ -60,7 +60,7 @@ class BlogService
             ->where('created_by', $userId)
             ->first();
 
-        return WebResponse::new($blog ? 200 : 404)->data([
+        return ResponseBuilder::new($blog ? 200 : 404)->data([
             'blog' => $blog,
         ]);
     }
@@ -72,7 +72,7 @@ class BlogService
             ->latest('created_at')
             ->get();
 
-        return WebResponse::new()->data([
+        return ResponseBuilder::new()->data([
             'blogs' => $blogs,
         ]);
     }
@@ -84,7 +84,7 @@ class BlogService
             ->where('blog_status', BlogStatus::ACTIVE->value)
             ->first();
 
-        return WebResponse::new($blog ? 200 : 404)->data([
+        return ResponseBuilder::new($blog ? 200 : 404)->data([
             'blog' => $blog,
         ]);
     }
