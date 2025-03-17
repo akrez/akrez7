@@ -6,7 +6,7 @@
 
 namespace App\Models;
 
-use App\Enums\BlogStatus;
+use App\Enums\BlogStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +33,7 @@ class Blog extends Model
     protected $table = 'blogs';
 
     protected $casts = [
-        'blog_status' => BlogStatus::class,
+        'blog_status' => BlogStatusEnum::class,
         'created_by' => 'int',
     ];
 
