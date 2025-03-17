@@ -15,7 +15,7 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="m-0">
                             <span
-                                class="{{ $blog->blog_status == App\Enums\BlogStatus::ACTIVE ? 'text-success' : 'text-danger' }}">
+                                class="{{ $blog->blog_status == App\Enums\BlogStatusEnum::ACTIVE ? 'text-success' : 'text-danger' }}">
                                 {{ $blog->name }}
                             </span>
                             <small class="text-muted">{{ $blog->short_description }}</small>
