@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public const HOME = '/blogs';
+    public const HOME = '/blogs/index';
 
     /**
      * Register any application services.
@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->singleton(ActiveBlog::class, function () {
+        $this->app->singleton('ActiveBlog', function () {
             return new ActiveBlog();
         });
         $this->app->alias('Arr', Arr::class);
