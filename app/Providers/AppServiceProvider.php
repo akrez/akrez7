@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->singleton(ActiveBlog::class, function () {
-            return new ActiveBlog(Auth::user());
+            return new ActiveBlog();
         });
         $this->app->alias('Arr', Arr::class);
         //

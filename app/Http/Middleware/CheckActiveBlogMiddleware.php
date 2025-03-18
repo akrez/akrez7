@@ -16,8 +16,12 @@ class CheckActiveBlogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! app(ActiveBlog::class)->has()) {
-            return redirect()->route('blogs.index');
+        $activeBlog =  app(ActiveBlog::class);
+
+        $activeBlog->set($request->user());
+
+        if (! $activeBlog->has()) {
+            return redirect()->route('home');
         }
 
         return $next($request);

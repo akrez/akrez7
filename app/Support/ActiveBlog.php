@@ -10,9 +10,14 @@ class ActiveBlog
 {
     protected ?Blog $blog;
 
-    public function __construct(?User $user)
+    public function __construct(?User $user = null)
     {
-        $this->blog = $this->find($user);
+        $this->set($user);
+    }
+
+    public function set(?User $user): ?Blog
+    {
+        return $this->blog = $this->find($user);
     }
 
     public function find(?User $user): ?Blog

@@ -4,7 +4,7 @@
 @section('subheader', $blog->name)
 
 @section('content')
-    @include('blogs._form', [
+    @include('blog._form', [
         'blog' => $blog,
     ])
 @endsection
