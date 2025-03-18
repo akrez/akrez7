@@ -16,7 +16,7 @@ class CheckActiveBlogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $activeBlog =  app(ActiveBlog::class);
+        $activeBlog =  app('ActiveBlog');
 
         $activeBlog->set($request->user());
 
