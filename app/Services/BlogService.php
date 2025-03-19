@@ -53,7 +53,7 @@ class BlogService
         ]));
     }
 
-    public function getUserBlog(int $userId, int $id)
+    public function getLatestUserBlog(int $userId, int $id)
     {
         $blog = Blog::query()
             ->where('id', $id)

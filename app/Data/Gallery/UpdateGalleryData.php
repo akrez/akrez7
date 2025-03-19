@@ -2,22 +2,18 @@
 
 namespace App\Data\Gallery;
 
-use App\Data\Data;
-use Illuminate\Http\UploadedFile;
-
-class UpdateGalleryData extends Data
+class UpdateGalleryData extends GalleryData
 {
     public function __construct(
-        public ?UploadedFile $file,
         public $gallery_order,
         public $is_selected,
     ) {}
 
     public static function rules($context)
     {
-        return [
-            'gallery_order' => ['nullable', 'numeric'],
-            'is_selected' => ['nullable', 'boolean'],
-        ];
+        return static::getRules($context, [
+            'gallery_order' => false,
+            'is_selected' => false,
+        ]);
     }
 }

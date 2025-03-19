@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Support\ActiveBlog;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +15,7 @@ class CheckActiveBlogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $activeBlog =  app('ActiveBlog');
+        $activeBlog = app('ActiveBlog');
 
         $activeBlog->set($request->user());
 

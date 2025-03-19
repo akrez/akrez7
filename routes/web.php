@@ -1,7 +1,26 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\SiteController;
+use App\Http\Middleware\CheckActiveBlogMiddleware;
+use App\Providers\AppServiceProvider;
 use Illuminate\Support\Facades\Route;
 
-Route::patch('blogs/{id}/active', [BlogController::class, 'active'])->name('blogs.active');
-Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
+Auth::routes();
+
+Route::middleware('auth')->group(function () {
+    //
+    Route::get(AppServiceProvider::HOME, [BlogController::class, 'index'])->name('home');
+    Route::patch('blogs/{id}/active', [BlogController::class, 'active'])->name('blogs.active');
+    Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
+    //
+    Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
+        Route::get('galleries/{gallery_category}/{gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
+        Route::post('galleries', [GalleryController::class, 'store'])->name('galleries.store');
+        Route::put('galleries/{id}', [GalleryController::class, 'update'])->name('galleries.update');
+        Route::delete('galleries/{id}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
+    });
+});
+
+Route::get('/', [SiteController::class, 'index'])->name('site');

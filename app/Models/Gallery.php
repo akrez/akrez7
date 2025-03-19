@@ -7,7 +7,9 @@
 namespace App\Models;
 
 use App\Enums\GalleryCategoryEnum;
+use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Gallery extends Model
 {
+    use ScopeDefaultTrait;
+
     protected $table = 'galleries';
 
     protected $casts = [
@@ -47,4 +51,12 @@ class Gallery extends Model
         'gallery_order',
         'selected_at',
     ];
+
+    public function scopeDefaultOrder(Builder $query)
+    {
+        $query = $query
+            ->orderBy('selected_at', 'DESC')
+            ->orderBy('gallery_order', 'DESC')
+            ->orderBy('created_at', 'ASC');
+    }
 }

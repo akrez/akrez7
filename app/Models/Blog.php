@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use App\Enums\BlogStatusEnum;
+use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Blog extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopeDefaultTrait;
 
     protected $table = 'blogs';
 

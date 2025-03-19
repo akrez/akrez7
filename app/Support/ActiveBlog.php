@@ -30,7 +30,7 @@ class ActiveBlog
             return null;
         }
 
-        return BlogService::new()->getUserBlog($user->id, $user->active_blog)->getData('blog');
+        return BlogService::new()->getLatestUserBlog($user->id, $user->active_blog)->getData('blog');
     }
 
     public function get(): ?Blog
@@ -46,6 +46,11 @@ class ActiveBlog
     public function attr(string $attribute): mixed
     {
         return $this->get() ? $this->get()->$attribute : null;
+    }
+
+    public function id(): ?string
+    {
+        return $this->attr('id');
     }
 
     public function name(): ?string
