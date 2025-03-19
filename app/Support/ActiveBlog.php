@@ -30,7 +30,7 @@ class ActiveBlog
             return null;
         }
 
-        return BlogService::new()->getLatestUserBlog($user->id, $user->active_blog)->getData('blog');
+        return BlogService::new()->getUserBlog($user->id, $user->active_blog)->getData('blog');
     }
 
     public function get(): ?Blog

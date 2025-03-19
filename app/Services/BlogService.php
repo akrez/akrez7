@@ -53,7 +53,7 @@ class BlogService
         ]));
     }
 
-    public function getLatestUserBlog(int $userId, int $id)
+    public function getUserBlog(int $userId, int $id)
     {
         $blog = Blog::query()
             ->where('id', $id)
@@ -65,7 +65,7 @@ class BlogService
         ]);
     }
 
-    public function getUserBlogs(int $userId)
+    public function getLatestUserBlogs(int $userId)
     {
         $blogs = Blog::query()
             ->where('created_by', $userId)

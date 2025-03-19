@@ -20,7 +20,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = $this->blogService->getUserBlogs(Auth::id())->getData('blogs');
+        $blogs = $this->blogService->getLatestUserBlogs(Auth::id())->getData('blogs');
 
         return view('blog.index', [
             'blogs' => $blogs,
@@ -61,7 +61,7 @@ class BlogController extends Controller
      */
     public function edit(int $id)
     {
-        $blog = $this->blogService->getLatestUserBlog(Auth::id(), $id);
+        $blog = $this->blogService->getUserBlog(Auth::id(), $id);
         $blog->abortUnSuccessful();
 
         return view('blog.edit', [
@@ -76,7 +76,7 @@ class BlogController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $blog = $this->blogService->getLatestUserBlog(Auth::id(), $id);
+        $blog = $this->blogService->getUserBlog(Auth::id(), $id);
         $blog->abortUnSuccessful();
 
         $response = $this->blogService->updateBlog($blog->getData('blog'), new UpdateBlogData(
@@ -93,7 +93,7 @@ class BlogController extends Controller
     {
         $user = Auth::user();
 
-        $blog = $this->blogService->getLatestUserBlog($user->id, $id);
+        $blog = $this->blogService->getUserBlog($user->id, $id);
         $blog->abortUnSuccessful();
 
         $response = UserService::new()->setActiveBlog($user, $blog->getData('blog.id'));
