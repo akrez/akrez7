@@ -19,13 +19,16 @@ class ButtonSubmit extends Component
 
     public $mt;
 
+    public $label;
+
     public function __construct(
         $name = null,
         $id = null,
         $class = null,
         $row = true,
         $md = 4,
-        $mt = 4
+        $mt = 4,
+        $label = null
     ) {
         $this->name = $name;
         $this->id = ($id === null ? uniqid(strval($name)) : $id);
@@ -33,6 +36,7 @@ class ButtonSubmit extends Component
         $this->row = $row;
         $this->md = $md;
         $this->mt = $mt;
+        $this->label = $label;
     }
 
     /**
