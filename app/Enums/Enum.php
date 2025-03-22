@@ -37,4 +37,12 @@ trait Enum
     {
         return array_keys(static::toArray());
     }
+
+    public function toResource()
+    {
+        return [
+            'value' => $this->value,
+            'trans' => $this->trans(),
+        ];
+    }
 }

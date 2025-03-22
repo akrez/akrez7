@@ -13,9 +13,9 @@ abstract class GalleryData extends Data
 
     public function __construct() {}
 
-    public function galleryType()
+    public function toLongGalleryType()
     {
-        return 'App\\Models\\' . $this->gallery_type;
+        return 'App\\Models\\'.$this->gallery_type;
     }
 
     public static function getRules($context, $attributesToRequired)

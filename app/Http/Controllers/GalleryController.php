@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Data\Gallery\IndexGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
-use App\Models\Gallery;
 use App\Services\GalleryService;
 use App\Support\ResponseBuilder;
 use Illuminate\Http\Request;
@@ -53,6 +52,15 @@ class GalleryController extends Controller
         return $response;
     }
 
+    public function edit(Request $request, int $id)
+    {
+        $response = $this->galleryService->getGallery(app('ActiveBlog')->id(), $id);
+
+        return view('gallery.edit', [
+            'gallery' => $response->getData('gallery'),
+        ]);
+    }
+
     public function update(Request $request, int $id)
     {
         $response = $this->galleryService->updateGallery(
@@ -64,7 +72,18 @@ class GalleryController extends Controller
             )
         );
 
-        return $response;
+        $gallery = $response->getData('gallery');
+        if ($gallery) {
+            $successfulRoute = route('galleries.index', [
+                'gallery_category' => $gallery['gallery_category']['value'],
+                'gallery_type' => $gallery['long_gallery_type'],
+                'gallery_id' => $gallery['gallery_id'],
+            ]);
+        } else {
+            $successfulRoute = null;
+        }
+
+        return $response->successfulRoute($successfulRoute);
     }
 
     public function destroy(Request $request, int $id)

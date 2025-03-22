@@ -20,6 +20,10 @@ class GalleryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'gallery_category' => $this->gallery_category ? $this->gallery_category->toResource() : null,
+            'gallery_type' => $this->gallery_type,
+            'gallery_id' => $this->gallery_id,
+            'long_gallery_type' => (new $this->gallery_type)->getClassName(),
             'selected_at' => $this->formatCarbonDateTime($this->selected_at),
             'created_at' => $this->formatCarbonDateTime($this->created_at),
             'gallery_order' => $this->gallery_order,

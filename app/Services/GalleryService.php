@@ -6,6 +6,7 @@ use App\Data\Gallery\IndexGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
 use App\Http\Resources\Gallery\GalleryCollection;
+use App\Http\Resources\Gallery\GalleryResource;
 use App\Models\Gallery;
 use App\Support\ResponseBuilder;
 use Exception;
@@ -31,7 +32,7 @@ class GalleryService
             return $responseBuilder->status(422)->errors($validation->errors());
         }
 
-        $galleries = $this->getLatestGalleriesQuery($blogId, $indexGalleryData->galleryType(), $indexGalleryData->gallery_id, $indexGalleryData->gallery_category)->get();
+        $galleries = $this->getLatestGalleriesQuery($blogId, $indexGalleryData->toLongGalleryType(), $indexGalleryData->gallery_id, $indexGalleryData->gallery_category)->get();
 
         return ResponseBuilder::new()->data([
             'galleries' => (new GalleryCollection($galleries))->toArray(request()),
@@ -50,7 +51,7 @@ class GalleryService
         $realPath = $storeGalleryData->file->getRealPath();
 
         $ext = $storeGalleryData->file->extension();
-        $name = hash_file('sha1', $realPath) . '.' . $ext;
+        $name = hash_file('sha1', $realPath).'.'.$ext;
         $selectedAt = ($storeGalleryData->is_selected ? now()->format('Y-m-d H:i:s.u') : null);
 
         $gallery = new Gallery([
@@ -60,7 +61,7 @@ class GalleryService
             'ext' => $ext,
             'name' => $name,
             'gallery_category' => $storeGalleryData->gallery_category,
-            'gallery_type' => $storeGalleryData->galleryType(),
+            'gallery_type' => $storeGalleryData->toLongGalleryType(),
             'gallery_id' => $storeGalleryData->gallery_id,
         ]);
         if (! $gallery->save()) {
@@ -119,6 +120,20 @@ class GalleryService
         ]));
     }
 
+    public function getGallery(int $blogId, int $id)
+    {
+        $responseBuilder = ResponseBuilder::new();
+
+        $gallery = Gallery::query()->where('id', $id)->where('blog_id', $blogId)->first();
+        if (! $gallery) {
+            return $responseBuilder->status(404);
+        }
+
+        return ResponseBuilder::new()->data([
+            'gallery' => (new GalleryResource($gallery))->toArr(request()),
+        ]);
+    }
+
     public function updateGallery(int $blogId, int $id, UpdateGalleryData $updateGalleryData)
     {
         $responseBuilder = ResponseBuilder::new()->input($updateGalleryData);
@@ -145,9 +160,12 @@ class GalleryService
 
         $this->resetSelected($blogId, $gallery);
 
-        return $responseBuilder->status(201)->data($gallery)->message(__(':name is updated successfully', [
-            'name' => $gallery->gallery_category->trans(),
-        ]));
+        return $responseBuilder
+            ->status(201)
+            ->data(['gallery' => (new GalleryResource($gallery))->toArr(request())])
+            ->message(__(':name is updated successfully', [
+                'name' => $gallery->gallery_category->trans(),
+            ]));
     }
 
     public function getUrlByModel(Gallery $gallery, $whmq = null)
@@ -164,11 +182,11 @@ class GalleryService
         return $this->getStorageUrl($this->getUri($category));
     }
 
-    protected function getLatestGalleriesQuery(int $blogId, string $galleryType, string $galleryId, string $galleryCategory): Builder
+    protected function getLatestGalleriesQuery(int $blogId, string $longGalleryType, string $galleryId, string $galleryCategory): Builder
     {
         return Gallery::query()
             ->where('blog_id', $blogId)
-            ->where('gallery_type', $galleryType)
+            ->where('gallery_type', $longGalleryType)
             ->where('gallery_id', $galleryId)
             ->where('gallery_category', $galleryCategory)
             ->defaultOrder();

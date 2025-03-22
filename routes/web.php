@@ -16,10 +16,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
     //
     Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
-        Route::get('galleries/{gallery_category}/{gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
-        Route::post('galleries', [GalleryController::class, 'store'])->name('galleries.store');
-        Route::put('galleries/{id}', [GalleryController::class, 'update'])->name('galleries.update');
-        Route::delete('galleries/{id}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
+        Route::get('galleries/index/{gallery_category}/{gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
+        Route::resource('galleries', GalleryController::class)->parameter('galleries', 'id')->except(['index', 'show']);
     });
 });
 
