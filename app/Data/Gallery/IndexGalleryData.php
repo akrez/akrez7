@@ -10,7 +10,7 @@ class IndexGalleryData extends GalleryData
         public $gallery_id
     ) {}
 
-    public static function rules($context)
+    public function rules($context)
     {
         return static::getRules($context, [
             'gallery_category' => true,

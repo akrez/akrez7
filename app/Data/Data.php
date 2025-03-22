@@ -7,7 +7,7 @@ use ReflectionClass;
 
 abstract class Data
 {
-    abstract public static function rules($context);
+    abstract public function rules($context);
 
     public function data()
     {
