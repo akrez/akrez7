@@ -30,7 +30,7 @@
                         'showConfirmButton' => false,
                         'timerProgressBar' => true,
                         'toast' => true,
-                        'position' => 'bottom',
+                        'position' => 'top',
                     ]) }}
                 );
             @endif
@@ -44,7 +44,7 @@
                         'showConfirmButton' => false,
                         'timerProgressBar' => true,
                         'toast' => true,
-                        'position' => 'bottom',
+                        'position' => 'top',
                     ]) }}
                 );
             @endif
