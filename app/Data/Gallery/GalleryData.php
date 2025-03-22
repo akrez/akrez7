@@ -9,13 +9,13 @@ use Illuminate\Validation\Rule;
 
 abstract class GalleryData extends Data
 {
-    public $gallery_type;
+    public $short_gallery_type;
 
     public function __construct() {}
 
-    public function toLongGalleryType()
+    public function toGalleryType()
     {
-        return 'App\\Models\\'.$this->gallery_type;
+        return 'App\\Models\\'.$this->short_gallery_type;
     }
 
     public static function getRules($context, $attributesToRequired)
@@ -23,7 +23,7 @@ abstract class GalleryData extends Data
         $rules = [
             'id' => [],
             'gallery_category' => [Rule::enum(GalleryCategoryEnum::class)],
-            'gallery_type' => [Rule::in([Blog::getClassName()])],
+            'short_gallery_type' => [Rule::in([Blog::getClassName()])],
             'gallery_id' => ['integer'],
             'gallery_order' => ['numeric'],
             'is_selected' => ['boolean'],

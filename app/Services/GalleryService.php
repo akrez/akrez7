@@ -32,7 +32,7 @@ class GalleryService
             return $responseBuilder->status(422)->errors($validation->errors());
         }
 
-        $galleries = $this->getLatestGalleriesQuery($blogId, $indexGalleryData->toLongGalleryType(), $indexGalleryData->gallery_id, $indexGalleryData->gallery_category)->get();
+        $galleries = $this->getLatestGalleriesQuery($blogId, $indexGalleryData->toGalleryType(), $indexGalleryData->gallery_id, $indexGalleryData->gallery_category)->get();
 
         return ResponseBuilder::new()->data([
             'galleries' => (new GalleryCollection($galleries))->toArray(request()),
@@ -61,7 +61,7 @@ class GalleryService
             'ext' => $ext,
             'name' => $name,
             'gallery_category' => $storeGalleryData->gallery_category,
-            'gallery_type' => $storeGalleryData->toLongGalleryType(),
+            'gallery_type' => $storeGalleryData->toGalleryType(),
             'gallery_id' => $storeGalleryData->gallery_id,
         ]);
         if (! $gallery->save()) {

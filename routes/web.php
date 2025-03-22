@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
     //
     Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
-        Route::get('galleries/index/{gallery_category}/{gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
+        Route::get('galleries/index/{gallery_category}/{short_gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
         Route::resource('galleries', GalleryController::class)->parameter('galleries', 'id')->except(['index', 'show']);
     });
 });

@@ -6,7 +6,7 @@ class IndexGalleryData extends GalleryData
 {
     public function __construct(
         public $gallery_category,
-        public $gallery_type,
+        public $short_gallery_type,
         public $gallery_id
     ) {}
 
@@ -14,7 +14,7 @@ class IndexGalleryData extends GalleryData
     {
         return static::getRules($context, [
             'gallery_category' => true,
-            'gallery_type' => true,
+            'short_gallery_type' => true,
             'gallery_id' => true,
         ]);
     }
