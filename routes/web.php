@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ColorController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\SiteController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
@@ -18,6 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
         Route::get('galleries/index/{gallery_category}/{short_gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
         Route::resource('galleries', GalleryController::class)->parameter('galleries', 'id')->except(['index', 'show']);
+        //
+        Route::resource('colors', ColorController::class)->parameter('colors', 'id');
     });
 });
 

@@ -8,7 +8,7 @@
     "devDependencies": {
         "@fortawesome/fontawesome-free": "*",
         "bootstrap": "^5.3.3",
-        "jscolor": "^0.3.0",
+        "@eastdesire/jscolor": "^2.5.2",
         "laravel-vite-plugin": "^1.2.0",
         "sweetalert2": "*",
         "vazir-font": "*",

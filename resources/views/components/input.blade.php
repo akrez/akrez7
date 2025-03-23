@@ -20,7 +20,7 @@
             </select>
         @else
             <input name="{{ $name }}" id="{{ $id }}" class="{{ $class }}"
-                type="{{ $type }}" value="{{ $value }}" />
+                type="{{ $type }}" value="{{ $value }}" {{ $attributes }} />
         @endif
 
         @foreach ($hints as $hint)
