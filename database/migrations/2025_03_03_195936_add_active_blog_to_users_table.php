@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Blog;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignIdFor(Blog::class, 'active_blog')
-                ->index('users_active_blog_foreign')
-                ->nullable()
-                ->constrained(app(Blog::class)->getTable(), 'id')
-                ->cascadeOnDelete();
+            $table->unsignedBigInteger('active_blog')->index();
         });
     }
 
@@ -31,7 +26,6 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('users_active_blog_foreign');
             $table->dropColumn('active_blog');
         });
     }

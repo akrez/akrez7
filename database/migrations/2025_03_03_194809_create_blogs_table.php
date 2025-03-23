@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name', 64)->nullable();
             $table->string('short_description', 120)->nullable();
             $table->string('description', 512)->nullable();
-            $table->unsignedBigInteger('created_by', 512)->index();
+            $table->unsignedBigInteger('created_by')->index();
             $table->enum('blog_status', [
                 BlogStatusEnum::ACTIVE->value,
                 BlogStatusEnum::DEACTIVE->value,

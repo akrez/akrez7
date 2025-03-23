@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('galleries', function (Blueprint $table) {
+        Schema::create('colors', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 60)->index();
-            $table->morphs('gallery');
+            $table->string('code', 16);
+            $table->string('name', 31);
             $table->unsignedBigInteger('blog_id')->index();
-            $table->string('ext', 8);
-            $table->string('gallery_category');
-            $table->decimal('gallery_order')->nullable();
-            $table->timestamp('selected_at', 0)->nullable();
             $table->timestamps();
+            $table->index(['blog_id', 'code']);
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('galleries');
+        Schema::dropIfExists('colors');
     }
 };
