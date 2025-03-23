@@ -9,10 +9,10 @@ return [
     'product_image' => 'عکس محصول',
     'blog_logo' => 'لوگو',
     //
-    "address" => "آدرس",
-    "email" => "ایمیل",
-    "telegram" => "تلگرام",
-    "whatsapp" => "واتساپ",
-    "phone" => "تلفن",
-    "instagram" => "اینستاگرام",
+    'address' => 'آدرس',
+    'email' => 'ایمیل',
+    'telegram' => 'تلگرام',
+    'whatsapp' => 'واتساپ',
+    'phone' => 'تلفن',
+    'instagram' => 'اینستاگرام',
 ];

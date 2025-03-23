@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Contact
- * 
+ *
  * @property int $id
  * @property ContactTypeEnum $contact_type
  * @property string|null $contact_value
@@ -18,25 +18,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $blog_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
- * @package App\Models
  */
 class Contact extends Model
 {
-	use ScopeDefaultTrait;
-	protected $table = 'contacts';
+    use ScopeDefaultTrait;
 
-	protected $casts = [
-		'contact_order' => 'float',
-		'blog_id' => 'int',
-		'contact_type' => ContactTypeEnum::class,
-	];
+    protected $table = 'contacts';
 
-	protected $fillable = [
-		'contact_type',
-		'contact_value',
-		'contact_link',
-		'contact_order',
-		'blog_id'
-	];
+    protected $casts = [
+        'contact_order' => 'float',
+        'blog_id' => 'int',
+        'contact_type' => ContactTypeEnum::class,
+    ];
+
+    protected $fillable = [
+        'contact_type',
+        'contact_value',
+        'contact_link',
+        'contact_order',
+        'blog_id',
+    ];
 }

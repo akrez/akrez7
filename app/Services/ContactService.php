@@ -24,7 +24,7 @@ class ContactService
     public function getLatestGalleries(int $blogId)
     {
         $contacts = $this->getQuery($blogId)->get();
-        
+
         return ResponseBuilder::new()->data([
             'contacts' => (new ContactCollection($contacts))->toArray(request()),
         ]);
