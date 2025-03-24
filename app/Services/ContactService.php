@@ -21,7 +21,7 @@ class ContactService
         return Contact::query()->where('blog_id', $blogId);
     }
 
-    public function getLatestGalleries(int $blogId)
+    public function getLatestContacts(int $blogId)
     {
         $contacts = $this->getQuery($blogId)->get();
 

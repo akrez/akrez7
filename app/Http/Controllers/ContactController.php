@@ -16,7 +16,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $response = $this->contactService->getLatestGalleries(app('ActiveBlog')->id());
+        $response = $this->contactService->getLatestContacts(app('ActiveBlog')->id());
 
         return view('contacts.index', [
             'contacts' => $response->getData('contacts'),

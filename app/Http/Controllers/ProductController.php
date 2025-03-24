@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $response = $this->productService->getLatestGalleries(app('ActiveBlog')->id());
+        $response = $this->productService->getLatestProducts(app('ActiveBlog')->id());
 
         return view('products.index', [
             'products' => $response->getData('products'),

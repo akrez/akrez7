@@ -16,7 +16,7 @@ class ColorController extends Controller
      */
     public function index()
     {
-        $response = $this->colorService->getLatestGalleries(app('ActiveBlog')->id());
+        $response = $this->colorService->getLatestColors(app('ActiveBlog')->id());
 
         return view('colors.index', [
             'colors' => $response->getData('colors'),

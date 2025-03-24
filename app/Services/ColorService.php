@@ -21,7 +21,7 @@ class ColorService
         return Color::query()->where('blog_id', $blogId);
     }
 
-    public function getLatestGalleries(int $blogId)
+    public function getLatestColors(int $blogId)
     {
         $colors = $this->getQuery($blogId)->get();
 

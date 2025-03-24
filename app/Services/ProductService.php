@@ -21,7 +21,7 @@ class ProductService
         return Product::query()->where('blog_id', $blogId);
     }
 
-    public function getLatestGalleries(int $blogId)
+    public function getLatestProducts(int $blogId)
     {
         $products = $this->getQuery($blogId)->get();
 
