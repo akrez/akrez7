@@ -5,6 +5,7 @@ namespace App\Data\Gallery;
 use App\Data\Data;
 use App\Enums\GalleryCategoryEnum;
 use App\Models\Blog;
+use App\Models\Product;
 use Illuminate\Validation\Rule;
 
 abstract class GalleryData extends Data
@@ -23,7 +24,7 @@ abstract class GalleryData extends Data
         $rules = [
             'id' => [],
             'gallery_category' => [Rule::enum(GalleryCategoryEnum::class)],
-            'short_gallery_type' => [Rule::in([Blog::getClassName()])],
+            'short_gallery_type' => [Rule::in([Blog::getClassName(), Product::getClassName()])],
             'gallery_id' => ['integer'],
             'gallery_order' => ['numeric'],
             'is_selected' => ['boolean'],

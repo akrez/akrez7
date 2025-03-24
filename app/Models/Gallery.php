@@ -55,6 +55,8 @@ class Gallery extends Model
     public function scopeDefaultOrder(Builder $query)
     {
         $query = $query
+            ->orderBy('gallery_type', 'ASC')
+            ->orderBy('gallery_id', 'ASC')
             ->orderBy('selected_at', 'DESC')
             ->orderBy('gallery_order', 'DESC')
             ->orderBy('created_at', 'ASC');
