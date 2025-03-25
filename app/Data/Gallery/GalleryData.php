@@ -22,6 +22,7 @@ abstract class GalleryData extends Data
     public static function getRules($context, $attributesToRequired)
     {
         $rules = [
+            'blog_id' => ['integer'],
             'id' => [],
             'gallery_category' => [Rule::enum(GalleryCategoryEnum::class)],
             'short_gallery_type' => [Rule::in([Blog::getClassName(), Product::getClassName()])],

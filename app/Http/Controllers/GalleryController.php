@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\Gallery\IndexGalleryData;
+use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
 use App\Services\GalleryService;
@@ -15,9 +15,9 @@ class GalleryController extends Controller
 
     public function index(string $gallery_category, string $short_gallery_type, string $gallery_id)
     {
-        $response = $this->galleryService->getLatestGalleries(
-            app('ActiveBlog')->id(),
-            new IndexGalleryData(
+        $response = $this->galleryService->getLatestModelGalleries(
+            new IndexModelGalleryData(
+                app('ActiveBlog')->id(),
                 $gallery_category,
                 $short_gallery_type,
                 $gallery_id,
