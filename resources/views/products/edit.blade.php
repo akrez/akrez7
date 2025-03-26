@@ -4,7 +4,7 @@
 @section('subheader', $product['name'])
 
 @section('content')
-@include('products._form', [
-'product' => $product,
-])
+    @include('products._form', [
+        'product' => $product,
+    ])
 @endsection
