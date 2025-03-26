@@ -5,6 +5,8 @@ namespace App\Data\Gallery;
 class UpdateGalleryData extends GalleryData
 {
     public function __construct(
+        public int $id,
+        public int $blog_id,
         public $gallery_order,
         public $is_selected,
     ) {}
@@ -12,6 +14,8 @@ class UpdateGalleryData extends GalleryData
     public function rules($context)
     {
         return static::getRules($context, [
+            'blog_id' => true,
+            'id' => true,
             'gallery_order' => false,
             'is_selected' => false,
         ]);

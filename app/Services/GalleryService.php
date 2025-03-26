@@ -64,7 +64,7 @@ class GalleryService
         ]);
     }
 
-    public function storeGallery(int $blogId, StoreGalleryData $storeGalleryData)
+    public function storeGallery(StoreGalleryData $storeGalleryData)
     {
         $responseBuilder = ResponseBuilder::new()->input($storeGalleryData);
 
@@ -80,7 +80,7 @@ class GalleryService
         $selectedAt = ($storeGalleryData->is_selected ? now()->format('Y-m-d H:i:s.u') : null);
 
         $gallery = new Gallery([
-            'blog_id' => $blogId,
+            'blog_id' => $storeGalleryData->blog_id,
             'gallery_order' => $storeGalleryData->gallery_order,
             'selected_at' => $selectedAt,
             'ext' => $ext,
@@ -108,7 +108,7 @@ class GalleryService
                 ->message($uploadResponse->getMessage());
         }
 
-        $this->resetSelected($blogId, $gallery);
+        $this->resetSelected($storeGalleryData->blog_id, $gallery);
 
         return $responseBuilder->status(201)->data($gallery)->message(__(':name is created successfully', [
             'name' => $gallery->gallery_category->trans(),
@@ -159,11 +159,11 @@ class GalleryService
         ]);
     }
 
-    public function updateGallery(int $blogId, int $id, UpdateGalleryData $updateGalleryData)
+    public function updateGallery(UpdateGalleryData $updateGalleryData)
     {
         $responseBuilder = ResponseBuilder::new()->input($updateGalleryData);
 
-        $gallery = Gallery::query()->where('id', $id)->where('blog_id', $blogId)->first();
+        $gallery = Gallery::query()->where('id', $updateGalleryData->id)->where('blog_id', $updateGalleryData->blog_id)->first();
         if (! $gallery) {
             return $responseBuilder->status(404);
         }
@@ -183,7 +183,7 @@ class GalleryService
             return $responseBuilder->status(500);
         }
 
-        $this->resetSelected($blogId, $gallery);
+        $this->resetSelected($updateGalleryData->blog_id, $gallery);
 
         return $responseBuilder
             ->status(201)

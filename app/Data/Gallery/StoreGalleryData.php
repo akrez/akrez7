@@ -7,6 +7,7 @@ use Illuminate\Http\UploadedFile;
 class StoreGalleryData extends GalleryData
 {
     public function __construct(
+        public int $blog_id,
         public ?UploadedFile $file,
         public $gallery_category,
         public $short_gallery_type,
@@ -18,6 +19,7 @@ class StoreGalleryData extends GalleryData
     public function rules($context)
     {
         return static::getRules($context, [
+            'blog_id' => true,
             'file' => true,
             'gallery_category' => true,
             'short_gallery_type' => true,

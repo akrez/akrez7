@@ -38,8 +38,8 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $response = $this->galleryService->storeGallery(
-            app('ActiveBlog')->id(),
             new StoreGalleryData(
+                app('ActiveBlog')->id(),
                 $request->file('file'),
                 $request->gallery_category,
                 $request->short_gallery_type,
@@ -64,9 +64,9 @@ class GalleryController extends Controller
     public function update(Request $request, int $id)
     {
         $response = $this->galleryService->updateGallery(
-            app('ActiveBlog')->id(),
-            $id,
             new UpdateGalleryData(
+                $id,
+                app('ActiveBlog')->id(),
                 $request->gallery_order,
                 $request->is_selected,
             )
