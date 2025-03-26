@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\Gallery\IndexCategoryGalleryData;
 use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
@@ -23,6 +24,25 @@ class GalleryService
         return app(self::class);
     }
 
+    public function getLatestCategoryGalleries(IndexCategoryGalleryData $indexCategoryGalleryData)
+    {
+        $responseBuilder = ResponseBuilder::new()->input($indexCategoryGalleryData);
+
+        $validation = $indexCategoryGalleryData->validate();
+        if ($validation->errors()->isNotEmpty()) {
+            return $responseBuilder->status(422)->errors($validation->errors());
+        }
+
+        $galleries = $this->getLatestCategoryGalleriesQuery(
+            $indexCategoryGalleryData->blog_id,
+            $indexCategoryGalleryData->gallery_category
+        )->get();
+
+        return ResponseBuilder::new()->data([
+            'galleries' => (new GalleryCollection($galleries))->toArray(request()),
+        ]);
+    }
+
     public function getLatestModelGalleries(IndexModelGalleryData $indexModelGalleryData)
     {
         $responseBuilder = ResponseBuilder::new()->input($indexModelGalleryData);
@@ -34,9 +54,9 @@ class GalleryService
 
         $galleries = $this->getLatestModelGalleriesQuery(
             $indexModelGalleryData->blog_id,
+            $indexModelGalleryData->gallery_category,
             $indexModelGalleryData->toGalleryType(),
-            $indexModelGalleryData->gallery_id,
-            $indexModelGalleryData->gallery_category
+            $indexModelGalleryData->gallery_id
         )->get();
 
         return ResponseBuilder::new()->data([
@@ -187,19 +207,24 @@ class GalleryService
         return $this->getStorageUrl($this->getUri($category));
     }
 
-    protected function getLatestTypeGalleriesQuery(int $blogId, string $galleryType): Builder
+    protected function getLatestGalleriesQuery(int $blogId): Builder
     {
         return Gallery::query()
             ->where('blog_id', $blogId)
-            ->where('gallery_type', $galleryType);
+            ->defaultOrder();
     }
 
-    protected function getLatestModelGalleriesQuery(int $blogId, string $galleryType, string $galleryId, string $galleryCategory): Builder
+    protected function getLatestCategoryGalleriesQuery(int $blogId, string $galleryCategory): Builder
     {
-        return $this->getLatestTypeGalleriesQuery($blogId, $galleryType)
+        return $this->getLatestGalleriesQuery($blogId)
+            ->where('gallery_category', $galleryCategory);
+    }
+
+    protected function getLatestModelGalleriesQuery(int $blogId, string $galleryCategory, string $galleryType, string $galleryId): Builder
+    {
+        return $this->getLatestCategoryGalleriesQuery($blogId, $galleryCategory)
             ->where('gallery_id', $galleryId)
-            ->where('gallery_category', $galleryCategory)
-            ->defaultOrder();
+            ->where('gallery_type', $galleryType);
     }
 
     protected function upload($image, $category, $name, $quality, $whmq = null)
@@ -229,9 +254,9 @@ class GalleryService
     {
         $shouldSelect = $this->getLatestModelGalleriesQuery(
             $blogId,
+            $gallery->gallery_category->value,
             $gallery->gallery_type,
-            $gallery->gallery_id,
-            $gallery->gallery_category->value
+            $gallery->gallery_id
         )->first();
 
         if (! $shouldSelect) {
@@ -245,9 +270,9 @@ class GalleryService
 
         $shouldNotSelects = $this->getLatestModelGalleriesQuery(
             $blogId,
+            $gallery->gallery_category->value,
             $gallery->gallery_type,
-            $gallery->gallery_id,
-            $gallery->gallery_category->value
+            $gallery->gallery_id
         )->whereNotNull('selected_at')->where('id', '<>', $shouldSelect->id)->get();
 
         foreach ($shouldNotSelects as $shouldNotSelect) {
