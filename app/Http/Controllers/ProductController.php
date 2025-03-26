@@ -2,24 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Gallery\IndexCategoryGalleryData;
 use App\Data\Product\StoreProductData;
 use App\Data\Product\UpdateProductData;
+use App\Enums\GalleryCategoryEnum;
+use App\Services\GalleryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(protected ProductService $productService) {}
+    public function __construct(
+        protected GalleryService $galleryService,
+        protected ProductService $productService
+    ) {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $response = $this->productService->getLatestProducts(app('ActiveBlog')->id());
+        $blogId = app('ActiveBlog')->id();
+
+        $latestProductsResponse = $this->productService->getLatestProducts($blogId);
+
+        $latestCategoryGalleriesResponse = $this->galleryService->getLatestCategoryGalleries(
+            new IndexCategoryGalleryData(
+                $blogId,
+                GalleryCategoryEnum::PRODUCT_IMAGE->value
+            )
+        );
+        $latestCategoryGalleriesResponse->abortUnSuccessful();
 
         return view('products.index', [
-            'products' => $response->getData('products'),
+            'products' => $latestProductsResponse->getData('products'),
+            'galleries' => [
+                GalleryCategoryEnum::PRODUCT_IMAGE->value => $latestCategoryGalleriesResponse->getData('galleries'),
+            ],
         ]);
     }
 

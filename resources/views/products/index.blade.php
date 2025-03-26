@@ -32,6 +32,13 @@
                 @forelse ($products as $product)
                 <tr class="{{ (\Arr::get($product, 'product_status.value') === \App\Enums\ProductStatusEnum::DEACTIVE->value) ? 'table-danger' : '' }}">
                     <td>
+                        @foreach (\Arr::get($galleries, \App\Enums\GalleryCategoryEnum::PRODUCT_IMAGE->value, []) as $productImage)
+                        @if($productImage['gallery_id'] == $product['id'])
+                        <a href="{{ $productImage['url'] }}" target="_blank">
+                            <img src="{{ $productImage['url'] }}" class="img-fluid max-height-38-px">
+                        </a>
+                        @endif
+                        @endforeach
                     </td>
                     <td>{{ $product['code'] }}</td>
                     <td>{{ $product['name'] }}</td>
