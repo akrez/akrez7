@@ -16,7 +16,6 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">@lang('validation.attributes.contact_type')</th>
-                    <th scope="col">@lang('validation.attributes.contact_key')</th>
                     <th scope="col">@lang('validation.attributes.contact_value')</th>
                     <th scope="col">@lang('validation.attributes.contact_link')</th>
                     <th scope="col">@lang('validation.attributes.contact_order')</th>

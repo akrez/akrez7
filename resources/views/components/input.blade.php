@@ -3,9 +3,9 @@
 @endif
 
 <div class="col-md-{{ $md }} mt-{{ $mt }}">
-    <div class="form-group">
+    <div class="input-group">
         @if ($label)
-            <label class="form-label" for="{{ $id }}">{{ $label }}</label>
+            <span class="input-group-text">{{ $label }}</span>
         @endif
 
         @if ('textarea' === $type)

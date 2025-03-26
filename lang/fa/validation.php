@@ -293,7 +293,6 @@ return [
         'file' => 'فایل',
         //
         'contact_link' => 'لینک',
-        'contact_key' => 'عنوان',
         'contact_value' => 'مقدار',
         'contact_order' => 'ترتیب',
         'contact_type' => 'نوع',
