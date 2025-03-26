@@ -28,7 +28,7 @@
             <tbody dir="ltr">
                 @forelse ($contacts as $contact)
                 <tr dir="ltr">
-                    <td scope="col">{{ \Arr::get($contact, 'fa') }}</td>
+                    <td scope="col">{{ \Arr::get($contact, 'contact_type.trans') }}</td>
                     <td scope="col">{{ $contact['contact_value'] }}</td>
                     <td scope="col">{{ $contact['contact_link'] }}</td>
                     <td scope="col">{{ $contact['contact_order'] }}</td>

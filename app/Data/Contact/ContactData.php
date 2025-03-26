@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 class ContactData extends Data
 {
     public function __construct(
+        public ?int $id,
         public int $blog_id,
         public $contact_type,
         public $contact_value,

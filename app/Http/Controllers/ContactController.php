@@ -37,6 +37,7 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $storeContactData = new StoreContactData(
+            null,
             app('ActiveBlog')->id(),
             $request->contact_type,
             $request->contact_value,
@@ -68,6 +69,7 @@ class ContactController extends Controller
     public function update(Request $request, int $id)
     {
         $updateContactData = new UpdateContactData(
+            $id,
             app('ActiveBlog')->id(),
             $request->contact_type,
             $request->contact_value,

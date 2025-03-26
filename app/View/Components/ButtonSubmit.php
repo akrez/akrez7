@@ -27,7 +27,7 @@ class ButtonSubmit extends Component
         $class = null,
         $row = true,
         $md = 4,
-        $mt = 4,
+        $mt = 2,
         $label = null
     ) {
         $this->name = $name;
