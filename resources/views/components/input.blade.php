@@ -23,17 +23,17 @@
                 type="{{ $type }}" value="{{ $value }}" {{ $attributes }} />
         @endif
 
-        @foreach ($hints as $hint)
-            <small class="form-text">{{ $hint }}</small>
-            @if (!$loop->last)
-                <br>
-            @endif
-        @endforeach
-
         @foreach ($errors as $error)
             <div class="invalid-feedback">{{ $error }}</div>
         @endforeach
     </div>
+
+    @foreach ($hints as $hint)
+        <small class="form-text">{{ $hint }}</small>
+        @if (!$loop->last)
+            <br>
+        @endif
+    @endforeach
 </div>
 
 @if ($row)
