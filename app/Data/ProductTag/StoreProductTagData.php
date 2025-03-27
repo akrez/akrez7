@@ -4,6 +4,7 @@ namespace App\Data\ProductTag;
 
 use App\Data\Data;
 use App\Services\ProductTagService;
+use App\Support\Arr;
 use Illuminate\Validation\Validator;
 
 class StoreProductTagData extends Data
@@ -50,7 +51,7 @@ class StoreProductTagData extends Data
 
         return $validator;
     }
-    
+
     public function filterTagNames($tagNames)
     {
         $tagNames = (is_array($tagNames) ? $tagNames : [$tagNames]);
