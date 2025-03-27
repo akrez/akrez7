@@ -25,11 +25,6 @@ abstract class Data
         return $result;
     }
 
-    public function prepareForValidation()
-    {
-        return $this->data();
-    }
-
     public function messages()
     {
         return [];
@@ -43,7 +38,7 @@ abstract class Data
     public function validate($context = null): Validator
     {
         return validator(
-            $this->prepareForValidation(),
+            $this->data(),
             $this->rules($context),
             $this->messages(),
             $this->attributes()

@@ -3,7 +3,7 @@
 @endif
 
 <div class="col-md-{{ $md }} mt-{{ $mt }}">
-    <div class="input-group">
+    <div class="{{ $label ? 'input-group' : 'form-group' }}">
         @if ($label)
             <span class="input-group-text">{{ $label }}</span>
         @endif
