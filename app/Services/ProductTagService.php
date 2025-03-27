@@ -25,9 +25,10 @@ class ProductTagService
         return app(self::class);
     }
 
-    public function exportToText(int $blogId, int $product_id)
+    public function exportToText(int $blogId, int $productId)
     {
-        return $this->getLatestProductTagsQuery($blogId, $product_id)
+        return $this->getProductTagsQuery($blogId, $productId)
+            ->defaultOrder()
             ->get()
             ->pluck('tag_name')
             ->implode(ProductTagService::NAME_GLUE);
@@ -42,7 +43,7 @@ class ProductTagService
             return $responseBuilder->status(422)->errors($validation->errors());
         }
 
-        $this->getLatestProductTagsQuery(
+        $this->getProductTagsQuery(
             $storeProductTagData->blog_id,
             $storeProductTagData->product_id
         )->delete();
@@ -68,7 +69,7 @@ class ProductTagService
         ]));
     }
 
-    protected function getLatestProductTagsQuery(int $blogId, int $productId)
+    protected function getProductTagsQuery(int $blogId, int $productId)
     {
         return ProductTag::query()
             ->where('blog_id', $blogId)
