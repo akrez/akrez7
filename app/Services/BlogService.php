@@ -38,7 +38,7 @@ class BlogService
     {
         $responseBuilder = ResponseBuilder::new()->input($blogData);
 
-        $validation = $blogData->validate(false);
+        $validation = $blogData->validate();
         if ($validation->errors()->isNotEmpty()) {
             return $responseBuilder->status(422)->errors($validation->errors());
         }
