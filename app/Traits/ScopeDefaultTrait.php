@@ -9,7 +9,7 @@ trait ScopeDefaultTrait
 {
     public function scopeDefaultOrder(Builder $query): void
     {
-        $query = $query->orderBy('id', 'desc');
+        $query = $query->orderBy('created_at', 'desc');
     }
 
     public static function getClassName($remove = '')

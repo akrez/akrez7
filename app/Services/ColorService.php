@@ -18,7 +18,9 @@ class ColorService
 
     protected function getQuery($blogId)
     {
-        return Color::query()->where('blog_id', $blogId);
+        return Color::query()
+            ->where('blog_id', $blogId)
+            ->defaultOrder();
     }
 
     public function getLatestColors(int $blogId)
