@@ -25,9 +25,12 @@ class ProductTagService
         return app(self::class);
     }
 
-    public function exportToTextArea(int $blogId, int $product_id)
+    public function exportToText(int $blogId, int $product_id)
     {
-        return implode(ProductTagService::NAME_GLUE, $this->exportToArray($blogId, $product_id));
+        return $this->getLatestProductTagsQuery($blogId, $product_id)
+            ->get()
+            ->pluck('tag_name')
+            ->implode(ProductTagService::NAME_GLUE);
     }
 
     public function storeProductTag(StoreProductTagData $storeProductTagData)
@@ -63,14 +66,6 @@ class ProductTagService
             'count' => count($createdTagNames),
             'names' => __('Tag'),
         ]));
-    }
-
-    protected function exportToArray(int $blogId, int $productId)
-    {
-        return $this->getLatestProductTagsQuery($blogId, $productId)
-            ->get()
-            ->pluck('tag_name')
-            ->toArray();
     }
 
     protected function getLatestProductTagsQuery(int $blogId, int $productId)

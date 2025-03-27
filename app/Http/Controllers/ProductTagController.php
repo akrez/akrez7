@@ -22,7 +22,7 @@ class ProductTagController extends Controller
 
         return view('product_tag.create', [
             'product' => $product,
-            'productTagsText' => $this->productTagService->exportToTextArea($this->blogId(), $product['id']),
+            'productTagsText' => $this->productTagService->exportToText($this->blogId(), $product['id']),
         ]);
     }
 
