@@ -124,6 +124,8 @@ class ResponseBuilder implements Responsable
     public function abortUnSuccessful()
     {
         abort_unless($this->isSuccessful(), $this->getStatus(), $this->getMessage());
+
+        return $this;
     }
 
     public function toResponse($request)
