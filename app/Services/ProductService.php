@@ -16,14 +16,14 @@ class ProductService
         return app(self::class);
     }
 
-    protected function getQuery($blogId)
+    protected function getProductsQuery($blogId)
     {
         return Product::query()->where('blog_id', $blogId);
     }
 
     public function getLatestProducts(int $blogId)
     {
-        $products = $this->getQuery($blogId)->get();
+        $products = $this->getProductsQuery($blogId)->defaultOrder()->get();
 
         return ResponseBuilder::new()->data([
             'products' => (new ProductCollection($products))->toArray(request()),
@@ -59,7 +59,7 @@ class ProductService
     {
         $responseBuilder = ResponseBuilder::new();
 
-        $product = $this->getQuery($blogId)->where('id', $id)->first();
+        $product = $this->getProductsQuery($blogId)->where('id', $id)->first();
         if (! $product) {
             return $responseBuilder->status(404);
         }
@@ -78,7 +78,7 @@ class ProductService
             return $responseBuilder->status(422)->errors($validation->errors());
         }
 
-        $product = $this->getQuery($updateProductData->blog_id)->where('id', $updateProductData->id)->first();
+        $product = $this->getProductsQuery($updateProductData->blog_id)->where('id', $updateProductData->id)->first();
         if (! $product) {
             return $responseBuilder->status(404);
         }

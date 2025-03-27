@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ProductStatusEnum;
 use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,4 +40,12 @@ class Product extends Model
         'product_status',
         'product_order',
     ];
+
+    public function scopeDefaultOrder(Builder $query): void
+    {
+        $query = $query
+            ->orderBy('product_order', 'DESC')
+            ->orderBy('name', 'ASC')
+            ->orderBy('created_at', 'ASC');
+    }
 }
