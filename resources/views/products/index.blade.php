@@ -47,6 +47,10 @@
                             <td>
                             </td>
                             <td>
+                                <a class="btn btn-light border border-dark w-100"
+                                    href="{{ route('products.product_tags.create', ['product_id' => $product['id']]) }}">
+                                    @lang('Tags')
+                                </a>
                             </td>
                             <td>
                                 <a class="btn btn-light border border-dark w-100"

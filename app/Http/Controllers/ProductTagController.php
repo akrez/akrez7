@@ -30,9 +30,11 @@ class ProductTagController extends Controller
     {
         $response = $this->productService->getProduct($this->blogId(), $product_id)->abortUnSuccessful();
 
+        $product = $response->getData('product');
+
         return $this->productTagService->storeProductTag(new StoreProductTagData(
             $this->blogId(),
-            $product_id,
+            $product['id'],
             $request->tag_names
         ));
     }
