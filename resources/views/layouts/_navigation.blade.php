@@ -64,7 +64,7 @@
                         <a class="nav-link active" aria-current="page"
                             href="{{ route('galleries.index', [
                                 'gallery_category' => \App\Enums\GalleryCategoryEnum::BLOG_LOGO->value,
-                                'short_gallery_type' => 'Blog',
+                                'short_gallery_type' => \App\Models\Blog::getClassName(),
                                 'gallery_id' => app('ActiveBlog')->id(),
                             ]) }}">
                             {{ \App\Enums\GalleryCategoryEnum::BLOG_LOGO->trans() }}

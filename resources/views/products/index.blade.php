@@ -56,7 +56,7 @@
                                 <a class="btn btn-light border border-dark w-100"
                                     href="{{ route('galleries.index', [
                                         'gallery_category' => \App\Enums\GalleryCategoryEnum::PRODUCT_IMAGE->value,
-                                        'short_gallery_type' => 'Product',
+                                        'short_gallery_type' => \App\Models\Product::getClassName(),
                                         'gallery_id' => $product['id'],
                                     ]) }}">
                                     @lang('product_images')
