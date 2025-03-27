@@ -6,6 +6,7 @@ use App\Support\ActiveBlog;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -33,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
             });
         }
         $this->app->singleton('ActiveBlog', function () {
-            return new ActiveBlog;
+            return new ActiveBlog(Auth::user());
         });
         $this->app->alias('Arr', Arr::class);
         //
