@@ -17,7 +17,7 @@ class GalleryController extends Controller
     {
         $response = $this->galleryService->getLatestModelGalleries(
             new IndexModelGalleryData(
-                app('ActiveBlog')->id(),
+                $this->blogId(),
                 $gallery_category,
                 $short_gallery_type,
                 $gallery_id,
@@ -39,7 +39,7 @@ class GalleryController extends Controller
     {
         $response = $this->galleryService->storeGallery(
             new StoreGalleryData(
-                app('ActiveBlog')->id(),
+                $this->blogId(),
                 $request->file('file'),
                 $request->gallery_category,
                 $request->short_gallery_type,
@@ -54,7 +54,7 @@ class GalleryController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $response = $this->galleryService->getGallery(app('ActiveBlog')->id(), $id);
+        $response = $this->galleryService->getGallery($this->blogId(), $id);
 
         return view('gallery.edit', [
             'gallery' => $response->getData('gallery'),
@@ -66,7 +66,7 @@ class GalleryController extends Controller
         $response = $this->galleryService->updateGallery(
             new UpdateGalleryData(
                 $id,
-                app('ActiveBlog')->id(),
+                $this->blogId(),
                 $request->gallery_order,
                 $request->is_selected,
             )
@@ -89,7 +89,7 @@ class GalleryController extends Controller
     public function destroy(Request $request, int $id)
     {
         $response = $this->galleryService->destroyGallery(
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $id
         );
 

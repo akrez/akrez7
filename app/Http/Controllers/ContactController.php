@@ -16,7 +16,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $response = $this->contactService->getLatestContacts(app('ActiveBlog')->id());
+        $response = $this->contactService->getLatestContacts($this->blogId());
 
         return view('contacts.index', [
             'contacts' => $response->getData('contacts'),
@@ -38,7 +38,7 @@ class ContactController extends Controller
     {
         $storeContactData = new StoreContactData(
             null,
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $request->contact_type,
             $request->contact_value,
             $request->contact_link,
@@ -55,8 +55,7 @@ class ContactController extends Controller
      */
     public function edit(int $id)
     {
-        $response = $this->contactService->getContact(app('ActiveBlog')->id(), $id);
-        $response->abortUnSuccessful();
+        $response = $this->contactService->getContact($this->blogId(), $id)->abortUnSuccessful();
 
         return view('contacts.edit', [
             'contact' => $response->getData('contact'),
@@ -70,7 +69,7 @@ class ContactController extends Controller
     {
         $updateContactData = new UpdateContactData(
             $id,
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $request->contact_type,
             $request->contact_value,
             $request->contact_link,

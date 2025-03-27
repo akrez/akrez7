@@ -24,8 +24,8 @@
                 @forelse ($colors as $color)
                 <tr dir="ltr">
                     <td scope="col">
-                        <code>{{ $color['code'] }}</code>
                         <span style="border: 1px solid black; background-color: {{ $color['code'] }};">⠀⠀⠀</span>
+                        <code> {{ $color['code'] }} </code>
                     </td>
                     <td scope="col">{{ $color['name'] }}</td>
                     <td>

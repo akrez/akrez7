@@ -61,8 +61,7 @@ class BlogController extends Controller
      */
     public function edit(int $id)
     {
-        $blog = $this->blogService->getUserBlog(Auth::id(), $id);
-        $blog->abortUnSuccessful();
+        $blog = $this->blogService->getUserBlog(Auth::id(), $id)->abortUnSuccessful();
 
         return view('blog.edit', [
             'blog' => $blog->getData('blog'),
@@ -76,8 +75,7 @@ class BlogController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $blog = $this->blogService->getUserBlog(Auth::id(), $id);
-        $blog->abortUnSuccessful();
+        $blog = $this->blogService->getUserBlog(Auth::id(), $id)->abortUnSuccessful();
 
         $response = $this->blogService->updateBlog($blog->getData('blog'), new UpdateBlogData(
             $request->name,
@@ -93,11 +91,9 @@ class BlogController extends Controller
     {
         $user = Auth::user();
 
-        $blog = $this->blogService->getUserBlog($user->id, $id);
-        $blog->abortUnSuccessful();
+        $blog = $this->blogService->getUserBlog($user->id, $id)->abortUnSuccessful();
 
-        $response = UserService::new()->setActiveBlog($user, $blog->getData('blog.id'));
-        $response->abortUnSuccessful();
+        $response = UserService::new()->setActiveBlog($user, $blog->getData('blog.id'))->abortUnSuccessful();
 
         return $response->message(__(':name is selected successfully', [
             'name' => __('Blog'),

@@ -22,17 +22,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $blogId = app('ActiveBlog')->id();
-
-        $latestProductsResponse = $this->productService->getLatestProducts($blogId);
+        $latestProductsResponse = $this->productService->getLatestProducts($this->blogId())->abortUnSuccessful();
 
         $latestCategoryGalleriesResponse = $this->galleryService->getLatestCategoryGalleries(
             new IndexCategoryGalleryData(
-                $blogId,
+                $this->blogId(),
                 GalleryCategoryEnum::PRODUCT_IMAGE->value
             )
-        );
-        $latestCategoryGalleriesResponse->abortUnSuccessful();
+        )->abortUnSuccessful();
 
         return view('products.index', [
             'products' => $latestProductsResponse->getData('products'),
@@ -57,7 +54,7 @@ class ProductController extends Controller
     {
         $storeProductData = new StoreProductData(
             null,
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $request->code,
             $request->name,
             $request->product_status,
@@ -74,8 +71,7 @@ class ProductController extends Controller
      */
     public function edit(int $id)
     {
-        $response = $this->productService->getProduct(app('ActiveBlog')->id(), $id);
-        $response->abortUnSuccessful();
+        $response = $this->productService->getProduct($this->blogId(), $id)->abortUnSuccessful();
 
         return view('products.edit', [
             'product' => $response->getData('product'),
@@ -89,7 +85,7 @@ class ProductController extends Controller
     {
         $updateProductData = new UpdateProductData(
             $id,
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $request->code,
             $request->name,
             $request->product_status,

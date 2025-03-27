@@ -16,7 +16,7 @@ class ColorController extends Controller
      */
     public function index()
     {
-        $response = $this->colorService->getLatestColors(app('ActiveBlog')->id());
+        $response = $this->colorService->getLatestColors($this->blogId());
 
         return view('colors.index', [
             'colors' => $response->getData('colors'),
@@ -38,7 +38,7 @@ class ColorController extends Controller
     {
         $storeColorData = new StoreColorData(
             null,
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $request->code,
             $request->name
         );
@@ -53,8 +53,7 @@ class ColorController extends Controller
      */
     public function edit(int $id)
     {
-        $response = $this->colorService->getColor(app('ActiveBlog')->id(), $id);
-        $response->abortUnSuccessful();
+        $response = $this->colorService->getColor($this->blogId(), $id)->abortUnSuccessful();
 
         return view('colors.edit', [
             'color' => $response->getData('color'),
@@ -68,7 +67,7 @@ class ColorController extends Controller
     {
         $updateColorData = new UpdateColorData(
             $id,
-            app('ActiveBlog')->id(),
+            $this->blogId(),
             $request->code,
             $request->name,
         );
