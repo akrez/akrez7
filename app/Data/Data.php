@@ -30,13 +30,23 @@ abstract class Data
         return $this->data();
     }
 
-    public function validate($context = null, array $messages = [], array $attributes = []): Validator
+    public function messages()
+    {
+        return [];
+    }
+
+    public function attributes()
+    {
+        return [];
+    }
+
+    public function validate($context = null): Validator
     {
         return validator(
             $this->prepareForValidation(),
             $this->rules($context),
-            $messages,
-            $attributes
+            $this->messages(),
+            $this->attributes()
         );
     }
 }
