@@ -6,7 +6,7 @@ use Illuminate\Support\Arr as BaseArr;
 
 class Arr extends BaseArr
 {
-    public function iexplode($delimiters, $string, $limit = PHP_INT_MAX)
+    public static function iexplode($delimiters, $string, $limit = PHP_INT_MAX)
     {
         if (! is_array($delimiters)) {
             $delimiters = [$delimiters];
@@ -32,7 +32,7 @@ class Arr extends BaseArr
         return $result;
     }
 
-    public function filterArray($array, $doFilter = true, $checkUnique = true, $doTrim = true): array
+    public static function filterArray($array, $doFilter = true, $checkUnique = true, $doTrim = true): array
     {
         if ($doTrim) {
             $array = array_map('trim', $array);
@@ -47,12 +47,12 @@ class Arr extends BaseArr
         return $array;
     }
 
-    public function templatedArray($template = [], $values = [], $const = [])
+    public static function templatedArray($template = [], $values = [], $const = [])
     {
         return $const + array_intersect_key($values, $template) + $template;
     }
 
-    public function trimRecursive($array)
+    public static function trimRecursive($array)
     {
         array_walk_recursive(
             $array,
