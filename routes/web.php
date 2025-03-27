@@ -5,6 +5,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\SiteController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Providers\AppServiceProvider;
@@ -25,6 +26,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('colors', ColorController::class)->parameter('colors', 'id');
         Route::resource('contacts', ContactController::class)->parameter('contacts', 'id');
         Route::resource('products', ProductController::class)->parameter('products', 'id');
+        //
+        Route::get('products/{product_id}/product_tags', [ProductTagController::class, 'create'])->name('products.product_tags.create');
+        Route::post('products/{product_id}/product_tags', [ProductTagController::class, 'store'])->name('products.product_tags.store');
     });
 });
 
