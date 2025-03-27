@@ -6,7 +6,7 @@
     <div class="row pb-2">
         @include('products._form', ['isVertical' => true])
     </div>
-    <div class="row pt-2">
+    <div class="row">
         <div class="col-md-12 table-responsive">
             <table class="table table-striped table-hover table-bordered align-middle rounded-3 text-center">
                 <thead class="table-dark">
