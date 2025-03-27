@@ -25,14 +25,15 @@ abstract class Data
         return $result;
     }
 
-    public function validate($context = null, $rulesParams = [], array $messages = [], array $attributes = []): Validator
+    public function prepareForValidation()
     {
-        foreach ($rulesParams as $rulesParamName => $rulesParamValue) {
-            $this->$rulesParamName = $rulesParamValue;
-        }
+        return $this->data();
+    }
 
+    public function validate($context = null, array $messages = [], array $attributes = []): Validator
+    {
         return validator(
-            $this->data(),
+            $this->prepareForValidation(),
             $this->rules($context),
             $messages,
             $attributes
