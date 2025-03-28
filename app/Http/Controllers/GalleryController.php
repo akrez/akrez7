@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Gallery\EffectGalleryData;
 use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
@@ -13,6 +14,22 @@ class GalleryController extends Controller
 {
     public function __construct(protected GalleryService $galleryService) {}
 
+    public function effect($gallery_category, $whmq, $name)
+    {
+        $galleryService = GalleryService::new();
+
+        $response = $galleryService->effect(new EffectGalleryData(
+            $gallery_category, $whmq, $name
+        ))->abortUnSuccessful();
+
+        return Response()->download(
+            $response->getData('path'),
+            $response->getData('name'),
+            [],
+            'inline'
+        );
+    }
+
     public function index(string $gallery_category, string $short_gallery_type, string $gallery_id)
     {
         $response = $this->galleryService->getLatestModelGalleries(
@@ -22,10 +39,7 @@ class GalleryController extends Controller
                 $short_gallery_type,
                 $gallery_id,
             )
-        );
-        if (! $response->isSuccessful()) {
-            return ResponseBuilder::new($response->getStatus());
-        }
+        )->abortUnSuccessful();
 
         return view('gallery.index', [
             'galleries' => $response->getData('galleries'),
@@ -54,7 +68,7 @@ class GalleryController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $response = $this->galleryService->getGallery($this->blogId(), $id);
+        $response = $this->galleryService->getGallery($this->blogId(), $id)->abortUnSuccessful();
 
         return view('gallery.edit', [
             'gallery' => $response->getData('gallery'),

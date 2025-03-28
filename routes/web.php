@@ -38,3 +38,4 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [SiteController::class, 'index'])->name('site');
+Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);

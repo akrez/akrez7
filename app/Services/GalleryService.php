@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\Gallery\EffectGalleryData;
 use App\Data\Gallery\IndexCategoryGalleryData;
 use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
@@ -19,6 +20,14 @@ use Intervention\Image\ImageManager;
 
 class GalleryService
 {
+    const MODE_CONTAIN = 'contain';
+
+    const VALID_MODES = [self::MODE_CONTAIN];
+
+    const WHMQ_REGEX_PATTERN = '/[A-Za-z0-9\-\.\_]/';
+
+    const MAX_SIZE = 3096;
+
     public static function new()
     {
         return app(self::class);
@@ -119,7 +128,7 @@ class GalleryService
     {
         $responseBuilder = ResponseBuilder::new();
 
-        $gallery = Gallery::query()->where('id', $id)->where('blog_id', $blogId)->first();
+        $gallery = $this->getLatestGalleriesQuery($blogId)->where('id', $id)->first();
         if (! $gallery) {
             return $responseBuilder->status(404);
         }
@@ -145,11 +154,80 @@ class GalleryService
         ]));
     }
 
+    public function effect(EffectGalleryData $effectGalleryData)
+    {
+        $responseBuilder = ResponseBuilder::new()->input($effectGalleryData);
+
+        $validation = $effectGalleryData->validate();
+        if ($validation->errors()->isNotEmpty()) {
+            return $responseBuilder->status(422)->errors($validation->errors());
+        }
+
+        $gallery = Gallery::query()
+            ->where('gallery_category', $effectGalleryData->gallery_category)
+            ->where('name', $effectGalleryData->name)
+            ->first();
+        if (! $gallery) {
+            return $responseBuilder->status(404);
+        }
+
+        $sourceFilePath = $this->getUri(
+            $effectGalleryData->gallery_category,
+            $effectGalleryData->name,
+        );
+        //
+        $manager = new ImageManager(Driver::class);
+        $image = $manager->read($this->getStoragePath($sourceFilePath));
+        //
+        $width = $effectGalleryData->getWidth();
+        $height = $effectGalleryData->getHeight();
+        //
+        if ($width && $height) {
+        } elseif ($width) {
+            $height = ($width * $image->height()) / $image->width();
+        } elseif ($height) {
+            $width = ($height * $image->width()) / $image->height();
+        } else {
+            $width = $image->width();
+            $height = $image->height();
+        }
+        //
+        if ($effectGalleryData->getMode() === self::MODE_CONTAIN) {
+            $width = $height = max($width, $height);
+            $image->contain(width: $width, height: $height, background: $image->pickColor(0, 0));
+        } else {
+            $image->resize(width: $width, height: $height);
+        }
+
+        $uploadResponse = $this->upload(
+            $image,
+            $effectGalleryData->gallery_category,
+            $effectGalleryData->name,
+            $effectGalleryData->getQuality(),
+            $effectGalleryData->whmq
+        );
+
+        if (! $uploadResponse->isSuccessful()) {
+            return $responseBuilder
+                ->status($uploadResponse->getStatus())
+                ->message($uploadResponse->getMessage());
+        }
+
+        return $responseBuilder->data([
+            'name' => $effectGalleryData->name,
+            'path' => $this->getUri(
+                $effectGalleryData->gallery_category,
+                $effectGalleryData->name,
+                $effectGalleryData->whmq
+            ),
+        ]);
+    }
+
     public function getGallery(int $blogId, int $id)
     {
         $responseBuilder = ResponseBuilder::new();
 
-        $gallery = Gallery::query()->where('id', $id)->where('blog_id', $blogId)->first();
+        $gallery = $this->getLatestGalleriesQuery($blogId)->where('id', $id)->first();
         if (! $gallery) {
             return $responseBuilder->status(404);
         }
@@ -163,7 +241,7 @@ class GalleryService
     {
         $responseBuilder = ResponseBuilder::new()->input($updateGalleryData);
 
-        $gallery = Gallery::query()->where('id', $updateGalleryData->id)->where('blog_id', $updateGalleryData->blog_id)->first();
+        $gallery = $this->getLatestGalleriesQuery($updateGalleryData->blog_id)->where('id', $updateGalleryData->id)->first();
         if (! $gallery) {
             return $responseBuilder->status(404);
         }
@@ -289,6 +367,11 @@ class GalleryService
     protected function getStorageUrl($url)
     {
         return Storage::url($url);
+    }
+
+    protected function getStoragePath($path)
+    {
+        return Storage::path($path);
     }
 
     protected function getUri($category, $name = null, $whmq = null)
