@@ -288,6 +288,7 @@ return [
         'tag_name' => 'نام برچسب',
         'property_key' => 'عنوان ویژگی',
         'property_value' => 'مقدار ویژگی',
+        'keys_values' => 'مقدار ویژگی',
         'gallery_order' => 'ترتیب',
         'is_selected' => 'عکس اصلی',
         'file' => 'فایل',

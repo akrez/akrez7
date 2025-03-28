@@ -5,10 +5,12 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductPropertyController;
 use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\SiteController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Providers\AppServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
@@ -29,6 +31,9 @@ Route::middleware('auth')->group(function () {
         //
         Route::get('products/{product_id}/product_tags', [ProductTagController::class, 'create'])->name('products.product_tags.create');
         Route::post('products/{product_id}/product_tags', [ProductTagController::class, 'store'])->name('products.product_tags.store');
+        //
+        Route::get('products/{product_id}/product_properties', [ProductPropertyController::class, 'create'])->name('products.product_properties.create');
+        Route::post('products/{product_id}/product_properties', [ProductPropertyController::class, 'store'])->name('products.product_properties.store');
     });
 });
 
