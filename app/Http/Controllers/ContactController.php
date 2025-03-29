@@ -80,4 +80,9 @@ class ContactController extends Controller
 
         return $response->successfulRoute(route('contacts.index'));
     }
+
+    public function destroy(Request $request, int $id)
+    {
+        return $this->contactService->destroyContact($this->blogId(), $id);
+    }
 }

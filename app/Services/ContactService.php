@@ -101,4 +101,22 @@ class ContactService
                 'name' => $contact->name,
             ]));
     }
+
+    public function destroyContact(int $blogId, int $id)
+    {
+        $responseBuilder = ResponseBuilder::new();
+
+        $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
+        if (! $contact) {
+            return $responseBuilder->status(404);
+        }
+
+        if (! $contact->delete()) {
+            return $responseBuilder->status(500);
+        }
+
+        return ResponseBuilder::new(200)->message(__(':name is deleted successfully', [
+            'name' => $contact->contact_value,
+        ]));
+    }
 }
