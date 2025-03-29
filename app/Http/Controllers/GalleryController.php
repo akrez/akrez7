@@ -7,7 +7,6 @@ use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
 use App\Services\GalleryService;
-use App\Support\ResponseBuilder;
 use Illuminate\Http\Request;
 
 class GalleryController extends Controller

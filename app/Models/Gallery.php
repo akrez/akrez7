@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use App\Enums\GalleryCategoryEnum;
 use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Gallery

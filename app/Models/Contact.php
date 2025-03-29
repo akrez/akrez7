@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\ContactTypeEnum;
 use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Contact

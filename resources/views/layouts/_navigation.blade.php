@@ -50,7 +50,7 @@
 @if (app('ActiveBlog')->has())
     <nav class="navbar navbar-light bg-light navbar-expand-lg z-1030">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('blogs.edit', ['id' => app('ActiveBlog')->attr('id')]) }}">
+            <a class="navbar-brand" href="{{ route('payvoices.index') }}">
                 {{ app('ActiveBlog')->name() }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
