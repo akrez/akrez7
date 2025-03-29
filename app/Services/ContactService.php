@@ -16,14 +16,14 @@ class ContactService
         return app(self::class);
     }
 
-    protected function getQuery($blogId)
+    protected function getContactsQuery($blogId)
     {
         return Contact::query()->where('blog_id', $blogId);
     }
 
     public function getLatestContacts(int $blogId)
     {
-        $contacts = $this->getQuery($blogId)->get();
+        $contacts = $this->getContactsQuery($blogId)->get();
 
         return ResponseBuilder::new()->data([
             'contacts' => (new ContactCollection($contacts))->toArray(request()),
@@ -59,7 +59,7 @@ class ContactService
     {
         $responseBuilder = ResponseBuilder::new();
 
-        $contact = $this->getQuery($blogId)->where('id', $id)->first();
+        $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
             return $responseBuilder->status(404);
         }
@@ -78,7 +78,7 @@ class ContactService
             return $responseBuilder->status(422)->errors($validation->errors());
         }
 
-        $contact = $this->getQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
+        $contact = $this->getContactsQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
         if (! $contact) {
             return $responseBuilder->status(404);
         }
