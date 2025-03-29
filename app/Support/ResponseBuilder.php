@@ -4,6 +4,8 @@ namespace App\Support;
 
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Lang;
 
@@ -23,6 +25,8 @@ class ResponseBuilder implements Responsable
 
     protected ?string $successfulRoute;
 
+    protected null|Paginator|LengthAwarePaginator $paginator;
+
     public function __construct()
     {
         $this->reset();
@@ -36,6 +40,7 @@ class ResponseBuilder implements Responsable
         $this->input = null;
         $this->errors = null;
         $this->successfulRoute = null;
+        $this->paginator = null;
 
         return $this;
     }
@@ -114,6 +119,24 @@ class ResponseBuilder implements Responsable
     public function getSuccessfulRoute(): ?string
     {
         return $this->successfulRoute;
+    }
+
+    public function paginator(null|Paginator|LengthAwarePaginator $paginator): self
+    {
+        $this->paginator = ($paginator ? app($paginator::class, [
+            'items' => [],
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
+            'options' => [],
+            'total' => ($paginator instanceof LengthAwarePaginator ? $paginator->total() : null),
+        ]) : null);
+
+        return $this;
+    }
+
+    public function getPaginator($path, $pageName = 'page'): null|Paginator|LengthAwarePaginator
+    {
+        return $this->paginator ? $this->paginator->setPath($path)->setPageName($pageName) : null;
     }
 
     public function isSuccessful(): bool
