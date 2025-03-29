@@ -22,7 +22,7 @@ class PayvoiceService
 
     public function getLatestPayvoices(int $blogId, ?int $page = null, ?int $perPage = 30)
     {
-        $payvoices = $this->getPayvoicesQuery($blogId)->paginate($perPage, ['*'], null, $page);
+        $payvoices = $this->getPayvoicesQuery($blogId)->page($page);
 
         return ResponseBuilder::new()->data([
             'payvoices' => (new PayvoiceCollection($payvoices))->toArray(request()),

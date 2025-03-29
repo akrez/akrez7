@@ -12,6 +12,7 @@ class PayvoiceResource extends JsonResource
         'desktop' => 'images/device/desktop.svg',
         'phone' => 'images/device/phone.svg',
         'tablet' => 'images/device/tablet.svg',
+        'robot' => 'images/device/robot.svg',
     ];
 
     const PLATFORM_ICON = [

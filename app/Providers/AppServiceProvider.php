@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Support\ActiveBlog;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
@@ -37,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
             return new ActiveBlog(Auth::user());
         });
         $this->app->alias('Arr', Arr::class);
+        Builder::macro('page', function ($page = null, $perPage = null, $total = null, $pageName = 'page') {
+            return $this->paginate($perPage, ['*'], $pageName, $page, $total);
+        });
         //
         Blade::directive('spaceless', function () {
             return '<?php ob_start(); ob_implicit_flush(false); ?>';
