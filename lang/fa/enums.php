@@ -15,4 +15,6 @@ return [
     'whatsapp' => 'واتساپ',
     'phone' => 'تلفن',
     'instagram' => 'اینستاگرام',
+    //
+    'out_of_stock' => 'اتمام موجودی',
 ];
