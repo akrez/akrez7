@@ -7,7 +7,7 @@ use App\Enums\PackageStatusEnum;
 use App\Services\ColorService;
 use Illuminate\Validation\Rule;
 
-class PackageData extends Data
+abstract class PackageData extends Data
 {
     public function __construct(
         public ?int $id,
@@ -20,17 +20,17 @@ class PackageData extends Data
         public $description
     ) {}
 
-    public function rules($context)
+    public function getRules($context, $attributesToRequired)
     {
-        return [
-            'product_id' => ['required', 'integer'],
-            'blog_id' => ['required', 'integer'],
-            'price' => ['required', 'numeric'],
-            'guaranty' => ['nullable', 'string', 'max:256'],
-            'description' => ['nullable', 'string', 'max:2048'],
-            'package_status' => ['required', Rule::in(PackageStatusEnum::values())],
+        $rules = [
+            'id' => ['integer'],
+            'product_id' => ['integer'],
+            'blog_id' => ['integer'],
+            'price' => ['numeric'],
+            'guaranty' => ['string', 'max:256'],
+            'description' => ['string', 'max:2048'],
+            'package_status' => [Rule::in(PackageStatusEnum::values())],
             'color_id' => [
-                'nullable',
                 function ($attribute, $value, $fail) {
                     if ($value !== null) {
                         $isValidColor = ColorService::new()->getColor($this->blog_id, $this->color_id)->isSuccessful();
@@ -43,5 +43,15 @@ class PackageData extends Data
                 },
             ],
         ];
+
+        $result = [];
+        foreach ($attributesToRequired as $attribute => $required) {
+            $result[$attribute] = array_merge(
+                [$required ? 'required' : 'nullable'],
+                $rules[$attribute]
+            );
+        }
+
+        return $result;
     }
 }

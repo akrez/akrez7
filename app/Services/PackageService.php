@@ -89,10 +89,6 @@ class PackageService
 
         $package->update([
             'package_status' => $updatePackageData->package_status,
-            'price' => $updatePackageData->price,
-            'color_id' => $updatePackageData->color_id,
-            'guaranty' => $updatePackageData->guaranty,
-            'description' => $updatePackageData->description,
         ]);
         if (! $package->save()) {
             return $responseBuilder->status(500);

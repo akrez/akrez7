@@ -40,16 +40,16 @@
                                         style="border: 1px solid black; background-color: {{ \Arr::get($colorsIdArray, $package['color_id'] . '.code') }};">
                                         ⠀⠀⠀
                                     </span>
-                                    <span class="px-1"> {{ \Arr::get($colorsIdArray, $package['color_id'] . '.name') }} </span>
+                                    <span class="px-1"> {{ \Arr::get($colorsIdArray, $package['color_id'] . '.name') }}
+                                    </span>
                                 @endif
                             </td>
                             <td scope="col">{{ $package['guaranty'] }}</td>
                             <td scope="col">{{ $package['description'] }}</td>
                             <td>
-                                <a class="btn btn-light border border-dark w-100"
-                                    href="{{ route('products.packages.edit', ['product_id' => $product['id'], 'id' => $package['id']]) }}">
-                                    @lang('Edit')
-                                </a>
+                                <div dir="rtl">
+                                    @include('package._form', ['package' => $package])
+                                </div>
                             </td>
                             <td>
                                 <form
