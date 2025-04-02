@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Data\ProductTag\StoreProductTagData;
 use App\Models\ProductTag;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 
 class ProductTagService
 {
@@ -36,7 +36,7 @@ class ProductTagService
 
     public function storeProductTag(StoreProductTagData $storeProductTagData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storeProductTagData);
+        $responseBuilder = WebResponse::new()->input($storeProductTagData);
 
         $validation = $storeProductTagData->validate();
         if ($validation->errors()->isNotEmpty()) {

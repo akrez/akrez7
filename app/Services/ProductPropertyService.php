@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Data\ProductProperty\StoreProductPropertyData;
 use App\Models\ProductProperty;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 use Illuminate\Support\Collection;
 
 class ProductPropertyService
@@ -49,7 +49,7 @@ class ProductPropertyService
 
     public function storeProductProperty(StoreProductPropertyData $storeProductPropertyData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storeProductPropertyData);
+        $responseBuilder = WebResponse::new()->input($storeProductPropertyData);
 
         $validation = $storeProductPropertyData->validate();
         if ($validation->errors()->isNotEmpty()) {

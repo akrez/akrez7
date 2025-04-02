@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\Payvoice\PayvoiceCollection;
 use App\Models\Payvoice;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 
@@ -24,7 +24,7 @@ class PayvoiceService
     {
         $payvoices = $this->getPayvoicesQuery($blogId)->page($page);
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'payvoices' => (new PayvoiceCollection($payvoices))->toArray(request()),
         ])->paginator($payvoices);
     }

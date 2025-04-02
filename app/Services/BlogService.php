@@ -6,7 +6,7 @@ use App\Data\Blog\StoreBlogData;
 use App\Data\Blog\UpdateBlogData;
 use App\Enums\BlogStatusEnum;
 use App\Models\Blog;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 
 class BlogService
 {
@@ -15,9 +15,9 @@ class BlogService
         return app(self::class);
     }
 
-    public function storeBlog(int $userId, StoreBlogData $blogData): ResponseBuilder
+    public function storeBlog(int $userId, StoreBlogData $blogData): WebResponse
     {
-        $responseBuilder = ResponseBuilder::new()->input($blogData);
+        $responseBuilder = WebResponse::new()->input($blogData);
 
         $validation = $blogData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -34,9 +34,9 @@ class BlogService
         ]));
     }
 
-    public function updateBlog(Blog $blog, UpdateBlogData $blogData): ResponseBuilder
+    public function updateBlog(Blog $blog, UpdateBlogData $blogData): WebResponse
     {
-        $responseBuilder = ResponseBuilder::new()->input($blogData);
+        $responseBuilder = WebResponse::new()->input($blogData);
 
         $validation = $blogData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -60,7 +60,7 @@ class BlogService
             ->where('created_by', $userId)
             ->first();
 
-        return ResponseBuilder::new($blog ? 200 : 404)->data([
+        return WebResponse::new($blog ? 200 : 404)->data([
             'blog' => $blog,
         ]);
     }
@@ -72,7 +72,7 @@ class BlogService
             ->latest('created_at')
             ->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'blogs' => $blogs,
         ]);
     }
@@ -84,7 +84,7 @@ class BlogService
             ->where('blog_status', BlogStatusEnum::ACTIVE->value)
             ->first();
 
-        return ResponseBuilder::new($blog ? 200 : 404)->data([
+        return WebResponse::new($blog ? 200 : 404)->data([
             'blog' => $blog,
         ]);
     }

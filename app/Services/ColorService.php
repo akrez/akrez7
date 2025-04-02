@@ -7,7 +7,7 @@ use App\Data\Color\UpdateColorData;
 use App\Http\Resources\Color\ColorCollection;
 use App\Http\Resources\Color\ColorResource;
 use App\Models\Color;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 
 class ColorService
 {
@@ -27,14 +27,14 @@ class ColorService
     {
         $colors = $this->getQuery($blogId)->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'colors' => (new ColorCollection($colors))->toArray(request()),
         ]);
     }
 
     public function storeColor(StoreColorData $storeColorData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storeColorData);
+        $responseBuilder = WebResponse::new()->input($storeColorData);
 
         $validation = $storeColorData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -57,21 +57,21 @@ class ColorService
 
     public function getColor(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $color = $this->getQuery($blogId)->where('id', $id)->first();
         if (! $color) {
             return $responseBuilder->status(404);
         }
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'color' => (new ColorResource($color))->toArr(request()),
         ]);
     }
 
     public function updateColor(UpdateColorData $updateColorData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($updateColorData);
+        $responseBuilder = WebResponse::new()->input($updateColorData);
 
         $validation = $updateColorData->validate();
         if ($validation->errors()->isNotEmpty()) {

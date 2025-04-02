@@ -7,7 +7,7 @@ use App\Data\Package\UpdatePackageData;
 use App\Http\Resources\Package\PackageCollection;
 use App\Http\Resources\Package\PackageResource;
 use App\Models\Package;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 
 class PackageService
 {
@@ -27,14 +27,14 @@ class PackageService
     {
         $packages = $this->getQuery($blogId)->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'packages' => (new PackageCollection($packages))->toArray(request()),
         ]);
     }
 
     public function storePackage(StorePackageData $storePackageData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storePackageData);
+        $responseBuilder = WebResponse::new()->input($storePackageData);
 
         $validation = $storePackageData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -61,21 +61,21 @@ class PackageService
 
     public function getPackage(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $package = $this->getQuery($blogId)->where('id', $id)->first();
         if (! $package) {
             return $responseBuilder->status(404);
         }
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'package' => (new PackageResource($package))->toArr(request()),
         ]);
     }
 
     public function updatePackage(UpdatePackageData $updatePackageData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($updatePackageData);
+        $responseBuilder = WebResponse::new()->input($updatePackageData);
 
         $validation = $updatePackageData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -104,7 +104,7 @@ class PackageService
 
     public function destroyPackage(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $package = $this->getQuery($blogId)->where('id', $id)->first();
         if (! $package) {
@@ -115,7 +115,7 @@ class PackageService
             return $responseBuilder->status(500);
         }
 
-        return ResponseBuilder::new(200)->message(__(':name is deleted successfully', [
+        return WebResponse::new(200)->message(__(':name is deleted successfully', [
             'name' => __('Package'),
         ]));
     }

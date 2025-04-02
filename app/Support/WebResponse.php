@@ -9,7 +9,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Lang;
 
-class ResponseBuilder implements Responsable
+class WebResponse implements Responsable
 {
     const DEFAULT_STATUS = 200;
 
@@ -152,11 +152,6 @@ class ResponseBuilder implements Responsable
     }
 
     public function toResponse($request)
-    {
-        return $this->toWebResponse($request);
-    }
-
-    protected function toWebResponse($request)
     {
         if (! $this->isSuccessful()) {
             return back()

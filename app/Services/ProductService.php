@@ -7,7 +7,7 @@ use App\Data\Product\UpdateProductData;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 
 class ProductService
 {
@@ -25,14 +25,14 @@ class ProductService
     {
         $products = $this->getProductsQuery($blogId)->defaultOrder()->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'products' => (new ProductCollection($products))->toArray(request()),
         ]);
     }
 
     public function storeProduct(StoreProductData $storeProductData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storeProductData);
+        $responseBuilder = WebResponse::new()->input($storeProductData);
 
         $validation = $storeProductData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -57,21 +57,21 @@ class ProductService
 
     public function getProduct(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $product = $this->getProductsQuery($blogId)->where('id', $id)->first();
         if (! $product) {
             return $responseBuilder->status(404);
         }
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'product' => (new ProductResource($product))->toArr(request()),
         ]);
     }
 
     public function updateProduct(UpdateProductData $updateProductData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($updateProductData);
+        $responseBuilder = WebResponse::new()->input($updateProductData);
 
         $validation = $updateProductData->validate();
         if ($validation->errors()->isNotEmpty()) {

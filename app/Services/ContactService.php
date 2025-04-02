@@ -7,7 +7,7 @@ use App\Data\Contact\UpdateContactData;
 use App\Http\Resources\Contact\ContactCollection;
 use App\Http\Resources\Contact\ContactResource;
 use App\Models\Contact;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 
 class ContactService
 {
@@ -25,14 +25,14 @@ class ContactService
     {
         $contacts = $this->getContactsQuery($blogId)->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'contacts' => (new ContactCollection($contacts))->toArray(request()),
         ]);
     }
 
     public function storeContact(StoreContactData $storeContactData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storeContactData);
+        $responseBuilder = WebResponse::new()->input($storeContactData);
 
         $validation = $storeContactData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -57,21 +57,21 @@ class ContactService
 
     public function getContact(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
             return $responseBuilder->status(404);
         }
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'contact' => (new ContactResource($contact))->toArr(request()),
         ]);
     }
 
     public function updateContact(UpdateContactData $updateContactData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($updateContactData);
+        $responseBuilder = WebResponse::new()->input($updateContactData);
 
         $validation = $updateContactData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -104,7 +104,7 @@ class ContactService
 
     public function destroyContact(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
@@ -115,7 +115,7 @@ class ContactService
             return $responseBuilder->status(500);
         }
 
-        return ResponseBuilder::new(200)->message(__(':name is deleted successfully', [
+        return WebResponse::new(200)->message(__(':name is deleted successfully', [
             'name' => $contact->contact_value,
         ]));
     }

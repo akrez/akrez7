@@ -10,7 +10,7 @@ use App\Data\Gallery\UpdateGalleryData;
 use App\Http\Resources\Gallery\GalleryCollection;
 use App\Http\Resources\Gallery\GalleryResource;
 use App\Models\Gallery;
-use App\Support\ResponseBuilder;
+use App\Support\WebResponse;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +35,7 @@ class GalleryService
 
     public function getLatestCategoryGalleries(IndexCategoryGalleryData $indexCategoryGalleryData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($indexCategoryGalleryData);
+        $responseBuilder = WebResponse::new()->input($indexCategoryGalleryData);
 
         $validation = $indexCategoryGalleryData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -47,14 +47,14 @@ class GalleryService
             $indexCategoryGalleryData->gallery_category
         )->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'galleries' => (new GalleryCollection($galleries))->toArray(request()),
         ]);
     }
 
     public function getLatestModelGalleries(IndexModelGalleryData $indexModelGalleryData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($indexModelGalleryData);
+        $responseBuilder = WebResponse::new()->input($indexModelGalleryData);
 
         $validation = $indexModelGalleryData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -68,14 +68,14 @@ class GalleryService
             $indexModelGalleryData->gallery_id
         )->get();
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'galleries' => (new GalleryCollection($galleries))->toArray(request()),
         ]);
     }
 
     public function storeGallery(StoreGalleryData $storeGalleryData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($storeGalleryData);
+        $responseBuilder = WebResponse::new()->input($storeGalleryData);
 
         $validation = $storeGalleryData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -126,7 +126,7 @@ class GalleryService
 
     public function destroyGallery(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $gallery = $this->getLatestGalleriesQuery($blogId)->where('id', $id)->first();
         if (! $gallery) {
@@ -136,7 +136,7 @@ class GalleryService
         $path = $this->getUri($gallery->gallery_category->value, $gallery->name);
 
         if (! $gallery->delete()) {
-            return ResponseBuilder::new(500)->message('Internal Server Error');
+            return WebResponse::new(500)->message('Internal Server Error');
         }
 
         $sameNameGallery = Gallery::query()
@@ -149,14 +149,14 @@ class GalleryService
 
         $this->resetSelected($blogId, $gallery);
 
-        return ResponseBuilder::new(200)->message(__(':name is deleted successfully', [
+        return WebResponse::new(200)->message(__(':name is deleted successfully', [
             'name' => $gallery->gallery_category->trans(),
         ]));
     }
 
     public function effect(EffectGalleryData $effectGalleryData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($effectGalleryData);
+        $responseBuilder = WebResponse::new()->input($effectGalleryData);
 
         $validation = $effectGalleryData->validate();
         if ($validation->errors()->isNotEmpty()) {
@@ -225,21 +225,21 @@ class GalleryService
 
     public function getGallery(int $blogId, int $id)
     {
-        $responseBuilder = ResponseBuilder::new();
+        $responseBuilder = WebResponse::new();
 
         $gallery = $this->getLatestGalleriesQuery($blogId)->where('id', $id)->first();
         if (! $gallery) {
             return $responseBuilder->status(404);
         }
 
-        return ResponseBuilder::new()->data([
+        return WebResponse::new()->data([
             'gallery' => (new GalleryResource($gallery))->toArr(request()),
         ]);
     }
 
     public function updateGallery(UpdateGalleryData $updateGalleryData)
     {
-        $responseBuilder = ResponseBuilder::new()->input($updateGalleryData);
+        $responseBuilder = WebResponse::new()->input($updateGalleryData);
 
         $gallery = $this->getLatestGalleriesQuery($updateGalleryData->blog_id)->where('id', $updateGalleryData->id)->first();
         if (! $gallery) {
@@ -314,7 +314,7 @@ class GalleryService
             if ($isUploaded) {
                 $pathinfo = pathinfo($path);
 
-                return ResponseBuilder::new(201)->data([
+                return WebResponse::new(201)->data([
                     'width' => $image->width(),
                     'height' => $image->height(),
                     'name' => $pathinfo['basename'],
@@ -325,7 +325,7 @@ class GalleryService
         } catch (Exception $e) {
         }
 
-        return ResponseBuilder::new(500);
+        return WebResponse::new(500);
     }
 
     protected function resetSelected(int $blogId, Gallery $gallery)
