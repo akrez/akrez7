@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Data\Blog\StoreBlogData;
 use App\Data\Blog\UpdateBlogData;
 use App\Enums\BlogStatusEnum;
+use App\Http\Resources\Blog\BlogResource;
 use App\Models\Blog;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
 class BlogService
@@ -15,40 +17,52 @@ class BlogService
         return app(self::class);
     }
 
+    public function getApiResponse(int $id)
+    {
+        $blog = Blog::query()
+            ->where('id', $id)
+            ->where('blog_status', BlogStatusEnum::ACTIVE->value)
+            ->first();
+
+        return ApiResponse::new($blog ? 200 : 404)->data([
+            'blog' => (new BlogResource($blog))->toArr(),
+        ]);
+    }
+
     public function storeBlog(int $userId, StoreBlogData $blogData): WebResponse
     {
-        $responseBuilder = WebResponse::new()->input($blogData);
+        $webResponse = WebResponse::new()->input($blogData);
 
         $validation = $blogData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $blog = Blog::create(['created_by' => $userId] + $validation->getData());
         if (! $blog) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder->status(201)->data($blog)->message(__(':name is created successfully', [
+        return $webResponse->status(201)->data($blog)->message(__(':name is created successfully', [
             'name' => __('Blog'),
         ]));
     }
 
     public function updateBlog(Blog $blog, UpdateBlogData $blogData): WebResponse
     {
-        $responseBuilder = WebResponse::new()->input($blogData);
+        $webResponse = WebResponse::new()->input($blogData);
 
         $validation = $blogData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $isSuccessful = $blog->update($validation->getData());
         if (! $isSuccessful) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder->data($blog)->status(200)->message(__(':name is updated successfully', [
+        return $webResponse->data($blog)->status(200)->message(__(':name is updated successfully', [
             'name' => __('Blog'),
         ]));
     }

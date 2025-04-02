@@ -36,11 +36,11 @@ class ProductTagService
 
     public function storeProductTag(StoreProductTagData $storeProductTagData)
     {
-        $responseBuilder = WebResponse::new()->input($storeProductTagData);
+        $webResponse = WebResponse::new()->input($storeProductTagData);
 
         $validation = $storeProductTagData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $this->getProductTagsQuery(
@@ -58,12 +58,12 @@ class ProductTagService
         }
 
         if (count($createdTagNames) == 0) {
-            return $responseBuilder->status(200)->message(__('All :names removed', [
+            return $webResponse->status(200)->message(__('All :names removed', [
                 'names' => __('Tags'),
             ]));
         }
 
-        return $responseBuilder->status(201)->message(__(':count :names are created successfully', [
+        return $webResponse->status(201)->message(__(':count :names are created successfully', [
             'count' => count($createdTagNames),
             'names' => __('Tag'),
         ]));

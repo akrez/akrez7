@@ -32,11 +32,11 @@ class ProductService
 
     public function storeProduct(StoreProductData $storeProductData)
     {
-        $responseBuilder = WebResponse::new()->input($storeProductData);
+        $webResponse = WebResponse::new()->input($storeProductData);
 
         $validation = $storeProductData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $product = Product::create([
@@ -47,21 +47,21 @@ class ProductService
             'blog_id' => $storeProductData->blog_id,
         ]);
         if (! $product) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder->status(201)->data($product)->message(__(':name is created successfully', [
+        return $webResponse->status(201)->data($product)->message(__(':name is created successfully', [
             'name' => __('Product'),
         ]));
     }
 
     public function getProduct(int $blogId, int $id)
     {
-        $responseBuilder = WebResponse::new();
+        $webResponse = WebResponse::new();
 
         $product = $this->getProductsQuery($blogId)->where('id', $id)->first();
         if (! $product) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
@@ -71,16 +71,16 @@ class ProductService
 
     public function updateProduct(UpdateProductData $updateProductData)
     {
-        $responseBuilder = WebResponse::new()->input($updateProductData);
+        $webResponse = WebResponse::new()->input($updateProductData);
 
         $validation = $updateProductData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $product = $this->getProductsQuery($updateProductData->blog_id)->where('id', $updateProductData->id)->first();
         if (! $product) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         $product->update([
@@ -91,10 +91,10 @@ class ProductService
             'blog_id' => $updateProductData->blog_id,
         ]);
         if (! $product->save()) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder
+        return $webResponse
             ->status(201)
             ->data(['product' => (new ProductResource($product))->toArr(request())])
             ->message(__(':name is updated successfully', [

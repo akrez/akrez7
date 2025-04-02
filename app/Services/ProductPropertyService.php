@@ -49,11 +49,11 @@ class ProductPropertyService
 
     public function storeProductProperty(StoreProductPropertyData $storeProductPropertyData)
     {
-        $responseBuilder = WebResponse::new()->input($storeProductPropertyData);
+        $webResponse = WebResponse::new()->input($storeProductPropertyData);
 
         $validation = $storeProductPropertyData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $this->getProductPropertiesQuery(
@@ -74,12 +74,12 @@ class ProductPropertyService
         }
 
         if (count($createdKeyValues) == 0) {
-            return $responseBuilder->status(200)->message(__('All :names removed', [
+            return $webResponse->status(200)->message(__('All :names removed', [
                 'names' => __('Properties'),
             ]));
         }
 
-        return $responseBuilder->status(201)->message(__(':count :names are created successfully', [
+        return $webResponse->status(201)->message(__(':count :names are created successfully', [
             'count' => count($createdKeyValues),
             'names' => __('Property'),
         ]));

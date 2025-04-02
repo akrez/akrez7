@@ -34,11 +34,11 @@ class PackageService
 
     public function storePackage(StorePackageData $storePackageData)
     {
-        $responseBuilder = WebResponse::new()->input($storePackageData);
+        $webResponse = WebResponse::new()->input($storePackageData);
 
         $validation = $storePackageData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $package = Package::create([
@@ -51,21 +51,21 @@ class PackageService
             'description' => $storePackageData->description,
         ]);
         if (! $package) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder->status(201)->data($package)->message(__(':name is created successfully', [
+        return $webResponse->status(201)->data($package)->message(__(':name is created successfully', [
             'name' => __('Package'),
         ]));
     }
 
     public function getPackage(int $blogId, int $id)
     {
-        $responseBuilder = WebResponse::new();
+        $webResponse = WebResponse::new();
 
         $package = $this->getQuery($blogId)->where('id', $id)->first();
         if (! $package) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
@@ -75,26 +75,26 @@ class PackageService
 
     public function updatePackage(UpdatePackageData $updatePackageData)
     {
-        $responseBuilder = WebResponse::new()->input($updatePackageData);
+        $webResponse = WebResponse::new()->input($updatePackageData);
 
         $validation = $updatePackageData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $package = $this->getQuery($updatePackageData->blog_id)->where('id', $updatePackageData->id)->first();
         if (! $package) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         $package->update([
             'package_status' => $updatePackageData->package_status,
         ]);
         if (! $package->save()) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder
+        return $webResponse
             ->status(201)
             ->data(['package' => (new PackageResource($package))->toArr(request())])
             ->message(__(':name is updated successfully', [
@@ -104,15 +104,15 @@ class PackageService
 
     public function destroyPackage(int $blogId, int $id)
     {
-        $responseBuilder = WebResponse::new();
+        $webResponse = WebResponse::new();
 
         $package = $this->getQuery($blogId)->where('id', $id)->first();
         if (! $package) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         if (! $package->delete()) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
         return WebResponse::new(200)->message(__(':name is deleted successfully', [

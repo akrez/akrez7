@@ -34,11 +34,11 @@ class ColorService
 
     public function storeColor(StoreColorData $storeColorData)
     {
-        $responseBuilder = WebResponse::new()->input($storeColorData);
+        $webResponse = WebResponse::new()->input($storeColorData);
 
         $validation = $storeColorData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $color = Color::create([
@@ -47,21 +47,21 @@ class ColorService
             'blog_id' => $storeColorData->blog_id,
         ]);
         if (! $color) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder->status(201)->data($color)->message(__(':name is created successfully', [
+        return $webResponse->status(201)->data($color)->message(__(':name is created successfully', [
             'name' => __('Color'),
         ]));
     }
 
     public function getColor(int $blogId, int $id)
     {
-        $responseBuilder = WebResponse::new();
+        $webResponse = WebResponse::new();
 
         $color = $this->getQuery($blogId)->where('id', $id)->first();
         if (! $color) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
@@ -71,16 +71,16 @@ class ColorService
 
     public function updateColor(UpdateColorData $updateColorData)
     {
-        $responseBuilder = WebResponse::new()->input($updateColorData);
+        $webResponse = WebResponse::new()->input($updateColorData);
 
         $validation = $updateColorData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $color = $this->getQuery($updateColorData->blog_id)->where('id', $updateColorData->id)->first();
         if (! $color) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         $color->update([
@@ -88,10 +88,10 @@ class ColorService
             'code' => $updateColorData->code,
         ]);
         if (! $color->save()) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder
+        return $webResponse
             ->status(201)
             ->data(['color' => (new ColorResource($color))->toArr(request())])
             ->message(__(':name is updated successfully', [

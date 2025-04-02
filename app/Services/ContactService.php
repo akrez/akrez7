@@ -32,11 +32,11 @@ class ContactService
 
     public function storeContact(StoreContactData $storeContactData)
     {
-        $responseBuilder = WebResponse::new()->input($storeContactData);
+        $webResponse = WebResponse::new()->input($storeContactData);
 
         $validation = $storeContactData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $contact = Contact::create([
@@ -47,21 +47,21 @@ class ContactService
             'blog_id' => $storeContactData->blog_id,
         ]);
         if (! $contact) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder->status(201)->data($contact)->message(__(':name is created successfully', [
+        return $webResponse->status(201)->data($contact)->message(__(':name is created successfully', [
             'name' => __('Contact'),
         ]));
     }
 
     public function getContact(int $blogId, int $id)
     {
-        $responseBuilder = WebResponse::new();
+        $webResponse = WebResponse::new();
 
         $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
@@ -71,16 +71,16 @@ class ContactService
 
     public function updateContact(UpdateContactData $updateContactData)
     {
-        $responseBuilder = WebResponse::new()->input($updateContactData);
+        $webResponse = WebResponse::new()->input($updateContactData);
 
         $validation = $updateContactData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $responseBuilder->status(422)->errors($validation->errors());
+            return $webResponse->status(422)->errors($validation->errors());
         }
 
         $contact = $this->getContactsQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
         if (! $contact) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         $contact->update([
@@ -91,10 +91,10 @@ class ContactService
             'blog_id' => $updateContactData->blog_id,
         ]);
         if (! $contact->save()) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
-        return $responseBuilder
+        return $webResponse
             ->status(201)
             ->data(['contact' => (new ContactResource($contact))->toArr(request())])
             ->message(__(':name is updated successfully', [
@@ -104,15 +104,15 @@ class ContactService
 
     public function destroyContact(int $blogId, int $id)
     {
-        $responseBuilder = WebResponse::new();
+        $webResponse = WebResponse::new();
 
         $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
-            return $responseBuilder->status(404);
+            return $webResponse->status(404);
         }
 
         if (! $contact->delete()) {
-            return $responseBuilder->status(500);
+            return $webResponse->status(500);
         }
 
         return WebResponse::new(200)->message(__(':name is deleted successfully', [
