@@ -23,6 +23,8 @@
                 type="{{ $type }}" value="{{ $value }}" {{ $attributes }} />
         @endif
 
+        {{ $slot }}
+
         @foreach ($errors as $error)
             <div class="invalid-feedback">{{ $error }}</div>
         @endforeach

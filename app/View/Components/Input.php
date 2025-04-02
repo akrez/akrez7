@@ -53,7 +53,7 @@ class Input extends Component
         $this->label = ($label === null ? __('validation.attributes.'.$name) : $label);
         $this->id = ($id === null ? crc32($name.$this->label) : $id);
         $this->errors = ($errors ? $errors->get($name) : []);
-        $this->class = 'form-control '.($this->errors ? 'is-invalid ' : '').$class;
+        $this->class = ($type === 'select' ? 'form-select' : 'form-control').' '.($this->errors ? 'is-invalid ' : '').' '.$class;
         $this->hints = $hints;
         $this->row = $row;
         $this->md = $md;
