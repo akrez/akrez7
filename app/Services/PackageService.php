@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\Package\StorePackageData;
 use App\Data\Package\UpdatePackageData;
+use App\Enums\PackageStatusEnum;
 use App\Http\Resources\Package\PackageCollection;
 use App\Http\Resources\Package\PackageResource;
 use App\Models\Package;
@@ -35,6 +36,12 @@ class PackageService extends Service
         return ApiResponse::new(200)->data([
             'packages' => (new PackageCollection($models))->toArr(),
         ]);
+    }
+
+    protected function getLatestApiQuery($blogId)
+    {
+        return $this->getLatestBaseQuery($blogId)
+            ->where('package_status', '!=', PackageStatusEnum::DEACTIVE->value);
     }
 
     protected function getLatestBaseQuery($blogId)
