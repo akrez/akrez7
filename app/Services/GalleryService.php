@@ -70,7 +70,7 @@ class GalleryService extends Service
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $galleries = $this->getLatestCategoryGalleriesQuery(
+        $galleries = $this->getLatestCategoryBlogQuery(
             $indexCategoryGalleryData->blog_id,
             $indexCategoryGalleryData->gallery_category
         )->get();
@@ -89,7 +89,7 @@ class GalleryService extends Service
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $galleries = $this->getLatestModelGalleriesQuery(
+        $galleries = $this->getLatestModelBlogQuery(
             $indexModelGalleryData->blog_id,
             $indexModelGalleryData->gallery_category,
             $indexModelGalleryData->toGalleryType(),
@@ -313,15 +313,15 @@ class GalleryService extends Service
         return $this->getStorageUrl($this->getUri($category));
     }
 
-    protected function getLatestCategoryGalleriesQuery(int $blogId, string $galleryCategory): Builder
+    protected function getLatestCategoryBlogQuery(int $blogId, string $galleryCategory): Builder
     {
         return $this->getLatestBlogQuery($blogId)
             ->where('gallery_category', $galleryCategory);
     }
 
-    protected function getLatestModelGalleriesQuery(int $blogId, string $galleryCategory, string $galleryType, string $galleryId): Builder
+    protected function getLatestModelBlogQuery(int $blogId, string $galleryCategory, string $galleryType, string $galleryId): Builder
     {
-        return $this->getLatestCategoryGalleriesQuery($blogId, $galleryCategory)
+        return $this->getLatestCategoryBlogQuery($blogId, $galleryCategory)
             ->where('gallery_id', $galleryId)
             ->where('gallery_type', $galleryType);
     }
@@ -351,7 +351,7 @@ class GalleryService extends Service
 
     protected function resetSelected(int $blogId, Gallery $gallery)
     {
-        $shouldSelect = $this->getLatestModelGalleriesQuery(
+        $shouldSelect = $this->getLatestModelBlogQuery(
             $blogId,
             $gallery->gallery_category->value,
             $gallery->gallery_type,
@@ -367,7 +367,7 @@ class GalleryService extends Service
             $shouldSelect->save();
         }
 
-        $shouldNotSelects = $this->getLatestModelGalleriesQuery(
+        $shouldNotSelects = $this->getLatestModelBlogQuery(
             $blogId,
             $gallery->gallery_category->value,
             $gallery->gallery_type,
