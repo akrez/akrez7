@@ -16,6 +16,7 @@ class PackageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'product_id' => $this->product_id,
             'package_status' => $this->package_status ? $this->package_status->toResource() : null,
             'price' => $this->price,
             'color_id' => $this->color_id,
