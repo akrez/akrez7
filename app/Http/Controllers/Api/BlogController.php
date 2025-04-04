@@ -26,21 +26,19 @@ class BlogController extends Controller
     {
         $blogResponse = $this->blogService->getApiResource($id)->abortUnSuccessful();
 
-        $blog = $blogResponse->getData('blog');
-
         $raw = [
+            'blog' => $blogResponse->getData('blog'),
+            'colors' => ColorService::new()->getApiCollection($id)->getData('colors'),
+            'contacts' => ContactService::new()->getApiCollection($id)->getData('contacts'),
+            'packages' => PackageService::new()->getApiCollection($id)->getData('packages'),
             'products' => ProductService::new()->getApiCollection($id)->getData('products'),
             'galleries' => GalleryService::new()->getApiCollection($id)->getData('galleries'),
             'productTags' => ProductTagService::new()->getApiCollection($id)->getData('product_tags'),
             'productProperties' => ProductPropertyService::new()->getApiCollection($id)->getData('product_properties'),
-            'packages' => PackageService::new()->getApiCollection($id)->getData('packages'),
-            'colors' => ColorService::new()->getApiCollection($id)->getData('colors'),
-            'contacts' => ContactService::new()->getApiCollection($id)->getData('contacts'),
         ];
 
         $organized = [
             'colors' => [],
-            'products' => [],
             'packages' => [],
             'galleries' => [],
             'productTags' => [],
@@ -66,6 +64,19 @@ class BlogController extends Controller
             ];
         }
 
+        foreach ($raw['galleries'] as $gallery) {
+            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
+                'name' => $gallery['name'],
+                'base_url' => $gallery['base_url'],
+                'url' => $gallery['url'],
+                'contain_url' => $gallery['contain_url'],
+            ];
+        }
+
+        foreach ($raw['productTags'] as $productTag) {
+            $organized['productTags'][$productTag['product_id']][] = $productTag['tag_name'];
+        }
+
         foreach ($raw['productProperties'] as $productProperty) {
             if (! isset($organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']])) {
                 $organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']] = [
@@ -76,23 +87,31 @@ class BlogController extends Controller
             $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
         }
 
-        foreach ($raw['productTags'] as $productTag) {
-            $organized['productTags'][$productTag['product_id']][] = $productTag['tag_name'];
-        }
+        $output = [
+            'blog' => null,
+            'contacts' => [],
+            'products' => [],
+        ];
 
-        foreach ($raw['galleries'] as $gallery) {
-            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
-                'name' => $gallery['name'],
-                'base_url' => $gallery['base_url'],
-                'url' => $gallery['url'],
-                'contain_url' => $gallery['contain_url'],
+        $output['blog'] = [
+            'id' => $raw['blog']['id'],
+            'name' => $raw['blog']['name'],
+            'short_description' => $raw['blog']['short_description'],
+            'description' => $raw['blog']['description'],
+            'galleries' => $this->getOrganizedGalleries($organized['galleries'], Blog::class.'.'.$raw['blog']['id']),
+        ];
+
+        foreach ($raw['contacts'] as $contact) {
+            $output['contacts'][] = [
+                'contact_type' => $contact['contact_type'],
+                'contact_key' => $contact['contact_key'],
+                'contact_value' => $contact['contact_value'],
+                'contact_link' => $contact['contact_link'],
             ];
         }
 
-        $blog['galleries'] = $this->getOrganizedGalleries($organized['galleries'], Blog::class.'.'.$id);
-
         foreach ($raw['products'] as $product) {
-            $organized['products'][] = [
+            $output['products'][] = [
                 'id' => $product['id'],
                 'name' => $product['name'],
                 'code' => $product['code'],
@@ -104,11 +123,7 @@ class BlogController extends Controller
             ];
         }
 
-        return ApiResponse::new()->data([
-            'blog' => $blog,
-            'contacts' => $raw['contacts'],
-            'products' => $organized['products'],
-        ]);
+        return ApiResponse::new()->data($output);
     }
 
     public function getOrganizedGalleries(&$galleries, $key, $default = [])
