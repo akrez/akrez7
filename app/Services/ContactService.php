@@ -64,6 +64,7 @@ class ContactService extends Service
 
         $contact = Contact::create([
             'contact_type' => $storeContactData->contact_type,
+            'contact_key' => $storeContactData->contact_key,
             'contact_value' => $storeContactData->contact_value,
             'contact_link' => $storeContactData->contact_link,
             'contact_order' => $storeContactData->contact_order,
@@ -108,6 +109,7 @@ class ContactService extends Service
 
         $contact->update([
             'contact_type' => $updateContactData->contact_type,
+            'contact_key' => $updateContactData->contact_key,
             'contact_value' => $updateContactData->contact_value,
             'contact_link' => $updateContactData->contact_link,
             'contact_order' => $updateContactData->contact_order,
@@ -139,7 +141,7 @@ class ContactService extends Service
         }
 
         return WebResponse::new(200)->message(__(':name is deleted successfully', [
-            'name' => $contact->contact_value,
+            'name' => $contact->contact_key,
         ]));
     }
 }

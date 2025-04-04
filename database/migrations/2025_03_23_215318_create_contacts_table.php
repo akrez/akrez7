@@ -22,6 +22,7 @@ return new class extends Migration
                 ContactTypeEnum::EMAIL->value,
                 ContactTypeEnum::INSTAGRAM->value,
             ])->nullable();
+            $table->string('contact_key', 1023)->nullable();
             $table->string('contact_value', 1023)->nullable();
             $table->string('contact_link', 1023)->nullable();
             $table->decimal('contact_order')->nullable();

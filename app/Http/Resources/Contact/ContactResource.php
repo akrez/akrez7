@@ -17,6 +17,7 @@ class ContactResource extends JsonResource
         return [
             'id' => $this->id,
             'contact_type' => $this->contact_type ? $this->contact_type->toResource() : null,
+            'contact_key' => $this->contact_key,
             'contact_value' => $this->contact_value,
             'contact_link' => $this->contact_link,
             'contact_order' => $this->contact_order,

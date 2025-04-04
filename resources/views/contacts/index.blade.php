@@ -12,6 +12,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">@lang('validation.attributes.contact_type')</th>
+                        <th scope="col">@lang('validation.attributes.contact_key')</th>
                         <th scope="col">@lang('validation.attributes.contact_value')</th>
                         <th scope="col">@lang('validation.attributes.contact_link')</th>
                         <th scope="col">@lang('validation.attributes.contact_order')</th>
@@ -25,6 +26,7 @@
                     @forelse ($contacts as $contact)
                         <tr dir="ltr">
                             <td scope="col">{{ \Arr::get($contact, 'contact_type.trans') }}</td>
+                            <td scope="col">{{ $contact['contact_key'] }}</td>
                             <td scope="col">{{ $contact['contact_value'] }}</td>
                             <td scope="col">{{ $contact['contact_link'] }}</td>
                             <td scope="col">{{ $contact['contact_order'] }}</td>

@@ -40,6 +40,7 @@ class ContactController extends Controller
             null,
             $this->blogId(),
             $request->contact_type,
+            $request->contact_key,
             $request->contact_value,
             $request->contact_link,
             $request->contact_order
@@ -71,6 +72,7 @@ class ContactController extends Controller
             $id,
             $this->blogId(),
             $request->contact_type,
+            $request->contact_key,
             $request->contact_value,
             $request->contact_link,
             $request->contact_order

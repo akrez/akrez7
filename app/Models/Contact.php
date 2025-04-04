@@ -10,6 +10,7 @@ use Carbon\Carbon;
  *
  * @property int $id
  * @property ContactTypeEnum $contact_type
+ * @property string|null $contact_key
  * @property string|null $contact_value
  * @property string|null $contact_link
  * @property float|null $contact_order
@@ -29,6 +30,7 @@ class Contact extends Model
 
     protected $fillable = [
         'contact_type',
+        'contact_key',
         'contact_value',
         'contact_link',
         'contact_order',

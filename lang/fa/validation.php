@@ -293,6 +293,7 @@ return [
         'is_selected' => 'عکس اصلی',
         'file' => 'فایل',
         //
+        'contact_key' => 'عنوان',
         'contact_link' => 'لینک',
         'contact_value' => 'مقدار',
         'contact_order' => 'ترتیب',
