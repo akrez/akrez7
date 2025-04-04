@@ -42,7 +42,7 @@ class BlogController extends Controller
         $organizedPackages = [];
         foreach ($packages as $package) {
             $packageItem = $package;
-            $packageItem['color'] = Arr::get($organizedColors, $package['color_id']);
+            $packageItem['color'] = Arr::get($organizedColors, $package['color_id'], []);
             unset($colorItem['color_id']);
             $organizedPackages[$package['product_id']][] = $packageItem;
         }
@@ -77,24 +77,26 @@ class BlogController extends Controller
         }
 
         foreach (GalleryCategoryEnum::values() as $galleryCategoryEnumValue) {
-            $blog['galleries'][$galleryCategoryEnumValue] = Arr::get($organizedGalleries, $galleryCategoryEnumValue.'.'.Blog::class.'.'.$id.'.'. 0);
+            $blog['galleries'][$galleryCategoryEnumValue] = Arr::get($organizedGalleries, $galleryCategoryEnumValue.'.'.Blog::class.'.'.$id.'.'. 0, []);
         }
 
         $products = ProductService::new()->getApiCollection($id)->getData('products');
         $organizedProducts = [];
         foreach ($products as $product) {
-            $productItem = $product;
-            $productItem['packages'] = array_values(Arr::get($organizedPackages, $product['id'], []));
-            $productItem['product_properties'] = array_values(Arr::get($organizedProductProperties, $product['id'], []));
-            $productItem['product_tags'] = array_values(Arr::get($organizedProductTags, $product['id'], []));
+            $productItem = [
+                'id' => $product['id'],
+                'name' => $product['name'],
+                'code' => $product['code'],
+                'product_order' => $product['product_order'],
+                'product_tags' => array_values(Arr::get($organizedProductTags, $product['id'], [])),
+                'product_properties' => array_values(Arr::get($organizedProductProperties, $product['id'], [])),
+                'packages' => array_values(Arr::get($organizedPackages, $product['id'], [])),
+                'galleries' => [],
+            ];
             //
             foreach (GalleryCategoryEnum::values() as $galleryCategoryEnumValue) {
-                $productItem['galleries'][$galleryCategoryEnumValue] = Arr::get($organizedGalleries, $galleryCategoryEnumValue.'.'.Product::class.'.'.$product['id']);
+                $productItem['galleries'][$galleryCategoryEnumValue] = Arr::get($organizedGalleries, $galleryCategoryEnumValue.'.'.Product::class.'.'.$product['id'], []);
             }
-            //
-            unset($productItem['product_status']);
-            unset($productItem['created_at']);
-            unset($productItem['updated_at']);
             //
             $organizedProducts[] = $productItem;
         }
