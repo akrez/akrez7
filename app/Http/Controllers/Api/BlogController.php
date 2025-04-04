@@ -28,47 +28,60 @@ class BlogController extends Controller
 
         $blog = $blogResponse->getData('blog');
 
-        $contacts = ContactService::new()->getApiCollection($id)->getData('contacts');
+        $raw = [
+            'products' => ProductService::new()->getApiCollection($id)->getData('products'),
+            'galleries' => GalleryService::new()->getApiCollection($id)->getData('galleries'),
+            'productTags' => ProductTagService::new()->getApiCollection($id)->getData('product_tags'),
+            'productProperties' => ProductPropertyService::new()->getApiCollection($id)->getData('product_properties'),
+            'packages' => PackageService::new()->getApiCollection($id)->getData('packages'),
+            'colors' => ColorService::new()->getApiCollection($id)->getData('colors'),
+            'contacts' => ContactService::new()->getApiCollection($id)->getData('contacts'),
+        ];
 
-        $colors = ColorService::new()->getApiCollection($id)->getData('colors');
-        $organizedColors = [];
-        foreach ($colors as $color) {
-            $colorItem = $color;
-            unset($colorItem['id']);
-            $organizedColors[$color['id']] = $colorItem;
+        $organized = [
+            'colors' => [],
+            'products' => [],
+            'packages' => [],
+            'galleries' => [],
+            'productTags' => [],
+            'productProperties' => [],
+        ];
+
+        foreach ($raw['colors'] as $color) {
+            $organized['colors'][$color['id']] = [
+                'code' => $color['code'],
+                'name' => $color['name'],
+            ];
         }
 
-        $packages = PackageService::new()->getApiCollection($id)->getData('packages');
-        $organizedPackages = [];
-        foreach ($packages as $package) {
-            $packageItem = $package;
-            $packageItem['color'] = Arr::get($organizedColors, $package['color_id'], []);
-            unset($colorItem['color_id']);
-            $organizedPackages[$package['product_id']][] = $packageItem;
+        foreach ($raw['packages'] as $package) {
+            $organized['packages'][$package['product_id']][] = [
+                'id' => $package['id'],
+                'product_id' => $package['product_id'],
+                'package_status' => $package['package_status'],
+                'price' => $package['price'],
+                'guaranty' => $package['guaranty'],
+                'description' => $package['description'],
+                'color' => Arr::get($organized['colors'], $package['color_id'], []),
+            ];
         }
 
-        $productProperties = ProductPropertyService::new()->getApiCollection($id)->getData('product_properties');
-        $organizedProductProperties = [];
-        foreach ($productProperties as $productProperty) {
+        foreach ($raw['productProperties'] as $productProperty) {
             if (! isset($organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']])) {
                 $organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']] = [
                     'property_key' => $productProperty['property_key'],
                     'property_values' => [],
                 ];
             }
-            $organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
+            $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
         }
 
-        $productTags = ProductTagService::new()->getApiCollection($id)->getData('product_tags');
-        $organizedProductTags = [];
-        foreach ($productTags as $productTag) {
-            $organizedProductTags[$productTag['product_id']][] = $productTag['tag_name'];
+        foreach ($raw['productTags'] as $productTag) {
+            $organized['productTags'][$productTag['product_id']][] = $productTag['tag_name'];
         }
 
-        $galleries = GalleryService::new()->getApiCollection($id)->getData('galleries');
-        $organizedGalleries = [];
-        foreach ($galleries as $gallery) {
-            $organizedGalleries[$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
+        foreach ($raw['galleries'] as $gallery) {
+            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
                 'name' => $gallery['name'],
                 'base_url' => $gallery['base_url'],
                 'url' => $gallery['url'],
@@ -76,35 +89,35 @@ class BlogController extends Controller
             ];
         }
 
-        foreach (GalleryCategoryEnum::values() as $galleryCategoryEnumValue) {
-            $blog['galleries'][$galleryCategoryEnumValue] = Arr::get($organizedGalleries, $galleryCategoryEnumValue.'.'.Blog::class.'.'.$id.'.'. 0, []);
-        }
+        $blog['galleries'] = $this->getOrganizedGalleries($organized['galleries'], Blog::class.'.'.$id);
 
-        $products = ProductService::new()->getApiCollection($id)->getData('products');
-        $organizedProducts = [];
-        foreach ($products as $product) {
-            $productItem = [
+        foreach ($raw['products'] as $product) {
+            $organized['products'][] = [
                 'id' => $product['id'],
                 'name' => $product['name'],
                 'code' => $product['code'],
                 'product_order' => $product['product_order'],
-                'product_tags' => array_values(Arr::get($organizedProductTags, $product['id'], [])),
+                'product_tags' => array_values(Arr::get($organized['productTags'], $product['id'], [])),
                 'product_properties' => array_values(Arr::get($organizedProductProperties, $product['id'], [])),
-                'packages' => array_values(Arr::get($organizedPackages, $product['id'], [])),
-                'galleries' => [],
+                'packages' => array_values(Arr::get($organized['packages'], $product['id'], [])),
+                'galleries' => $this->getOrganizedGalleries($organized['galleries'], Product::class.'.'.$product['id']),
             ];
-            //
-            foreach (GalleryCategoryEnum::values() as $galleryCategoryEnumValue) {
-                $productItem['galleries'][$galleryCategoryEnumValue] = Arr::get($organizedGalleries, $galleryCategoryEnumValue.'.'.Product::class.'.'.$product['id'], []);
-            }
-            //
-            $organizedProducts[] = $productItem;
         }
 
         return ApiResponse::new()->data([
             'blog' => $blog,
-            'contacts' => $contacts,
-            'products' => $organizedProducts,
+            'contacts' => $raw['contacts'],
+            'products' => $organized['products'],
         ]);
+    }
+
+    public function getOrganizedGalleries(&$galleries, $key, $default = [])
+    {
+        $result = [];
+        foreach (GalleryCategoryEnum::values() as $galleryCategoryEnumValue) {
+            $result[$galleryCategoryEnumValue] = Arr::get($galleries, $galleryCategoryEnumValue.'.'.$key, $default);
+        }
+
+        return $result;
     }
 }
