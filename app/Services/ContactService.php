@@ -10,34 +10,46 @@ use App\Models\Contact;
 use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
-class ContactService
+class ContactService extends Service
 {
     public static function new()
     {
         return app(self::class);
     }
 
-    public function getApiCollection(int $blogId)
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $contacts = $this->getContactQuery($blogId)
-            ->get();
+        $model = $this->getLatestApiQuery($blogId)
+            ->first();
 
         return ApiResponse::new(200)->data([
-            'contacts' => (new ContactCollection($contacts))->toArray(request()),
+            'contact' => (new ContactResource($model))->toArr(),
         ]);
     }
 
-    protected function getContactQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
     {
-        return Contact::query()->where('blog_id', $blogId);
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'contacts' => (new ContactCollection($models))->toArr(),
+        ]);
+    }
+
+    protected function getLatestBaseQuery($blogId)
+    {
+        return Contact::query()
+            ->where('blog_id', $blogId)
+            ->defaultOrder();
     }
 
     public function getLatestContacts(int $blogId)
     {
-        $contacts = $this->getContactQuery($blogId)->get();
+        $contacts = $this->getLatestBlogQuery($blogId)->get();
 
         return WebResponse::new()->data([
-            'contacts' => (new ContactCollection($contacts))->toArray(request()),
+            'contacts' => (new ContactCollection($contacts))->toArr(),
         ]);
     }
 
@@ -70,13 +82,13 @@ class ContactService
     {
         $webResponse = WebResponse::new();
 
-        $contact = $this->getContactQuery($blogId)->where('id', $id)->first();
+        $contact = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
             return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
-            'contact' => (new ContactResource($contact))->toArr(request()),
+            'contact' => (new ContactResource($contact))->toArr(),
         ]);
     }
 
@@ -89,7 +101,7 @@ class ContactService
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $contact = $this->getContactQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
+        $contact = $this->getLatestBlogQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
         if (! $contact) {
             return $webResponse->status(404);
         }
@@ -107,7 +119,7 @@ class ContactService
 
         return $webResponse
             ->status(201)
-            ->data(['contact' => (new ContactResource($contact))->toArr(request())])
+            ->data(['contact' => (new ContactResource($contact))->toArr()])
             ->message(__(':name is updated successfully', [
                 'name' => $contact->name,
             ]));
@@ -117,7 +129,7 @@ class ContactService
     {
         $webResponse = WebResponse::new();
 
-        $contact = $this->getContactQuery($blogId)->where('id', $id)->first();
+        $contact = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
             return $webResponse->status(404);
         }

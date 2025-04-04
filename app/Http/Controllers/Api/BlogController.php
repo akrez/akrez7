@@ -28,8 +28,8 @@ class BlogController extends Controller
             'colors' => ColorService::new()->getApiCollection($id)->getData('colors'),
             'contacts' => ContactService::new()->getApiCollection($id)->getData('contacts'),
             'packages' => PackageService::new()->getApiCollection($id)->getData('packages'),
-            'productProperties' => ProductPropertyService::new()->getApiCollection($id)->getData('productProperties'),
-            'productTags' => ProductTagService::new()->getApiCollection($id)->getData('productTags'),
+            'product_properties' => ProductPropertyService::new()->getApiCollection($id)->getData('product_properties'),
+            'product_tags' => ProductTagService::new()->getApiCollection($id)->getData('product_tags'),
             'galleries' => GalleryService::new()->getApiCollection($id)->getData('galleries'),
         ]);
     }

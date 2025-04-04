@@ -7,7 +7,6 @@ use App\Data\Gallery\IndexCategoryGalleryData;
 use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
-use App\Enums\GalleryCategoryEnum;
 use App\Http\Resources\Gallery\GalleryCollection;
 use App\Http\Resources\Gallery\GalleryResource;
 use App\Models\Gallery;
@@ -20,7 +19,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\AutoEncoder;
 use Intervention\Image\ImageManager;
 
-class GalleryService
+class GalleryService extends Service
 {
     const MODE_CONTAIN = 'contain';
 
@@ -35,31 +34,31 @@ class GalleryService
         return app(self::class);
     }
 
-    public function getApiCollection(int $blogId)
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $galleries = $this->getGalleriesQuery($blogId)
-            ->defaultOrder()
-            ->get();
-
-        return ApiResponse::new()->data([
-            'galleries' => (new GalleryCollection($galleries))->toArray(request()),
-        ]);
-    }
-
-    public function getApiResource(int $blogId)
-    {
-        $gallery = $this->getGalleriesQuery($blogId)
-            ->defaultOrder()
+        $model = $this->getLatestApiQuery($blogId)
             ->first();
 
-        return ApiResponse::new()->data([
-            'gallery' => ($gallery ? (new GalleryResource($gallery))->toArr(request()) : null),
+        return ApiResponse::new(200)->data([
+            'gallery' => (new GalleryResource($model))->toArr(),
         ]);
     }
 
-    protected function getGalleriesQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
     {
-        return Gallery::query()->where('blog_id', $blogId);
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'galleries' => (new GalleryCollection($models))->toArr(),
+        ]);
+    }
+
+    protected function getLatestBaseQuery($blogId)
+    {
+        return Gallery::query()
+            ->where('blog_id', $blogId)
+            ->defaultOrder();
     }
 
     public function getLatestCategoryGalleries(IndexCategoryGalleryData $indexCategoryGalleryData)
@@ -77,7 +76,7 @@ class GalleryService
         )->get();
 
         return WebResponse::new()->data([
-            'galleries' => (new GalleryCollection($galleries))->toArray(request()),
+            'galleries' => (new GalleryCollection($galleries))->toArr(),
         ]);
     }
 
@@ -98,7 +97,7 @@ class GalleryService
         )->get();
 
         return WebResponse::new()->data([
-            'galleries' => (new GalleryCollection($galleries))->toArray(request()),
+            'galleries' => (new GalleryCollection($galleries))->toArr(),
         ]);
     }
 
@@ -157,7 +156,7 @@ class GalleryService
     {
         $webResponse = WebResponse::new();
 
-        $gallery = $this->getLatestGalleriesQuery($blogId)->where('id', $id)->first();
+        $gallery = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $gallery) {
             return $webResponse->status(404);
         }
@@ -256,13 +255,13 @@ class GalleryService
     {
         $webResponse = WebResponse::new();
 
-        $gallery = $this->getLatestGalleriesQuery($blogId)->where('id', $id)->first();
+        $gallery = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $gallery) {
             return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
-            'gallery' => (new GalleryResource($gallery))->toArr(request()),
+            'gallery' => (new GalleryResource($gallery))->toArr(),
         ]);
     }
 
@@ -270,7 +269,7 @@ class GalleryService
     {
         $webResponse = WebResponse::new()->input($updateGalleryData);
 
-        $gallery = $this->getLatestGalleriesQuery($updateGalleryData->blog_id)->where('id', $updateGalleryData->id)->first();
+        $gallery = $this->getLatestBlogQuery($updateGalleryData->blog_id)->where('id', $updateGalleryData->id)->first();
         if (! $gallery) {
             return $webResponse->status(404);
         }
@@ -294,7 +293,7 @@ class GalleryService
 
         return $webResponse
             ->status(201)
-            ->data(['gallery' => (new GalleryResource($gallery))->toArr(request())])
+            ->data(['gallery' => (new GalleryResource($gallery))->toArr()])
             ->message(__(':name is updated successfully', [
                 'name' => $gallery->gallery_category->trans(),
             ]));
@@ -314,16 +313,9 @@ class GalleryService
         return $this->getStorageUrl($this->getUri($category));
     }
 
-    protected function getLatestGalleriesQuery(int $blogId): Builder
-    {
-        return Gallery::query()
-            ->where('blog_id', $blogId)
-            ->defaultOrder();
-    }
-
     protected function getLatestCategoryGalleriesQuery(int $blogId, string $galleryCategory): Builder
     {
-        return $this->getLatestGalleriesQuery($blogId)
+        return $this->getLatestBlogQuery($blogId)
             ->where('gallery_category', $galleryCategory);
     }
 

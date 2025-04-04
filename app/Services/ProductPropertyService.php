@@ -8,8 +8,9 @@ use App\Models\ProductProperty;
 use Illuminate\Support\Collection;
 use App\Data\ProductProperty\StoreProductPropertyData;
 use App\Http\Resources\ProductProperty\ProductPropertyCollection;
+use App\Http\Resources\ProductProperty\ProductPropertyResource;
 
-class ProductPropertyService
+class ProductPropertyService extends Service
 {
     const PROPERTY_MAX_LENGTH = 32;
 
@@ -34,27 +35,37 @@ class ProductPropertyService
     {
         return app(self::class);
     }
-
-    public function getApiCollection(int $blogId)
+    
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $productProperties = $this->getProductPropertyQuery($blogId)
-            ->defaultOrder()
-            ->get();
+        $model = $this->getLatestApiQuery($blogId)
+            ->first();
 
         return ApiResponse::new(200)->data([
-            'productProperties' => (new ProductPropertyCollection($productProperties))->toArray(request()),
+            'product_property' => (new ProductPropertyResource($model))->toArr(),
         ]);
     }
 
-    protected function getProductPropertyQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
     {
-        return ProductProperty::query()->where('blog_id', $blogId);
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'product_properties' => (new ProductPropertyCollection($models))->toArr(),
+        ]);
+    }
+
+    protected function getLatestBaseQuery($blogId)
+    {
+        return ProductProperty::query()
+            ->where('blog_id', $blogId)
+            ->defaultOrder();
     }
 
     public function exportToText(int $blogId, int $productId)
     {
         return $this->getProductPropertiesQuery($blogId, $productId)
-            ->defaultOrder()
             ->get()
             ->groupBy('property_key')
             ->map(function (Collection $groupedValues, $key) {
@@ -105,8 +116,7 @@ class ProductPropertyService
 
     protected function getProductPropertiesQuery(int $blogId, int $productId)
     {
-        return ProductProperty::query()
-            ->where('blog_id', $blogId)
+        return $this->getLatestBlogQuery($blogId)
             ->where('product_id', $productId);
     }
 }

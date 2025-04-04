@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\Data\ProductTag\StoreProductTagData;
+use App\Http\Resources\ProductTag\ProductTagCollection;
+use App\Http\Resources\ProductTag\ProductTagResource;
 use App\Models\ProductTag;
 use App\Support\ApiResponse;
 use App\Support\WebResponse;
-use App\Data\ProductTag\StoreProductTagData;
-use App\Http\Resources\ProductTag\ProductTagCollection;
 
-class ProductTagService
+class ProductTagService extends Service
 {
     const TAG_NAME_MAX_LENGTH = 32;
 
@@ -27,26 +28,36 @@ class ProductTagService
         return app(self::class);
     }
 
-    public function getApiCollection(int $blogId)
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $productTags = $this->getProductTagQuery($blogId)
-            ->defaultOrder()
-            ->get();
+        $model = $this->getLatestApiQuery($blogId)
+            ->first();
 
         return ApiResponse::new(200)->data([
-            'productTags' => (new ProductTagCollection($productTags))->toArray(request()),
+            'product_tag' => (new ProductTagResource($model))->toArr(),
         ]);
     }
 
-    protected function getProductTagQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
     {
-        return ProductTag::query()->where('blog_id', $blogId);
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'product_tags' => (new ProductTagCollection($models))->toArr(),
+        ]);
+    }
+
+    protected function getLatestBaseQuery($blogId)
+    {
+        return ProductTag::query()
+            ->where('blog_id', $blogId)
+            ->defaultOrder();
     }
 
     public function exportToText(int $blogId, int $productId)
     {
         return $this->getProductTagsQuery($blogId, $productId)
-            ->defaultOrder()
             ->get()
             ->pluck('tag_name')
             ->implode(ProductTagService::NAME_GLUE);
@@ -89,8 +100,7 @@ class ProductTagService
 
     protected function getProductTagsQuery(int $blogId, int $productId)
     {
-        return ProductTag::query()
-            ->where('blog_id', $blogId)
+        return $this->getLatestBlogQuery($blogId)
             ->where('product_id', $productId);
     }
 }

@@ -10,30 +10,34 @@ use App\Models\Package;
 use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
-class PackageService
+class PackageService extends Service
 {
     public static function new()
     {
         return app(self::class);
     }
 
-    public function getApiCollection(int $blogId)
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $packages = $this->getPackageQuery($blogId)
-            ->defaultOrder()
-            ->get();
+        $model = $this->getLatestApiQuery($blogId)
+            ->first();
 
         return ApiResponse::new(200)->data([
-            'packages' => (new PackageCollection($packages))->toArray(request()),
+            'package' => (new PackageResource($model))->toArr(),
         ]);
     }
 
-    protected function getPackageQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
     {
-        return Package::query()->where('blog_id', $blogId);
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'packages' => (new PackageCollection($models))->toArr(),
+        ]);
     }
 
-    protected function getQuery($blogId)
+    protected function getLatestBaseQuery($blogId)
     {
         return Package::query()
             ->where('blog_id', $blogId)
@@ -42,10 +46,10 @@ class PackageService
 
     public function getLatestPackages(int $blogId)
     {
-        $packages = $this->getQuery($blogId)->get();
+        $packages = $this->getLatestBlogQuery($blogId)->get();
 
         return WebResponse::new()->data([
-            'packages' => (new PackageCollection($packages))->toArray(request()),
+            'packages' => (new PackageCollection($packages))->toArr(),
         ]);
     }
 
@@ -80,13 +84,13 @@ class PackageService
     {
         $webResponse = WebResponse::new();
 
-        $package = $this->getQuery($blogId)->where('id', $id)->first();
+        $package = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $package) {
             return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
-            'package' => (new PackageResource($package))->toArr(request()),
+            'package' => (new PackageResource($package))->toArr(),
         ]);
     }
 
@@ -99,7 +103,7 @@ class PackageService
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $package = $this->getQuery($updatePackageData->blog_id)->where('id', $updatePackageData->id)->first();
+        $package = $this->getLatestBlogQuery($updatePackageData->blog_id)->where('id', $updatePackageData->id)->first();
         if (! $package) {
             return $webResponse->status(404);
         }
@@ -113,7 +117,7 @@ class PackageService
 
         return $webResponse
             ->status(201)
-            ->data(['package' => (new PackageResource($package))->toArr(request())])
+            ->data(['package' => (new PackageResource($package))->toArr()])
             ->message(__(':name is updated successfully', [
                 'name' => $package->name,
             ]));
@@ -123,7 +127,7 @@ class PackageService
     {
         $webResponse = WebResponse::new();
 
-        $package = $this->getQuery($blogId)->where('id', $id)->first();
+        $package = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $package) {
             return $webResponse->status(404);
         }

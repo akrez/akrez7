@@ -11,35 +11,52 @@ use App\Models\Product;
 use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
-class ProductService
+class ProductService extends Service
 {
     public static function new()
     {
         return app(self::class);
     }
 
-    public function getApiCollection(int $blogId)
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $products = $this->getProductsQuery($blogId)
-            ->where('product_status', ProductStatusEnum::ACTIVE->value)
-            ->get();
+        $model = $this->getLatestApiQuery($blogId)
+            ->first();
 
         return ApiResponse::new(200)->data([
-            'products' => (new ProductCollection($products))->toArray(request()),
+            'product' => (new ProductResource($model))->toArr(),
         ]);
     }
 
-    protected function getProductsQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
     {
-        return Product::query()->where('blog_id', $blogId);
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'products' => (new ProductCollection($models))->toArr(),
+        ]);
+    }
+
+    protected function getLatestApiQuery($blogId)
+    {
+        return $this->getLatestBaseQuery($blogId)
+            ->where('product_status', ProductStatusEnum::ACTIVE->value);
+    }
+
+    protected function getLatestBaseQuery($blogId)
+    {
+        return Product::query()
+            ->where('blog_id', $blogId)
+            ->defaultOrder();
     }
 
     public function getLatestProducts(int $blogId)
     {
-        $products = $this->getProductsQuery($blogId)->defaultOrder()->get();
+        $products = $this->getLatestBlogQuery($blogId)->get();
 
         return WebResponse::new()->data([
-            'products' => (new ProductCollection($products))->toArray(request()),
+            'products' => (new ProductCollection($products))->toArr(),
         ]);
     }
 
@@ -72,13 +89,13 @@ class ProductService
     {
         $webResponse = WebResponse::new();
 
-        $product = $this->getProductsQuery($blogId)->where('id', $id)->first();
+        $product = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $product) {
             return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
-            'product' => (new ProductResource($product))->toArr(request()),
+            'product' => (new ProductResource($product))->toArr(),
         ]);
     }
 
@@ -91,7 +108,7 @@ class ProductService
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $product = $this->getProductsQuery($updateProductData->blog_id)->where('id', $updateProductData->id)->first();
+        $product = $this->getLatestBlogQuery($updateProductData->blog_id)->where('id', $updateProductData->id)->first();
         if (! $product) {
             return $webResponse->status(404);
         }
@@ -109,7 +126,7 @@ class ProductService
 
         return $webResponse
             ->status(201)
-            ->data(['product' => (new ProductResource($product))->toArr(request())])
+            ->data(['product' => (new ProductResource($product))->toArr()])
             ->message(__(':name is updated successfully', [
                 'name' => $product->name,
             ]));

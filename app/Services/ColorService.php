@@ -10,24 +10,34 @@ use App\Models\Color;
 use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
-class ColorService
+class ColorService extends Service
 {
     public static function new()
     {
         return app(self::class);
     }
 
-    public function getApiCollection(int $blogId)
+    public function getApiResource(int $blogId): ApiResponse
     {
-        $colors = $this->getColorQuery($blogId)
-            ->get();
+        $model = $this->getLatestApiQuery($blogId)
+            ->first();
 
         return ApiResponse::new(200)->data([
-            'colors' => (new ColorCollection($colors))->toArray(request()),
+            'color' => (new ColorResource($model))->toArr(),
         ]);
     }
 
-    protected function getColorQuery($blogId)
+    public function getApiCollection(int $blogId): ApiResponse
+    {
+        $models = $this->getLatestApiQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'colors' => (new ColorCollection($models))->toArr(),
+        ]);
+    }
+
+    protected function getLatestBaseQuery($blogId)
     {
         return Color::query()
             ->where('blog_id', $blogId)
@@ -36,10 +46,10 @@ class ColorService
 
     public function getLatestColors(int $blogId)
     {
-        $colors = $this->getColorQuery($blogId)->get();
+        $colors = $this->getLatestBlogQuery($blogId)->get();
 
         return WebResponse::new()->data([
-            'colors' => (new ColorCollection($colors))->toArray(request()),
+            'colors' => (new ColorCollection($colors))->toArr(),
         ]);
     }
 
@@ -70,13 +80,13 @@ class ColorService
     {
         $webResponse = WebResponse::new();
 
-        $color = $this->getColorQuery($blogId)->where('id', $id)->first();
+        $color = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $color) {
             return $webResponse->status(404);
         }
 
         return WebResponse::new()->data([
-            'color' => (new ColorResource($color))->toArr(request()),
+            'color' => (new ColorResource($color))->toArr(),
         ]);
     }
 
@@ -89,7 +99,7 @@ class ColorService
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $color = $this->getColorQuery($updateColorData->blog_id)->where('id', $updateColorData->id)->first();
+        $color = $this->getLatestBlogQuery($updateColorData->blog_id)->where('id', $updateColorData->id)->first();
         if (! $color) {
             return $webResponse->status(404);
         }
@@ -104,7 +114,7 @@ class ColorService
 
         return $webResponse
             ->status(201)
-            ->data(['color' => (new ColorResource($color))->toArr(request())])
+            ->data(['color' => (new ColorResource($color))->toArr()])
             ->message(__(':name is updated successfully', [
                 'name' => $color->name,
             ]));
