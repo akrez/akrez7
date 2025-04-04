@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\ContactTypeEnum;
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 
 /**
@@ -20,8 +19,6 @@ use Carbon\Carbon;
  */
 class Contact extends Model
 {
-    use ScopeDefaultTrait;
-
     protected $table = 'contacts';
 
     protected $casts = [

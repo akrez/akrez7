@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 
 /**
@@ -17,8 +16,6 @@ use Carbon\Carbon;
  */
 class Color extends Model
 {
-    use ScopeDefaultTrait;
-
     protected $table = 'colors';
 
     protected $casts = [

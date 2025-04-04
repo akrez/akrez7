@@ -52,7 +52,7 @@ return [
         |
         */
 
-        'parent' => Illuminate\Database\Eloquent\Model::class,
+        'parent' => App\Models\Model::class,
 
         /*
         |--------------------------------------------------------------------------

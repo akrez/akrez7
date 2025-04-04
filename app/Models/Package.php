@@ -3,9 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PackageStatusEnum;
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -24,7 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Package extends Model
 {
-    use ScopeDefaultTrait, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'packages';
 

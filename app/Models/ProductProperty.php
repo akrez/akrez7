@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,8 +18,6 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class ProductProperty extends Model
 {
-    use ScopeDefaultTrait;
-
     protected $table = 'product_properties';
 
     protected $casts = [

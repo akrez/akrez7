@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\ProductStatusEnum;
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +21,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Product extends Model
 {
-    use HasFactory, ScopeDefaultTrait;
+    use HasFactory;
 
     protected $table = 'products';
 

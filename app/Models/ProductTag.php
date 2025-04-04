@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -18,8 +17,6 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class ProductTag extends Model
 {
-    use ScopeDefaultTrait;
-
     protected $table = 'product_tags';
 
     protected $casts = [

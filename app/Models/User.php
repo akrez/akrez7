@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\ScopeDefaultTrait;
 use Carbon\Carbon;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,7 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasRoles, Notifiable, ScopeDefaultTrait;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $table = 'users';
 

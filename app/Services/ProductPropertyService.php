@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Support\ApiResponse;
-use App\Support\WebResponse;
-use App\Models\ProductProperty;
-use Illuminate\Support\Collection;
 use App\Data\ProductProperty\StoreProductPropertyData;
 use App\Http\Resources\ProductProperty\ProductPropertyCollection;
 use App\Http\Resources\ProductProperty\ProductPropertyResource;
+use App\Models\ProductProperty;
+use App\Support\ApiResponse;
+use App\Support\WebResponse;
+use Illuminate\Support\Collection;
 
 class ProductPropertyService extends Service
 {
@@ -35,7 +35,7 @@ class ProductPropertyService extends Service
     {
         return app(self::class);
     }
-    
+
     public function getApiResource(int $blogId): ApiResponse
     {
         $model = $this->getLatestApiQuery($blogId)
