@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\Contact;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class ContactCollection extends ResourceCollection {}

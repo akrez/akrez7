@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\Payvoice;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class PayvoiceCollection extends ResourceCollection {}

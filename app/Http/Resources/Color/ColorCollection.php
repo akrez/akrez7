@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\Color;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class ColorCollection extends ResourceCollection {}

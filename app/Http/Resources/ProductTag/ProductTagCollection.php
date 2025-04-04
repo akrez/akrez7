@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\ProductTag;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class ProductTagCollection extends ResourceCollection {}

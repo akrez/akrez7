@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\Package;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class PackageCollection extends ResourceCollection {}

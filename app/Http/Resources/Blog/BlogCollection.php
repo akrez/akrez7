@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\Blog;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class BlogCollection extends ResourceCollection {}

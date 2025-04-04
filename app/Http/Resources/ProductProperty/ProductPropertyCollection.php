@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources\ProductProperty;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\ResourceCollection;
 
 class ProductPropertyCollection extends ResourceCollection {}
