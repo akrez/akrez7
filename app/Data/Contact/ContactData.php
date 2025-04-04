@@ -23,7 +23,7 @@ class ContactData extends Data
         $uniqueRule = Rule::unique('contacts')
             ->where('blog_id', $this->blog_id)
             ->where('contact_key', $this->contact_key);
-        if (! $this->id) {
+        if ($this->id) {
             $uniqueRule = $uniqueRule->ignore($this->id);
         }
 
