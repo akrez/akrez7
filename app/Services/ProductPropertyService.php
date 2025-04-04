@@ -65,7 +65,7 @@ class ProductPropertyService extends Service
 
     public function exportToText(int $blogId, int $productId)
     {
-        return $this->getProductPropertiesQuery($blogId, $productId)
+        return $this->getProductPropertyQuery($blogId, $productId)
             ->get()
             ->groupBy('property_key')
             ->map(function (Collection $groupedValues, $key) {
@@ -85,7 +85,7 @@ class ProductPropertyService extends Service
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $this->getProductPropertiesQuery(
+        $this->getProductPropertyQuery(
             $storeProductPropertyData->blog_id,
             $storeProductPropertyData->product_id
         )->delete();
@@ -114,7 +114,7 @@ class ProductPropertyService extends Service
         ]));
     }
 
-    protected function getProductPropertiesQuery(int $blogId, int $productId)
+    protected function getProductPropertyQuery(int $blogId, int $productId)
     {
         return $this->getLatestBlogQuery($blogId)
             ->where('product_id', $productId);

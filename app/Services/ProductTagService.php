@@ -57,7 +57,7 @@ class ProductTagService extends Service
 
     public function exportToText(int $blogId, int $productId)
     {
-        return $this->getProductTagsQuery($blogId, $productId)
+        return $this->getProductTagQuery($blogId, $productId)
             ->get()
             ->pluck('tag_name')
             ->implode(ProductTagService::NAME_GLUE);
@@ -72,7 +72,7 @@ class ProductTagService extends Service
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $this->getProductTagsQuery(
+        $this->getProductTagQuery(
             $storeProductTagData->blog_id,
             $storeProductTagData->product_id
         )->delete();
@@ -98,7 +98,7 @@ class ProductTagService extends Service
         ]));
     }
 
-    protected function getProductTagsQuery(int $blogId, int $productId)
+    protected function getProductTagQuery(int $blogId, int $productId)
     {
         return $this->getLatestBlogQuery($blogId)
             ->where('product_id', $productId);

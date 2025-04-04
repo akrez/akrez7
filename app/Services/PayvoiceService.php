@@ -15,14 +15,14 @@ class PayvoiceService
         return app(self::class);
     }
 
-    protected function getPayvoicesQuery(int $blogId)
+    protected function getPayvoiceQuery(int $blogId)
     {
         return Payvoice::query()->where('blog_id', $blogId);
     }
 
     public function getLatestPayvoices(int $blogId, ?int $page = null, ?int $perPage = 30)
     {
-        $payvoices = $this->getPayvoicesQuery($blogId)->page($page);
+        $payvoices = $this->getPayvoiceQuery($blogId)->page($page);
 
         return WebResponse::new()->data([
             'payvoices' => (new PayvoiceCollection($payvoices))->toArray(request()),
