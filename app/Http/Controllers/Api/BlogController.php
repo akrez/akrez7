@@ -78,8 +78,8 @@ class BlogController extends Controller
         }
 
         foreach ($raw['productProperties'] as $productProperty) {
-            if (! isset($organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']])) {
-                $organizedProductProperties[$productProperty['product_id']][$productProperty['property_key']] = [
+            if (! isset($organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']])) {
+                $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']] = [
                     'property_key' => $productProperty['property_key'],
                     'property_values' => [],
                 ];
@@ -117,7 +117,7 @@ class BlogController extends Controller
                 'code' => $product['code'],
                 'product_order' => $product['product_order'],
                 'product_tags' => array_values(Arr::get($organized['productTags'], $product['id'], [])),
-                'product_properties' => array_values(Arr::get($organizedProductProperties, $product['id'], [])),
+                'product_properties' => array_values(Arr::get($organized['productProperties'], $product['id'], [])),
                 'packages' => array_values(Arr::get($organized['packages'], $product['id'], [])),
                 'galleries' => $this->getOrganizedGalleries($organized['galleries'], Product::class.'.'.$product['id']),
             ];
