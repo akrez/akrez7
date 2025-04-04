@@ -17,7 +17,7 @@ class BlogService
         return app(self::class);
     }
 
-    public function getApiResponse(int $id)
+    public function getApiResource(int $id)
     {
         $blog = Blog::query()
             ->where('id', $id)

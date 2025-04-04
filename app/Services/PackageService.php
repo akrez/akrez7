@@ -7,6 +7,7 @@ use App\Data\Package\UpdatePackageData;
 use App\Http\Resources\Package\PackageCollection;
 use App\Http\Resources\Package\PackageResource;
 use App\Models\Package;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
 class PackageService
@@ -14,6 +15,22 @@ class PackageService
     public static function new()
     {
         return app(self::class);
+    }
+
+    public function getApiCollection(int $blogId)
+    {
+        $packages = $this->getPackageQuery($blogId)
+            ->defaultOrder()
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'packages' => (new PackageCollection($packages))->toArray(request()),
+        ]);
+    }
+
+    protected function getPackageQuery($blogId)
+    {
+        return Package::query()->where('blog_id', $blogId);
     }
 
     protected function getQuery($blogId)

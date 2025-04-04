@@ -7,6 +7,7 @@ use App\Data\Contact\UpdateContactData;
 use App\Http\Resources\Contact\ContactCollection;
 use App\Http\Resources\Contact\ContactResource;
 use App\Models\Contact;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
 class ContactService
@@ -16,14 +17,24 @@ class ContactService
         return app(self::class);
     }
 
-    protected function getContactsQuery($blogId)
+    public function getApiCollection(int $blogId)
+    {
+        $contacts = $this->getContactQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'contacts' => (new ContactCollection($contacts))->toArray(request()),
+        ]);
+    }
+
+    protected function getContactQuery($blogId)
     {
         return Contact::query()->where('blog_id', $blogId);
     }
 
     public function getLatestContacts(int $blogId)
     {
-        $contacts = $this->getContactsQuery($blogId)->get();
+        $contacts = $this->getContactQuery($blogId)->get();
 
         return WebResponse::new()->data([
             'contacts' => (new ContactCollection($contacts))->toArray(request()),
@@ -59,7 +70,7 @@ class ContactService
     {
         $webResponse = WebResponse::new();
 
-        $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
+        $contact = $this->getContactQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
             return $webResponse->status(404);
         }
@@ -78,7 +89,7 @@ class ContactService
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $contact = $this->getContactsQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
+        $contact = $this->getContactQuery($updateContactData->blog_id)->where('id', $updateContactData->id)->first();
         if (! $contact) {
             return $webResponse->status(404);
         }
@@ -106,7 +117,7 @@ class ContactService
     {
         $webResponse = WebResponse::new();
 
-        $contact = $this->getContactsQuery($blogId)->where('id', $id)->first();
+        $contact = $this->getContactQuery($blogId)->where('id', $id)->first();
         if (! $contact) {
             return $webResponse->status(404);
         }

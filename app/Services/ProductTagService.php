@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
-use App\Data\ProductTag\StoreProductTagData;
 use App\Models\ProductTag;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
+use App\Data\ProductTag\StoreProductTagData;
+use App\Http\Resources\ProductTag\ProductTagCollection;
 
 class ProductTagService
 {
@@ -23,6 +25,22 @@ class ProductTagService
     public static function new()
     {
         return app(self::class);
+    }
+
+    public function getApiCollection(int $blogId)
+    {
+        $productTags = $this->getProductTagQuery($blogId)
+            ->defaultOrder()
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'productTags' => (new ProductTagCollection($productTags))->toArray(request()),
+        ]);
+    }
+
+    protected function getProductTagQuery($blogId)
+    {
+        return ProductTag::query()->where('blog_id', $blogId);
     }
 
     public function exportToText(int $blogId, int $productId)

@@ -7,6 +7,7 @@ use App\Data\Color\UpdateColorData;
 use App\Http\Resources\Color\ColorCollection;
 use App\Http\Resources\Color\ColorResource;
 use App\Models\Color;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
 class ColorService
@@ -16,7 +17,17 @@ class ColorService
         return app(self::class);
     }
 
-    protected function getQuery($blogId)
+    public function getApiCollection(int $blogId)
+    {
+        $colors = $this->getColorQuery($blogId)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'colors' => (new ColorCollection($colors))->toArray(request()),
+        ]);
+    }
+
+    protected function getColorQuery($blogId)
     {
         return Color::query()
             ->where('blog_id', $blogId)
@@ -25,7 +36,7 @@ class ColorService
 
     public function getLatestColors(int $blogId)
     {
-        $colors = $this->getQuery($blogId)->get();
+        $colors = $this->getColorQuery($blogId)->get();
 
         return WebResponse::new()->data([
             'colors' => (new ColorCollection($colors))->toArray(request()),
@@ -59,7 +70,7 @@ class ColorService
     {
         $webResponse = WebResponse::new();
 
-        $color = $this->getQuery($blogId)->where('id', $id)->first();
+        $color = $this->getColorQuery($blogId)->where('id', $id)->first();
         if (! $color) {
             return $webResponse->status(404);
         }
@@ -78,7 +89,7 @@ class ColorService
             return $webResponse->status(422)->errors($validation->errors());
         }
 
-        $color = $this->getQuery($updateColorData->blog_id)->where('id', $updateColorData->id)->first();
+        $color = $this->getColorQuery($updateColorData->blog_id)->where('id', $updateColorData->id)->first();
         if (! $color) {
             return $webResponse->status(404);
         }

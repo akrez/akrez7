@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
-use App\Data\ProductProperty\StoreProductPropertyData;
-use App\Models\ProductProperty;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
+use App\Models\ProductProperty;
 use Illuminate\Support\Collection;
+use App\Data\ProductProperty\StoreProductPropertyData;
+use App\Http\Resources\ProductProperty\ProductPropertyCollection;
 
 class ProductPropertyService
 {
@@ -31,6 +33,22 @@ class ProductPropertyService
     public static function new()
     {
         return app(self::class);
+    }
+
+    public function getApiCollection(int $blogId)
+    {
+        $productProperties = $this->getProductPropertyQuery($blogId)
+            ->defaultOrder()
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'productProperties' => (new ProductPropertyCollection($productProperties))->toArray(request()),
+        ]);
+    }
+
+    protected function getProductPropertyQuery($blogId)
+    {
+        return ProductProperty::query()->where('blog_id', $blogId);
     }
 
     public function exportToText(int $blogId, int $productId)

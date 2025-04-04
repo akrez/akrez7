@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Data\Product\StoreProductData;
 use App\Data\Product\UpdateProductData;
+use App\Enums\ProductStatusEnum;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
 
 class ProductService
@@ -14,6 +16,17 @@ class ProductService
     public static function new()
     {
         return app(self::class);
+    }
+
+    public function getApiCollection(int $blogId)
+    {
+        $products = $this->getProductsQuery($blogId)
+            ->where('product_status', ProductStatusEnum::ACTIVE->value)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'products' => (new ProductCollection($products))->toArray(request()),
+        ]);
     }
 
     protected function getProductsQuery($blogId)

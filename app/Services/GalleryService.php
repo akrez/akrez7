@@ -7,9 +7,11 @@ use App\Data\Gallery\IndexCategoryGalleryData;
 use App\Data\Gallery\IndexModelGalleryData;
 use App\Data\Gallery\StoreGalleryData;
 use App\Data\Gallery\UpdateGalleryData;
+use App\Enums\GalleryCategoryEnum;
 use App\Http\Resources\Gallery\GalleryCollection;
 use App\Http\Resources\Gallery\GalleryResource;
 use App\Models\Gallery;
+use App\Support\ApiResponse;
 use App\Support\WebResponse;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,6 +33,33 @@ class GalleryService
     public static function new()
     {
         return app(self::class);
+    }
+
+    public function getApiCollection(int $blogId)
+    {
+        $galleries = $this->getGalleriesQuery($blogId)
+            ->defaultOrder()
+            ->get();
+
+        return ApiResponse::new()->data([
+            'galleries' => (new GalleryCollection($galleries))->toArray(request()),
+        ]);
+    }
+
+    public function getApiResource(int $blogId)
+    {
+        $gallery = $this->getGalleriesQuery($blogId)
+            ->defaultOrder()
+            ->first();
+
+        return ApiResponse::new()->data([
+            'gallery' => ($gallery ? (new GalleryResource($gallery))->toArr(request()) : null),
+        ]);
+    }
+
+    protected function getGalleriesQuery($blogId)
+    {
+        return Gallery::query()->where('blog_id', $blogId);
     }
 
     public function getLatestCategoryGalleries(IndexCategoryGalleryData $indexCategoryGalleryData)
