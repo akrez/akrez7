@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\BlogService;
+use App\Support\ApiResponse;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -12,6 +13,11 @@ class BlogController extends Controller
 
     public function index(Request $request, int $id)
     {
+        $blogResponse = $this->getApiResource($id);
+        if (! $blogResponse->isSuccessful()) {
+            return ApiResponse::new($blogResponse->getStatus());
+        }
+
         return BlogService::new()->getApiResponse($id);
     }
 }
