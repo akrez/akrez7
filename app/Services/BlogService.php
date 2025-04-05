@@ -32,6 +32,17 @@ class BlogService
         ]);
     }
 
+    public function getBlog(int $id)
+    {
+        $blog = Blog::query()
+            ->where('id', $id)
+            ->first();
+
+        return WebResponse::new($blog ? 200 : 404)->data([
+            'blog' => (new BlogResource($blog))->toArr(),
+        ]);
+    }
+
     public function storeBlog(int $userId, StoreBlogData $blogData): WebResponse
     {
         $webResponse = WebResponse::new()->input($blogData);
@@ -108,11 +119,9 @@ class BlogService
 
     public function getApiResponse(int $id)
     {
-        $apiResponse = ApiResponse::new();
-
-        $blogResponse = $this->getApiResource($id);
+        $blogResponse = $this->getBlog($id);
         if (! $blogResponse->isSuccessful()) {
-            return $apiResponse->status($blogResponse->getStatus());
+            return ApiResponse::new($blogResponse->getStatus());
         }
 
         $raw = [
@@ -212,7 +221,7 @@ class BlogService
             ];
         }
 
-        return $apiResponse->data($output);
+        return ApiResponse::new()->data($output);
     }
 
     protected function getOrganizedGalleries(&$galleries, $key, $default = [])
