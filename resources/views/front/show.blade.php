@@ -99,12 +99,12 @@
 
                                     <div class="p-3">
                                         @if (count($product['galleries']['product_image']) == 1)
-                                            <img class="w-100 mb-3 rounded"
+                                            <img class="w-100 rounded"
                                                 src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
                                                 alt="{{ $product['name'] }}">
                                         @elseif (count($product['galleries']['product_image']) > 1)
                                             <div id="product-carousel-{{ $productKey }}"
-                                                class="carousel mb-3 carousel-dark slide">
+                                                class="carousel carousel-dark slide">
                                                 <div class="carousel-inner">
                                                     @foreach ($product['galleries']['product_image'] as $productImage)
                                                         <div
@@ -132,43 +132,44 @@
                                     </div>
 
                                     <div class="card-body">
-                                        <h5 class="card-title font-weight-bold pb-2">{{ $product['name'] }}</h5>
-                                        <p class="card-text">
+                                        <h5 class="card-title font-weight-bold">{{ $product['name'] }}</h5>
+                                        <div class="card-text">
                                             @foreach ($product['product_properties'] as $property)
-                                                <strong>{{ $property['property_key'] }}:</strong>
-                                                {{ implode(', ', $property['property_values']) }}<br>
-                                            @endforeach
-                                        </p>
-                                    </div>
-                                    @if ($product['packages'])
-                                        
-                                            @foreach ($product['packages'] as $package)
-                                                <div class="card-footer text-body-secondary">
-                                                    <div class="d-flex">
-                                                        <div class="package-width">🏷️</div>
-                                                        <div>{{ number_format($package['price']) }} ﷼</div>
-                                                    </div>
-                                                    @if ($package['color'])
-                                                        <div class="d-flex">
-                                                            <div class="package-width"
-                                                                style="color: {{ $package['color']['code'] }};">⦿</div>
-                                                            <div>{{ $package['color']['name'] }}</div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($package['description'])
-                                                        <div class="d-flex">
-                                                            <div class="package-width">✔️</div>
-                                                            <div>{{ $package['description'] }}</div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($package['guaranty'])
-                                                        <div class="d-flex">
-                                                            <div class="package-width">💯</div>
-                                                            <div>{{ $package['guaranty'] }}</div>
-                                                        </div>
-                                                    @endif
+                                                <div>
+                                                    <strong>{{ $property['property_key'] }}</strong>
+                                                    {{ implode(', ', $property['property_values']) }}
                                                 </div>
                                             @endforeach
+                                        </div>
+                                    </div>
+                                    @if ($product['packages'])
+                                        @foreach ($product['packages'] as $package)
+                                            <div class="card-footer text-body-secondary">
+                                                <div class="d-flex">
+                                                    <div class="package-width">🏷️</div>
+                                                    <div>{{ number_format($package['price']) }} ﷼</div>
+                                                </div>
+                                                @if ($package['color'])
+                                                    <div class="d-flex">
+                                                        <div class="package-width"
+                                                            style="color: {{ $package['color']['code'] }};">⦿</div>
+                                                        <div>{{ $package['color']['name'] }}</div>
+                                                    </div>
+                                                @endif
+                                                @if ($package['description'])
+                                                    <div class="d-flex">
+                                                        <div class="package-width">✔️</div>
+                                                        <div>{{ $package['description'] }}</div>
+                                                    </div>
+                                                @endif
+                                                @if ($package['guaranty'])
+                                                    <div class="d-flex">
+                                                        <div class="package-width">💯</div>
+                                                        <div>{{ $package['guaranty'] }}</div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
                                     @endif
                                 </div>
                             </div>
