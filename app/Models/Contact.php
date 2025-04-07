@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ContactTypeEnum;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Contact
@@ -36,4 +37,11 @@ class Contact extends Model
         'contact_order',
         'blog_id',
     ];
+
+    public function scopeDefaultOrder(Builder $query): void
+    {
+        $query = $query
+            ->orderBy('contact_order', 'DESC')
+            ->orderBy('created_at', 'ASC');
+    }
 }
