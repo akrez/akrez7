@@ -1,0 +1,25 @@
+body {
+    font-family: "Vazir";
+}
+
+.fs-3em {
+    font-size: 3em;
+}
+
+.bg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: left;
+    background-position-y: top;
+}
+
+.text-shadow-white {
+    text-shadow: 0 0 0.15em white, 0 0 0.15em white, 0 0 0.15em white;
+}
+
+.package-width {
+    width: 26px;
+    min-width: 26px;
+    max-width: 26px;
+    text-align: center;
+}

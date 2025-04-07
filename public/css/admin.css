@@ -1,0 +1,24 @@
+body {
+    font-family: "Vazir";
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.max-height-38-px {
+    max-height: 38px;
+}
+
+.max-height-28-px {
+    max-height: 28px;
+}
+
+.max-height-24-px {
+    max-height: 24px;
+}
+
+.font-monospace-small {
+    font-size: 0.8em;
+    font-family: monospace;
+}

@@ -32,9 +32,8 @@
         <meta name="description" content="{{ $description }}">
 
         <!-- CSS files -->
-        <link rel="stylesheet" href="{{ url('npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css') }}" />
-        <link rel="stylesheet" href="{{ url('npm/vazir-font@30.1.0/dist/font-face.css') }}" />
-        <link rel="stylesheet" href="{{ url('npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css') }}">
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="{{ url('assets/vazir-font/font-face.css') }}">
         <link rel="stylesheet" href="{{ url('css/blog.css') }}">
 
         <style>

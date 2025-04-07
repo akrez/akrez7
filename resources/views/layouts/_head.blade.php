@@ -16,3 +16,5 @@
 @endif
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
+<link rel="stylesheet" href="{{ url('assets/vazir-font/font-face.css') }}">
+<link rel="stylesheet" href="{{ url('css/admin.css') }}">

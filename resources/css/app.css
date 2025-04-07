@@ -1,29 +1,4 @@
 @import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 @import 'sweetalert2/dist/sweetalert2.min.css';
-@import 'vazir-font/dist/font-face.css';
 @import '@fortawesome/fontawesome-free/css/all.min.css';
-
-body {
-    font-family: "Vazir";
-}
-
-.text-justify {
-    text-align: justify;
-}
-
-.max-height-38-px {
-    max-height: 38px;
-}
-
-.max-height-28-px {
-    max-height: 28px;
-}
-
-.max-height-24-px {
-    max-height: 24px;
-}
-
-.font-monospace-small {
-    font-size: 0.8em;
-    font-family: monospace;
-}
+@import 'bootstrap-icons/font/bootstrap-icons.min.css';
