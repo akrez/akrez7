@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayvoiceController;
@@ -12,8 +13,16 @@ use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\SiteController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Providers\AppServiceProvider;
+use App\Services\DomainService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+if (App::isProduction()) {
+    Route::domain('{domain}')
+        ->whereIn('domain', DomainService::new()->getDomains())
+        ->get('/', [FrontController::class, 'domain']);
+}
 
 Auth::routes();
 
@@ -22,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get(AppServiceProvider::HOME, [BlogController::class, 'index'])->name('home');
     Route::patch('blogs/{id}/active', [BlogController::class, 'active'])->name('blogs.active');
     Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
+    Route::get('/blogs/{id}', [FrontController::class, 'blog'])->name('blogs.show');
     //
     Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
         Route::get('payvoices', [PayvoiceController::class, 'index'])->name('payvoices.index');
@@ -44,3 +54,4 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [SiteController::class, 'index'])->name('site');
 Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);
+Route::get('/fronts/{id}', [FrontController::class, 'show'])->name('fronts.show');
