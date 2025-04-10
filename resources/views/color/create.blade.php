@@ -3,5 +3,5 @@
 @section('header', __('Create :name', ['name' => __('Color')]))
 
 @section('content')
-    @include('colors._form')
+    @include('color._form')
 @endsection

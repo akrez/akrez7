@@ -18,7 +18,7 @@ class ColorController extends Controller
     {
         $response = $this->colorService->getLatestColors($this->blogId());
 
-        return view('colors.index', [
+        return view('color.index', [
             'colors' => $response->getData('colors'),
         ]);
     }
@@ -28,7 +28,7 @@ class ColorController extends Controller
      */
     public function create()
     {
-        return view('colors.create');
+        return view('color.create');
     }
 
     /**
@@ -55,7 +55,7 @@ class ColorController extends Controller
     {
         $response = $this->colorService->getColor($this->blogId(), $id)->abortUnSuccessful();
 
-        return view('colors.edit', [
+        return view('color.edit', [
             'color' => $response->getData('color'),
         ]);
     }

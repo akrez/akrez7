@@ -4,7 +4,7 @@
 @section('subheader', $color['name'])
 
 @section('content')
-    @include('colors._form', [
+    @include('color._form', [
         'color' => $color,
     ])
 @endsection
