@@ -3,5 +3,5 @@
 @section('header', __('Create :name', ['name' => __('Product')]))
 
 @section('content')
-    @include('products._form')
+    @include('product._form')
 @endsection

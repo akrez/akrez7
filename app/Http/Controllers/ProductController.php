@@ -31,7 +31,7 @@ class ProductController extends Controller
             )
         )->abortUnSuccessful();
 
-        return view('products.index', [
+        return view('product.index', [
             'products' => $latestProductsResponse->getData('products'),
             'galleries' => [
                 GalleryCategoryEnum::PRODUCT_IMAGE->value => $latestCategoryGalleriesResponse->getData('galleries'),
@@ -44,7 +44,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        return view('product.create');
     }
 
     /**
@@ -73,7 +73,7 @@ class ProductController extends Controller
     {
         $response = $this->productService->getProduct($this->blogId(), $id)->abortUnSuccessful();
 
-        return view('products.edit', [
+        return view('product.edit', [
             'product' => $response->getData('product'),
         ]);
     }

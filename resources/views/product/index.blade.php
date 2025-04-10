@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="row pb-2">
-        @include('products._form', ['isVertical' => true])
+        @include('product._form', ['isVertical' => true])
     </div>
     <div class="row">
         <div class="col-md-12 table-responsive">
