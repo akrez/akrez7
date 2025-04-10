@@ -18,7 +18,7 @@ class ContactController extends Controller
     {
         $response = $this->contactService->getLatestContacts($this->blogId());
 
-        return view('contacts.index', [
+        return view('contact.index', [
             'contacts' => $response->getData('contacts'),
         ]);
     }
@@ -28,7 +28,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        return view('contacts.create');
+        return view('contact.create');
     }
 
     /**
@@ -58,7 +58,7 @@ class ContactController extends Controller
     {
         $response = $this->contactService->getContact($this->blogId(), $id)->abortUnSuccessful();
 
-        return view('contacts.edit', [
+        return view('contact.edit', [
             'contact' => $response->getData('contact'),
         ]);
     }

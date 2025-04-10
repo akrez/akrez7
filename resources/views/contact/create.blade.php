@@ -3,5 +3,5 @@
 @section('header', __('Create :name', ['name' => __('Contact')]))
 
 @section('content')
-    @include('contacts._form')
+    @include('contact._form')
 @endsection

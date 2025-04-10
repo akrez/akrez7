@@ -4,7 +4,7 @@
 @section('subheader', $contact['contact_key'])
 
 @section('content')
-    @include('contacts._form', [
+    @include('contact._form', [
         'contact' => $contact,
     ])
 @endsection
