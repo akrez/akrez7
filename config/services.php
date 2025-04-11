@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'telegram_bot' => [
+        'base_url' => env('TELEGRAM_BOT_BASE_URL', 'https://api.telegram.org'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
