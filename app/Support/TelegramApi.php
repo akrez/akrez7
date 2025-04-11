@@ -26,11 +26,10 @@ class TelegramApi
     {
         $url = $this->getUrl($path);
 
-        $response = Http::withHeaders($headers)
+        return Http::withHeaders($headers)
             ->asForm()
-            ->post($url, $data);
-
-        return $response->json();
+            ->post($url, $data)
+            ->json();
     }
 
     public function getMe()
