@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
         Route::get('galleries/index/{gallery_category}/{short_gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
         Route::resource('galleries', GalleryController::class)->parameter('galleries', 'id')->except(['index', 'show']);
         //
+        Route::post('telegram_bots/{id}/upload', [TelegramBotController::class, 'upload'])->name('telegram_bots.upload');
         Route::resource('telegram_bots', TelegramBotController::class)->parameter('telegram_bots', 'id');
         Route::resource('colors', ColorController::class)->parameter('colors', 'id');
         Route::resource('contacts', ContactController::class)->parameter('contacts', 'id');

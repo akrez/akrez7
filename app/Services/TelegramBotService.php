@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Data\TelegramBot\StoreTelegramBotData;
 use App\Data\TelegramBot\UpdateTelegramBotData;
+use App\Data\TelegramBot\UploadTelegramBotData;
 use App\Http\Resources\TelegramBot\TelegramBotCollection;
 use App\Http\Resources\TelegramBot\TelegramBotResource;
 use App\Models\TelegramBot;
 use App\Support\ApiResponse;
+use App\Support\TelegramApi;
 use App\Support\WebResponse;
 
 class TelegramBotService extends Service
@@ -134,5 +136,43 @@ class TelegramBotService extends Service
         return WebResponse::new(200)->message(__(':name is deleted successfully', [
             'name' => __('TelegramBot'),
         ]));
+    }
+
+    public function uploadTelegramBot(UploadTelegramBotData $uploadTelegramBotData)
+    {
+        $webResponse = WebResponse::new()->input($uploadTelegramBotData);
+
+        $validation = $uploadTelegramBotData->validate();
+        if ($validation->errors()->isNotEmpty()) {
+            return $webResponse->status(422)->errors($validation->errors());
+        }
+
+        $bot = $this->getLatestBlogQuery($uploadTelegramBotData->blog_id)->where('id', $uploadTelegramBotData->id)->first();
+        if (! $bot) {
+            return $webResponse->status(404);
+        }
+
+        $blog = BlogService::new()->getBlog($uploadTelegramBotData->blog_id)->getData('blog');
+
+        $telegramApi = (new TelegramApi($bot['telegram_token']));
+
+        if ($uploadTelegramBotData->attribute_name === 'name') {
+            $response = $telegramApi->setMyName($blog['name']);
+        } elseif ($uploadTelegramBotData->attribute_name === 'short_description') {
+            $response = $telegramApi->setMyShortDescription($blog['short_description']);
+        } elseif ($uploadTelegramBotData->attribute_name === 'description') {
+            $response = $telegramApi->setMyDescription($blog['description']);
+        } else {
+            return WebResponse::new(400);
+        }
+
+        if (isset($response['ok']) and $response['ok']) {
+            return WebResponse::new(200)->message(__(':name is updated successfully', [
+                'name' => __('TelegramBot'),
+            ]));
+        }
+
+        return WebResponse::new(500);
+
     }
 }

@@ -8,8 +8,8 @@ use Illuminate\Validation\Rule;
 class TelegramBotData extends Data
 {
     public function __construct(
-        public ?int $id,
-        public ?int $blog_id,
+        public $id,
+        public $blog_id,
         public $telegram_token
     ) {}
 
@@ -23,6 +23,7 @@ class TelegramBotData extends Data
         }
 
         return [
+            'blog_id' => ['required', 'integer'],
             'telegram_token' => ['required', 'max:64', 'regex:/^\d{10,}:[A-Za-z0-9_-]{35}$/', $uniqueRule],
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\TelegramBot\StoreTelegramBotData;
 use App\Data\TelegramBot\UpdateTelegramBotData;
+use App\Data\TelegramBot\UploadTelegramBotData;
 use App\Services\TelegramBotService;
 use Illuminate\Http\Request;
 
@@ -78,5 +79,18 @@ class TelegramBotController extends Controller
     public function destroy(Request $request, int $id)
     {
         return $this->telegramBotService->destroyTelegramBot($this->blogId(), $id);
+    }
+
+    public function upload(Request $request, int $id)
+    {
+        $uploadTelegramBotData = new UploadTelegramBotData(
+            $id,
+            $this->blogId(),
+            $request->attribute_name
+        );
+
+        $response = $this->telegramBotService->uploadTelegramBot($uploadTelegramBotData);
+
+        return $response->successfulRoute(route('telegram_bots.index'));
     }
 }
