@@ -81,6 +81,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('telegram_bots.index') }}">
+                            {{ __('TelegramBots') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ route('contacts.index') }}">
                             {{ __('Contacts') }}
                         </a>

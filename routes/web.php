@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPropertyController;
 use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\TelegramBotController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Providers\AppServiceProvider;
 use App\Services\DomainService;
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
         Route::get('galleries/index/{gallery_category}/{short_gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
         Route::resource('galleries', GalleryController::class)->parameter('galleries', 'id')->except(['index', 'show']);
         //
+        Route::resource('telegram_bots', TelegramBotController::class)->parameter('telegram_bots', 'id');
         Route::resource('colors', ColorController::class)->parameter('colors', 'id');
         Route::resource('contacts', ContactController::class)->parameter('contacts', 'id');
         Route::resource('products', ProductController::class)->parameter('products', 'id');

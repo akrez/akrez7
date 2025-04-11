@@ -303,5 +303,7 @@ return [
         //
         'guaranty' => 'گارانتی',
         'color_id' => 'رنگ',
+        //
+        'telegram_token' => 'توکن بات تلگرام',
     ],
 ];

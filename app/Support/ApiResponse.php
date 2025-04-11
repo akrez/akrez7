@@ -125,6 +125,6 @@ class ApiResponse implements Responsable
 
     public static function new($status = self::DEFAULT_STATUS): static
     {
-        return (new static)->status($status);
+        return app(static::class)->status($status);
     }
 }
