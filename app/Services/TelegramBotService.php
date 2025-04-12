@@ -64,6 +64,10 @@ class TelegramBotService extends Service
             return $webResponse->status(422)->errors($validation->errors());
         }
 
+        if (! $this->setWebhook($storeTelegramBotData->telegram_token)) {
+            return $webResponse->status(500);
+        }
+
         $model = TelegramBot::create([
             'telegram_token' => $storeTelegramBotData->telegram_token,
             'blog_id' => $storeTelegramBotData->blog_id,
@@ -103,6 +107,12 @@ class TelegramBotService extends Service
         $model = $this->getLatestBlogQuery($updateTelegramBotData->blog_id)->where('id', $updateTelegramBotData->id)->first();
         if (! $model) {
             return $webResponse->status(404);
+        }
+
+        if ($model->telegram_token !== $updateTelegramBotData->telegram_token) {
+            if (! $this->setWebhook($updateTelegramBotData->telegram_token)) {
+                return $webResponse->status(500);
+            }
         }
 
         $model->update([
@@ -173,6 +183,15 @@ class TelegramBotService extends Service
         }
 
         return WebResponse::new(500);
+    }
 
+    protected function setWebhook($telegramToken)
+    {
+        $url = TelegramMessageService::new()->getWebhookUrl($telegramToken);
+
+        $telegramApi = new TelegramApi($telegramToken);
+        $response = $telegramApi->setWebhook($url);
+
+        return ! empty($response['ok']);
     }
 }
