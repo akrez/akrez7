@@ -22,14 +22,19 @@ class TelegramApi
         ]);
     }
 
-    private function sendPostForm($path, $data = [], $headers = [])
+    private function sendPostForm($path, $postData = [], $headers = [])
     {
         $url = $this->getUrl($path);
+        $response = Http::withHeaders($headers)->asForm()->post($url, $postData);
 
-        return Http::withHeaders($headers)
-            ->asForm()
-            ->post($url, $data)
-            ->json();
+        return $response->json();
+    }
+
+    public function setWebhook($url)
+    {
+        return $this->sendPostForm('setWebhook', [
+            'url' => $url,
+        ]);
     }
 
     public function getMe()
