@@ -3,6 +3,7 @@
 namespace App\Data\TelegramBot;
 
 use App\Data\Data;
+use App\Rules\TelegramTokenRule;
 use Illuminate\Validation\Rule;
 
 class TelegramBotData extends Data
@@ -24,7 +25,7 @@ class TelegramBotData extends Data
 
         return [
             'blog_id' => ['required', 'integer'],
-            'telegram_token' => ['required', 'max:64', 'regex:/^\d{10,}:[A-Za-z0-9_-]{35}$/', $uniqueRule],
+            'telegram_token' => ['required', 'max:64', new TelegramTokenRule, $uniqueRule],
         ];
     }
 }
