@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class TelegramMessage
- * 
+ *
  * @property int $id
  * @property string $telegram_token
  * @property array|null $message_json
@@ -18,35 +18,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
- * @package App\Models
  */
 class TelegramMessage extends Model
 {
-	use SoftDeletes;
+    use SoftDeletes;
 
-	protected $table = 'telegram_messages';
+    protected $table = 'telegram_messages';
 
-	public $incrementing = false;
+    public $incrementing = false;
 
-	protected $casts = [
-		'id' => 'int',
-		'message_json' => 'json',
-		'blog_id' => 'int',
-		'bot_id' => 'int',
-		'chat_id' => 'int'
-	];
+    protected $casts = [
+        'id' => 'int',
+        'message_json' => 'json',
+        'blog_id' => 'int',
+        'bot_id' => 'int',
+        'chat_id' => 'int',
+    ];
 
-	protected $hidden = [
-		'telegram_token'
-	];
+    protected $hidden = [
+        'telegram_token',
+    ];
 
-	protected $fillable = [
-		'telegram_token',
-		'message_json',
-		'process_status',
-		'blog_id',
-		'bot_id',
-		'chat_id'
-	];
+    protected $fillable = [
+        'telegram_token',
+        'message_json',
+        'process_status',
+        'blog_id',
+        'bot_id',
+        'chat_id',
+    ];
 }
