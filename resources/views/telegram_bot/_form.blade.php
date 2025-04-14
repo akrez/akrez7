@@ -8,6 +8,8 @@
     @if ($isVertical)
         <div class="row">
     @endif
+    <x-input :md="3" :row="!$isVertical" name="telegram_bot_status" :errors="$errors" :value="isset($telegramBot) ? $telegramBot['telegram_bot_status']['value'] : ''"
+        type="select" :label="__('validation.attributes.status')" :options="\App\Enums\TelegramBotStatusEnum::toArray()" />
     <x-input :md="6" :row="!$isVertical" name="telegram_token" :errors="$errors" :value="isset($telegramBot) ? $telegramBot['telegram_token'] : ''" />
     @if ($isVertical)
         </div>

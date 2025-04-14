@@ -11,6 +11,7 @@
             <table class="table table-striped table-hover table-bordered align-middle rounded-3 text-center">
                 <thead class="table-dark">
                     <tr>
+                        <th scope="col">@lang('validation.attributes.status')</th>
                         <th scope="col">@lang('validation.attributes.telegram_token')</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
@@ -19,7 +20,12 @@
                 </thead>
                 <tbody>
                     @forelse ($telegramBots as $telegramBot)
-                        <tr>
+                        <tr
+                            class="{{ $telegramBot['telegram_bot_status']['value'] === \App\Enums\TelegramBotStatusEnum::DEACTIVE->value
+                                ? 'table-danger'
+                                : 'table-success' }}">
+
+                            <td>{{ $telegramBot['telegram_bot_status'] ? $telegramBot['telegram_bot_status']['trans'] : '' }}</td>
                             <td class="font-monospace" dir="ltr">
                                 {{ Str::mask($telegramBot['telegram_token'], '*', 14, 22) }}
                             </td>
@@ -45,8 +51,8 @@
                                         value="name" class="d-none">
                                     <input id="btn-short_description-{{ $telegramBot['id'] }}" type="submit"
                                         name="attribute_name" value="short_description" class="d-none">
-                                    <input id="btn-description-{{ $telegramBot['id'] }}" type="submit" name="attribute_name"
-                                        value="description" class="d-none">
+                                    <input id="btn-description-{{ $telegramBot['id'] }}" type="submit"
+                                        name="attribute_name" value="description" class="d-none">
                                 </x-form>
                             </td>
                             <td>

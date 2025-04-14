@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TelegramBotStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
  * Class TelegramBot
  *
  * @property int $id
+ * @property TelegramBotStatusEnum $telegram_bot_status
  * @property string $telegram_token
  * @property int $blog_id
  * @property Carbon|null $created_at
@@ -20,6 +22,7 @@ class TelegramBot extends Model
 
     protected $casts = [
         'blog_id' => 'int',
+        'telegram_bot_status' => TelegramBotStatusEnum::class,
     ];
 
     protected $hidden = [
@@ -27,6 +30,7 @@ class TelegramBot extends Model
     ];
 
     protected $fillable = [
+        'telegram_bot_status',
         'telegram_token',
         'blog_id',
     ];

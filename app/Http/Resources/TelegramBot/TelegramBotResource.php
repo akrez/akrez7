@@ -17,6 +17,7 @@ class TelegramBotResource extends JsonResource
         return [
             'id' => $this->id,
             'telegram_token' => $this->telegram_token,
+            'telegram_bot_status' => $this->telegram_bot_status ? $this->telegram_bot_status->toResource() : null,
         ];
     }
 }

@@ -40,7 +40,8 @@ class TelegramBotController extends Controller
         $storeTelegramBotData = new StoreTelegramBotData(
             null,
             $this->blogId(),
-            $request->telegram_token
+            $request->telegram_token,
+            $request->telegram_bot_status
         );
 
         $response = $this->telegramBotService->storeTelegramBot($storeTelegramBotData);
@@ -68,7 +69,8 @@ class TelegramBotController extends Controller
         $updateTelegramBotData = new UpdateTelegramBotData(
             $id,
             $this->blogId(),
-            $request->telegram_token
+            $request->telegram_token,
+            $request->telegram_bot_status
         );
 
         $response = $this->telegramBotService->updateTelegramBot($updateTelegramBotData);

@@ -69,6 +69,7 @@ class TelegramBotService extends Service
         }
 
         $model = TelegramBot::create([
+            'telegram_bot_status' => $storeTelegramBotData->telegram_bot_status,
             'telegram_token' => $storeTelegramBotData->telegram_token,
             'blog_id' => $storeTelegramBotData->blog_id,
         ]);
@@ -116,6 +117,7 @@ class TelegramBotService extends Service
         }
 
         $model->update([
+            'telegram_bot_status' => $updateTelegramBotData->telegram_bot_status,
             'telegram_token' => $updateTelegramBotData->telegram_token,
         ]);
         if (! $model->save()) {
