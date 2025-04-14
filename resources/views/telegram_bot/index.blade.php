@@ -13,7 +13,7 @@
                     <tr>
                         <th scope="col">@lang('validation.attributes.status')</th>
                         <th scope="col">@lang('validation.attributes.telegram_token')</th>
-                        <th scope="col"></th>
+                        <th scope="col">@lang('Upload :name Attribute', ['name' => __('TelegramBot')])</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -25,7 +25,8 @@
                                 ? 'table-danger'
                                 : 'table-success' }}">
 
-                            <td>{{ $telegramBot['telegram_bot_status'] ? $telegramBot['telegram_bot_status']['trans'] : '' }}</td>
+                            <td>{{ $telegramBot['telegram_bot_status'] ? $telegramBot['telegram_bot_status']['trans'] : '' }}
+                            </td>
                             <td class="font-monospace" dir="ltr">
                                 {{ Str::mask($telegramBot['telegram_token'], '*', 14, 22) }}
                             </td>
