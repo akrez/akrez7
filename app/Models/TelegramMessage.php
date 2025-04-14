@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TelegramMessageProcessStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,8 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property string $telegram_token
- * @property array|null $message_json
+ * @property array $message_json
  * @property string|null $process_status
+ * @property int|null $update_id
  * @property int|null $blog_id
  * @property int|null $bot_id
  * @property int|null $chat_id
@@ -25,14 +27,13 @@ class TelegramMessage extends Model
 
     protected $table = 'telegram_messages';
 
-    public $incrementing = false;
-
     protected $casts = [
-        'id' => 'int',
         'message_json' => 'json',
+        'update_id' => 'int',
         'blog_id' => 'int',
         'bot_id' => 'int',
         'chat_id' => 'int',
+        'process_status' => TelegramMessageProcessStatusEnum::class,
     ];
 
     protected $hidden = [
@@ -43,6 +44,7 @@ class TelegramMessage extends Model
         'telegram_token',
         'message_json',
         'process_status',
+        'update_id',
         'blog_id',
         'bot_id',
         'chat_id',

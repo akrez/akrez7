@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('telegram_messages', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary('id');
-            $table->unsignedBigInteger('chat_id')->nullable();
-            $table->json('message_json')->nullable();
-            $table->string('processor')->nullable();
-            $table->unsignedBigInteger('blog_id')->index();
-            $table->unsignedBigInteger('bot_id')->index();
-            $table->timestamp('responsed_at')->nullable();
+            $table->id();
+            $table->string('telegram_token', 64);
+            $table->json('message_json');
+            $table->string('process_status')->nullable();
+            $table->unsignedBigInteger('update_id')->index()->nullable();
+            $table->unsignedBigInteger('blog_id')->index()->nullable();
+            $table->unsignedBigInteger('bot_id')->index()->nullable();
+            $table->unsignedBigInteger('chat_id')->index()->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
