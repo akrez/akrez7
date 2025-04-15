@@ -23,6 +23,7 @@ class TelegramBotService extends Service
     public function getApiResource(int $blogId, int $id): ApiResponse
     {
         $model = $this->getLatestApiQuery($blogId)
+            ->where('id', $id)
             ->first();
 
         return ApiResponse::new(200)->data([
