@@ -20,7 +20,7 @@ class TelegramBotService extends Service
         return app(self::class);
     }
 
-    public function getApiResource(int $blogId): ApiResponse
+    public function getApiResource(int $blogId, int $id): ApiResponse
     {
         $model = $this->getLatestApiQuery($blogId)
             ->first();
@@ -46,7 +46,7 @@ class TelegramBotService extends Service
             ->where('telegram_bot_status', TelegramBotStatusEnum::ACTIVE->value);
     }
 
-    protected function getLatestBaseQuery($blogId)
+    protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
     {
         return TelegramBot::query()
             ->where('blog_id', $blogId)

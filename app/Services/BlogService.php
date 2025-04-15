@@ -20,7 +20,7 @@ class BlogService
         return app(self::class);
     }
 
-    public function getApiResource(int $id)
+    public function getApiResource(int $id): ApiResponse
     {
         $blog = Blog::query()
             ->where('id', $id)

@@ -28,7 +28,7 @@ class ProductTagService extends Service
         return app(self::class);
     }
 
-    public function getApiResource(int $blogId): ApiResponse
+    public function getApiResource(int $blogId, int $id): ApiResponse
     {
         $model = $this->getLatestApiQuery($blogId)
             ->first();
@@ -48,7 +48,7 @@ class ProductTagService extends Service
         ]);
     }
 
-    protected function getLatestBaseQuery($blogId)
+    protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
     {
         return ProductTag::query()
             ->where('blog_id', $blogId)

@@ -18,7 +18,7 @@ class PackageService extends Service
         return app(self::class);
     }
 
-    public function getApiResource(int $blogId): ApiResponse
+    public function getApiResource(int $blogId, int $id): ApiResponse
     {
         $model = $this->getLatestApiQuery($blogId)
             ->first();
@@ -44,7 +44,7 @@ class PackageService extends Service
             ->where('package_status', '!=', PackageStatusEnum::DEACTIVE->value);
     }
 
-    protected function getLatestBaseQuery($blogId)
+    protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
     {
         return Package::query()
             ->where('blog_id', $blogId)
