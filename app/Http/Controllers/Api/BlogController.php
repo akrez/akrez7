@@ -13,7 +13,7 @@ class BlogController extends Controller
 
     public function index(Request $request, int $id)
     {
-        $blogResponse = $this->getApiResource($id);
+        $blogResponse = $this->blogService->getApiResource($id);
         if (! $blogResponse->isSuccessful()) {
             return ApiResponse::new($blogResponse->getStatus());
         }
