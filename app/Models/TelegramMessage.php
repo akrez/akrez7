@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\TelegramMessageProcessStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,13 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class TelegramMessage
  *
  * @property int $id
- * @property string $telegram_token
- * @property array $message_json
- * @property string|null $process_status
- * @property int|null $update_id
  * @property int|null $blog_id
+ * @property string $telegram_token
+ * @property array $content_json
+ * @property string|null $process_status
  * @property int|null $bot_id
+ * @property int|null $update_id
  * @property int|null $chat_id
+ * @property string|null $message_text
  * @property string|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -28,12 +28,11 @@ class TelegramMessage extends Model
     protected $table = 'telegram_messages';
 
     protected $casts = [
-        'message_json' => 'json',
-        'update_id' => 'int',
         'blog_id' => 'int',
+        'content_json' => 'json',
         'bot_id' => 'int',
+        'update_id' => 'int',
         'chat_id' => 'int',
-        'process_status' => TelegramMessageProcessStatusEnum::class,
     ];
 
     protected $hidden = [
@@ -41,12 +40,13 @@ class TelegramMessage extends Model
     ];
 
     protected $fillable = [
-        'telegram_token',
-        'message_json',
-        'process_status',
-        'update_id',
         'blog_id',
+        'telegram_token',
+        'content_json',
+        'process_status',
         'bot_id',
+        'update_id',
         'chat_id',
+        'message_text',
     ];
 }
