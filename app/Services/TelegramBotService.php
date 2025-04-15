@@ -195,6 +195,17 @@ class TelegramBotService extends Service
         return WebResponse::new(500);
     }
 
+    public function getApiResourceByTelegramToken(int $blogId, string $telegramToken): ApiResponse
+    {
+        $model = $this->getLatestApiQuery($blogId)
+            ->where('telegram_token', $telegramToken)
+            ->first();
+
+        return ApiResponse::new(200)->data([
+            'telegramBot' => (new TelegramBotResource($model))->toArr(),
+        ]);
+    }
+
     protected function setWebhook($blogId, $telegramToken)
     {
         $url = TelegramMessageService::new()->getWebhookUrl($blogId, $telegramToken);
