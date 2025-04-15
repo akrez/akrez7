@@ -11,13 +11,13 @@ class BlogController extends Controller
 {
     public function __construct(protected BlogService $blogService) {}
 
-    public function index(Request $request, int $id)
+    public function index(Request $request, int $blog_id)
     {
-        $blogResponse = $this->blogService->getApiResource($id);
+        $blogResponse = $this->blogService->getApiResource($blog_id);
         if (! $blogResponse->isSuccessful()) {
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        return BlogService::new()->getApiResponse($id);
+        return BlogService::new()->getApiResponse($blog_id);
     }
 }
