@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Data\TelegramBot\StoreTelegramBotData;
 use App\Data\TelegramBot\UpdateTelegramBotData;
 use App\Data\TelegramBot\UploadTelegramBotData;
+use App\Enums\TelegramBotStatusEnum;
 use App\Http\Resources\TelegramBot\TelegramBotCollection;
 use App\Http\Resources\TelegramBot\TelegramBotResource;
 use App\Models\TelegramBot;
@@ -37,6 +38,12 @@ class TelegramBotService extends Service
         return ApiResponse::new(200)->data([
             'telegramBots' => (new TelegramBotCollection($models))->toArr(),
         ]);
+    }
+
+    protected function getLatestApiQuery($blogId)
+    {
+        return $this->getLatestBaseQuery($blogId)
+            ->where('telegram_bot_status', TelegramBotStatusEnum::ACTIVE->value);
     }
 
     protected function getLatestBaseQuery($blogId)
