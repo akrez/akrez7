@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Services\BlogService;
 use App\Support\ApiResponse;
 use Illuminate\Http\Request;
+use App\Services\BlogService;
+use App\Services\SummaryService;
+use App\Http\Controllers\Controller;
 
-class BlogController extends Controller
+class SummaryController extends Controller
 {
     public function __construct(protected BlogService $blogService) {}
 
@@ -18,6 +19,6 @@ class BlogController extends Controller
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        return BlogService::new()->getApiResponse($blog_id);
+        return SummaryService::new()->getApiResponse($blog_id);
     }
 }

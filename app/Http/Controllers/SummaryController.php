@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\BlogService;
 use App\Services\DomainService;
+use App\Services\SummaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,7 +43,7 @@ class SummaryController extends Controller
     protected function render(int $id)
     {
         return view('summary.show', [
-            'data' => $this->blogService->getApiResponse($id)->getData(),
+            'data' => SummaryService::new()->getApiResponse($id)->getData(),
         ]);
     }
 }
