@@ -7,15 +7,15 @@ use App\Services\DomainService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FrontController extends Controller
+class SummaryController extends Controller
 {
     public function __construct(
         protected BlogService $blogService
     ) {}
 
-    public function domain(Request $request, $front)
+    public function domain(Request $request, $summary)
     {
-        $id = DomainService::new()->domainToBlogId($front);
+        $id = DomainService::new()->domainToBlogId($summary);
         abort_unless($id, 404);
 
         $blog = $this->blogService->getApiResource($id);
@@ -41,7 +41,7 @@ class FrontController extends Controller
 
     protected function render(int $id)
     {
-        return view('front.show', [
+        return view('summary.show', [
             'data' => $this->blogService->getApiResponse($id)->getData(),
         ]);
     }

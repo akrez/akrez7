@@ -3,7 +3,7 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\FrontController;
+use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayvoiceController;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 if (App::isProduction()) {
     Route::domain('{domain}')
         ->whereIn('domain', DomainService::new()->getDomains())
-        ->get('/', [FrontController::class, 'domain']);
+        ->get('/', [SummaryController::class, 'domain']);
 }
 
 Auth::routes();
@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get(AppServiceProvider::HOME, [BlogController::class, 'index'])->name('home');
     Route::patch('blogs/{id}/active', [BlogController::class, 'active'])->name('blogs.active');
     Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
-    Route::get('/blogs/{id}', [FrontController::class, 'blog'])->name('blogs.show');
+    Route::get('/blogs/{id}', [SummaryController::class, 'blog'])->name('blogs.show');
     //
     Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
         Route::get('payvoices', [PayvoiceController::class, 'index'])->name('payvoices.index');
@@ -57,4 +57,4 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [SiteController::class, 'index'])->name('site');
 Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);
-Route::get('/fronts/{id}', [FrontController::class, 'show'])->name('fronts.show');
+Route::get('/summaries/{id}', [SummaryController::class, 'show'])->name('summaries.show');
