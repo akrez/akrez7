@@ -206,7 +206,7 @@ class GalleryService extends Service
         );
         //
         $manager = new ImageManager(Driver::class);
-        $image = $manager->read($this->getStoragePath($sourceFilePath));
+        $image = $manager->read($this->getStorageContent($sourceFilePath));
         //
         $width = $effectGalleryData->getWidth();
         $height = $effectGalleryData->getHeight();
@@ -391,9 +391,9 @@ class GalleryService extends Service
         return Storage::url($url);
     }
 
-    protected function getStoragePath($path)
+    protected function getStorageContent($path)
     {
-        return Storage::path($path);
+        return Storage::get($path);
     }
 
     protected function getUri($category, $name = null, $whmq = null)
