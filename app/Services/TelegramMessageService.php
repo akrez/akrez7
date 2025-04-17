@@ -7,6 +7,8 @@ use App\Enums\TelegramMessageProcessStatusEnum;
 use App\Models\TelegramMessage;
 use App\Support\ApiResponse;
 use App\Support\Arr;
+use App\Support\TelegramApi;
+use Illuminate\Support\Str;
 
 class TelegramMessageService
 {
@@ -47,12 +49,10 @@ class TelegramMessageService
             return ApiResponse::new(422)->errors($validation->errors());
         }
 
-        $contentJson = (array) json_decode($storeTelegramMessageData->content_json, true);
-
         $telegramMessage = TelegramMessage::create([
             'blog_id' => $storeTelegramMessageData->blog_id,
             'telegram_token' => $storeTelegramMessageData->telegram_token,
-            'content_json' => $contentJson,
+            'content_json' => (array) json_decode($storeTelegramMessageData->content_json, true),
         ]);
 
         if (! $telegramMessage) {
@@ -66,15 +66,18 @@ class TelegramMessageService
 
     protected function process(TelegramMessage $telegramMessage)
     {
-        $telegramMessage->update(['process_status' => TelegramMessageProcessStatusEnum::PROCESSING]);
+        $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::PROCESSING, 300);
 
         $updateId = Arr::get($telegramMessage->content_json, 'update_id');
         $chatId = Arr::get($telegramMessage->content_json, 'message.chat.id');
         $messageText = Arr::get($telegramMessage->content_json, 'message.text');
         if (empty($updateId) || empty($chatId) || empty($messageText)) {
-            $telegramMessage->update(['process_status' => TelegramMessageProcessStatusEnum::NOT_VALID]);
+            return $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::NOT_VALID, 403);
+        }
 
-            return ApiResponse::new(403);
+        $isBot = Arr::get($telegramMessage->content_json, 'message.from.is_bot');
+        if ($isBot) {
+            return $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::IS_BOT, 403);
         }
 
         $telegramBotResponse = TelegramBotService::new()->getApiResourceByTelegramToken(
@@ -82,9 +85,7 @@ class TelegramMessageService
             $telegramMessage->telegram_token
         );
         if (! $telegramBotResponse->isSuccessful()) {
-            $telegramMessage->update(['process_status' => TelegramMessageProcessStatusEnum::NOT_VALID]);
-
-            return ApiResponse::new(403);
+            return $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::BOT_NOT_FOUND, 404);
         }
         $telegramBotResource = $telegramBotResponse->getData('telegramBot');
 
@@ -95,17 +96,167 @@ class TelegramMessageService
             'chat_id' => $chatId,
             'message_text' => $messageText,
         ]);
-
         if (! $wasUpdated) {
-            $telegramMessage->update(['process_status' => TelegramMessageProcessStatusEnum::NOT_VALID]);
-
-            return ApiResponse::new(500);
+            return $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::ERROR_ON_UPDATE, 500);
         }
 
-        $telegramMessage->update(['process_status' => TelegramMessageProcessStatusEnum::VALID]);
+        $apiResponse = SummaryService::new()->getApiResponse($telegramMessage->blog_id)->getData();
 
-        return ApiResponse::new(200)->data([
-            'telegramMessage' => ($telegramMessage),
+        $telegramApi = new TelegramApi($telegramBotResource['telegram_token']);
+
+        if ($telegramMessage->message_text === static::CONTACT_US) {
+            $this->messageContactUs($telegramApi, $telegramMessage, $apiResponse);
+        } elseif (Str::startsWith($telegramMessage->message_text, static::CATEGORY_PREFIX)) {
+            $this->messageCategory($telegramApi, $telegramMessage, $apiResponse);
+        } else {
+            $this->messageDefault($telegramApi, $telegramMessage, $apiResponse);
+        }
+
+        return $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::OK, 200);
+    }
+
+    protected function messageContactUs(TelegramApi $telegramApi, TelegramMessage $telegramMessage, $apiResponse)
+    {
+        $contacts = Arr::get($apiResponse, 'contacts', []);
+
+        $text = [];
+        foreach ($contacts as $contactUs) {
+            $text[] = '<b>'.$contactUs['contact_key'].'</b>'.' '.$contactUs['contact_value'];
+        }
+
+        return $telegramApi->sendMessage(
+            $telegramMessage->chat_id,
+            implode("\n", $text),
+            $this->getReplyMarkup($apiResponse)
+        );
+    }
+
+    protected function messageCategory(TelegramApi $telegramApi, TelegramMessage $telegramMessage, $apiResponse)
+    {
+        $products = Arr::get($apiResponse, 'products', []);
+
+        $filterText = Str::of($telegramMessage->message_text)->chopStart(static::CATEGORY_PREFIX)->value();
+
+        $filteredProducts = collect($products)->filter(function ($product) use ($filterText) {
+            return in_array($filterText, $product['product_tags']);
+        });
+
+        $this->filterProducts(
+            $telegramApi,
+            $telegramMessage,
+            $apiResponse,
+            $filteredProducts->toArray(),
+            'محصول با دسته بندی'.'<b>'.$filterText.'</b>'.'یافت نشد'
+        );
+    }
+
+    protected function messageDefault(TelegramApi $telegramApi, TelegramMessage $telegramMessage, $apiResponse)
+    {
+        $products = Arr::get($apiResponse, 'products', []);
+
+        $filterText = $telegramMessage->message_text;
+
+        $filteredProducts = collect($products)->filter(function ($product) use ($filterText) {
+            return Str::contains($product['name'], $filterText, true);
+        });
+
+        $this->filterProducts(
+            $telegramApi,
+            $telegramMessage,
+            $apiResponse,
+            $filteredProducts->toArray(),
+            'محصول با عنوانی که شامل'.'<b>'.$filterText.'</b>'.'باشد یافت نشد'
+        );
+    }
+
+    protected function filterProducts(TelegramApi $telegramApi, $telegramMessage, $apiResponse, $products, $notFoundMessage)
+    {
+        if ($products) {
+            foreach ($products as $product) {
+                $caption = ['<b>'.$product['name'].'</b>'];
+
+                if ($product['product_properties']) {
+                    $caption[] = '';
+                    foreach ($product['product_properties'] as $productProperty) {
+                        if ($productProperty['property_values']) {
+                            $caption[] = '<b>'.$productProperty['property_key'].'</b>'.' '.implode(', ', $productProperty['property_values']);
+                        }
+                    }
+                }
+
+                if ($product['galleries']['product_image']) {
+                    $medias = [];
+                    foreach ($product['galleries']['product_image'] as $productImageKey => $productImage) {
+                        $medias[$productImageKey] = [
+                            'type' => 'photo',
+                            'media' => $productImage['url'],
+                        ];
+                        if ($caption) {
+                            $medias[$productImageKey]['caption'] = implode("\n", $caption);
+                            $medias[$productImageKey]['parse_mode'] = 'HTML';
+                            $caption = [];
+                        }
+                    }
+                    $telegramApi->sendMediaGroup(
+                        $telegramMessage->chat_id,
+                        $medias,
+                        $this->getReplyMarkup($apiResponse)
+                    );
+                } else {
+                    $telegramApi->sendMessage(
+                        $telegramMessage->chat_id,
+                        implode("\n", $caption),
+                        $this->getReplyMarkup($apiResponse)
+                    );
+                }
+            }
+        } else {
+            $telegramApi->sendMessage(
+                $telegramMessage->chat_id,
+                $notFoundMessage,
+                $this->getReplyMarkup($apiResponse)
+            );
+        }
+    }
+
+    protected function getReplyMarkup($apiResponse)
+    {
+        $products = Arr::get($apiResponse, 'products', []);
+
+        $categories = collect($products)->pluck('product_tags')
+            ->flatten()
+            ->unique()
+            ->sort()
+            ->toArray();
+
+        $keyboard = collect($categories)->map(function ($tag) {
+            return [
+                'text' => static::CATEGORY_PREFIX.$tag,
+            ];
+        })->toArray();
+
+        return [
+            'parse_mode' => 'HTML',
+            'reply_markup' => json_encode([
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+                'keyboard' => array_merge([
+                    [
+                        [
+                            'text' => static::CONTACT_US,
+                        ],
+                    ],
+                ], array_chunk($keyboard, 2)),
+            ]),
+        ];
+    }
+
+    protected function updateStatus(TelegramMessage $telegramMessage, TelegramMessageProcessStatusEnum $processStatus, int $statusCode)
+    {
+        $telegramMessage->update(['process_status' => $processStatus]);
+
+        return ApiResponse::new($statusCode)->data([
+            'telegramMessage' => $telegramMessage,
         ]);
     }
 }
