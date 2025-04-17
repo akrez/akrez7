@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -14,7 +16,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function register(): void
     {
-        // Telescope::night();
+        Telescope::night();
 
         $this->hideSensitiveRequestDetails();
 
@@ -27,6 +29,12 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                    $entry->isFailedJob() ||
                    $entry->isScheduledTask() ||
                    $entry->hasMonitoredTag();
+        });
+
+        Telescope::tag(function (IncomingEntry $entry) {
+            return [
+                'method:'.app()->request->method(),
+            ];
         });
     }
 
@@ -55,10 +63,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate(): void
     {
-        Gate::define('viewTelescope', function ($user) {
-            return in_array($user->email, [
-                //
-            ]);
+        Gate::define('viewTelescope', function (User $user) {
+            $emails = config('services.telescope.admin_emails');
+
+            return in_array($user->email, Arr::filterArray(explode(',', $emails)));
         });
     }
 }

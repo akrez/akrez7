@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'telescope' => [
+        'admin_emails' => env('TELESCOPE_ADMIN_EMAILS'),
+    ],
+
     'telegram_bot' => [
         'base_url' => env('TELEGRAM_BOT_BASE_URL', 'https://api.telegram.org'),
     ],
