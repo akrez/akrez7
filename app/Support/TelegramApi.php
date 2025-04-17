@@ -13,7 +13,7 @@ class TelegramApi
         $this->fullTelegramToken = 'bot'.$telegramToken;
     }
 
-    private function getUrl($path)
+    protected function getUrl($path)
     {
         return implode('/', [
             config('services.telegram_bot.base_url'),
@@ -22,7 +22,7 @@ class TelegramApi
         ]);
     }
 
-    private function sendPostForm($path, $postData = [], $headers = [])
+    protected function sendPostForm($path, $postData = [], $headers = [])
     {
         $url = $this->getUrl($path);
         $response = Http::withHeaders($headers)->asForm()->post($url, $postData);
