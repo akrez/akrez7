@@ -43,7 +43,7 @@ class SummaryController extends Controller
     protected function render(int $id)
     {
         return view('summary.show', [
-            'data' => SummaryService::new()->getApiResponse($id)->getData(),
+            'data' => SummaryService::new()->getApiResponse($id, request())->getData(),
         ]);
     }
 }

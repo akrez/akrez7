@@ -100,7 +100,7 @@ class TelegramMessageService
             return $this->updateStatus($telegramMessage, TelegramMessageProcessStatusEnum::ERROR_ON_UPDATE, 500);
         }
 
-        $apiResponse = SummaryService::new()->getApiResponse($telegramMessage->blog_id)->getData();
+        $apiResponse = SummaryService::new()->getApiResponse($telegramMessage->blog_id, request())->getData();
 
         $telegramApi = new TelegramApi($telegramBotResource['telegram_token']);
 

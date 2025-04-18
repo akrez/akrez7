@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Support\ApiResponse;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Services\BlogService;
 use App\Services\SummaryService;
-use App\Http\Controllers\Controller;
+use App\Support\ApiResponse;
+use Illuminate\Http\Request;
 
 class SummaryController extends Controller
 {
@@ -19,6 +19,6 @@ class SummaryController extends Controller
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        return SummaryService::new()->getApiResponse($blog_id);
+        return SummaryService::new()->getApiResponse($blog_id, request());
     }
 }

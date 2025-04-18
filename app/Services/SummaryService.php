@@ -15,12 +15,14 @@ class SummaryService
         return app(self::class);
     }
 
-    public function getApiResponse(int $blog_id)
+    public function getApiResponse(int $blog_id, $request)
     {
         $blogResponse = BlogService::new()->getBlog($blog_id);
         if (! $blogResponse->isSuccessful()) {
             return ApiResponse::new($blogResponse->getStatus());
         }
+
+        PayvoiceService::new()->storePayvoice($blog_id, $request);
 
         $raw = [
             'blog' => $blogResponse->getData('blog'),

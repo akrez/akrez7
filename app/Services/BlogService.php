@@ -5,12 +5,9 @@ namespace App\Services;
 use App\Data\Blog\StoreBlogData;
 use App\Data\Blog\UpdateBlogData;
 use App\Enums\BlogStatusEnum;
-use App\Enums\GalleryCategoryEnum;
 use App\Http\Resources\Blog\BlogResource;
 use App\Models\Blog;
-use App\Models\Product;
 use App\Support\ApiResponse;
-use App\Support\Arr;
 use App\Support\WebResponse;
 
 class BlogService

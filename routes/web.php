@@ -3,7 +3,6 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayvoiceController;
@@ -11,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPropertyController;
 use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Providers\AppServiceProvider;
