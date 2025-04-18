@@ -24,7 +24,7 @@ class PackageController extends Controller
     {
         $productResponse = $this->productService->getProduct($this->blogId(), $product_id)->abortUnSuccessful();
 
-        $response = $this->packageService->getLatestPackages($this->blogId());
+        $response = $this->packageService->getLatestPackages($this->blogId(), $product_id);
 
         return view('package.index', [
             'packages' => $response->getData('packages'),
