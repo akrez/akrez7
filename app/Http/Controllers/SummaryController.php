@@ -32,12 +32,12 @@ class SummaryController extends Controller
         return $this->render($id);
     }
 
-    public function show(Request $request, int $id)
+    public function show(Request $request, int $blog_id)
     {
-        $blog = $this->blogService->getApiResource($id);
-        abort_unless($id, 404);
+        $blog = $this->blogService->getApiResource($blog_id);
+        abort_unless($blog, 404);
 
-        return $this->render($id);
+        return $this->render($blog_id);
     }
 
     protected function render(int $id)

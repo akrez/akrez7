@@ -61,6 +61,12 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent2">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" target="_blank"
+                            href="{{ route('summaries.show', ['id' => app('ActiveBlog')->id()]) }}">
+                            {{ __('View') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page"
                             href="{{ route('galleries.index', [
                                 'gallery_category' => \App\Enums\GalleryCategoryEnum::BLOG_LOGO->value,

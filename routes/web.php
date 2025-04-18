@@ -57,4 +57,4 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [SiteController::class, 'index'])->name('site');
 Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);
-Route::get('/summaries/{id}', [SummaryController::class, 'show'])->name('summaries.show');
+Route::get('/summaries/{blog_id}', [SummaryController::class, 'show'])->name('summaries.show');

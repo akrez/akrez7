@@ -89,7 +89,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row py-3">
                 <div class="container-fluid">
                     <div class="row g-0">
                         @foreach ($products as $productKey => $product)
