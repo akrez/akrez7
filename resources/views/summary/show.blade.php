@@ -146,7 +146,7 @@
                                         @foreach ($product['packages'] as $package)
                                             <div class="card-footer text-body-secondary">
                                                 <div class="d-flex">
-                                                    <div class="package-width">🏷️</div>
+                                                    <div class="package-width">💲</div>
                                                     <div>{{ number_format($package['price']) }} ﷼</div>
                                                 </div>
                                                 @if ($package['color'])
@@ -156,16 +156,16 @@
                                                         <div>{{ $package['color']['name'] }}</div>
                                                     </div>
                                                 @endif
-                                                @if ($package['description'])
-                                                    <div class="d-flex">
-                                                        <div class="package-width">✔️</div>
-                                                        <div>{{ $package['description'] }}</div>
-                                                    </div>
-                                                @endif
                                                 @if ($package['guaranty'])
                                                     <div class="d-flex">
                                                         <div class="package-width">💯</div>
                                                         <div>{{ $package['guaranty'] }}</div>
+                                                    </div>
+                                                @endif
+                                                @if ($package['description'])
+                                                    <div class="d-flex">
+                                                        <div class="package-width">✔️</div>
+                                                        <div>{{ $package['description'] }}</div>
                                                     </div>
                                                 @endif
                                             </div>

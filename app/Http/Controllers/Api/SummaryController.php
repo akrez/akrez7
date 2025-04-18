@@ -12,7 +12,7 @@ class SummaryController extends Controller
 {
     public function __construct(protected BlogService $blogService) {}
 
-    public function index(Request $request, int $blog_id)
+    public function show(Request $request, int $blog_id)
     {
         $blogResponse = $this->blogService->getApiResource($blog_id);
         if (! $blogResponse->isSuccessful()) {
