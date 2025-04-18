@@ -97,39 +97,41 @@
                                 data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
                                 <div class="card rounded-0 h-100">
 
-                                    <div class="p-3">
-                                        @if (count($product['galleries']['product_image']) == 1)
-                                            <img class="w-100 rounded"
-                                                src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
-                                                alt="{{ $product['name'] }}">
-                                        @elseif (count($product['galleries']['product_image']) > 1)
-                                            <div id="product-carousel-{{ $productKey }}"
-                                                class="carousel carousel-dark slide">
-                                                <div class="carousel-inner">
-                                                    @foreach ($product['galleries']['product_image'] as $productImage)
-                                                        <div
-                                                            class="carousel-item @if ($loop->first) active @endif">
-                                                            <img class="w-100 rounded"
-                                                                src="{{ $productImage['base_url'] . '/576__contain/' . $productImage['name'] }}"
-                                                                alt="{{ $product['name'] }}">
-                                                        </div>
-                                                    @endforeach
+                                    @if (count($product['galleries']['product_image']) > 0)
+                                        <div class="p-3">
+                                            @if (count($product['galleries']['product_image']) == 1)
+                                                <img class="w-100 rounded"
+                                                    src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
+                                                    alt="{{ $product['name'] }}">
+                                            @elseif (count($product['galleries']['product_image']) > 1)
+                                                <div id="product-carousel-{{ $productKey }}"
+                                                    class="carousel carousel-dark slide">
+                                                    <div class="carousel-inner">
+                                                        @foreach ($product['galleries']['product_image'] as $productImage)
+                                                            <div
+                                                                class="carousel-item @if ($loop->first) active @endif">
+                                                                <img class="w-100 rounded"
+                                                                    src="{{ $productImage['base_url'] . '/576__contain/' . $productImage['name'] }}"
+                                                                    alt="{{ $product['name'] }}">
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button"
+                                                        data-bs-target="#product-carousel-{{ $productKey }}"
+                                                        data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button"
+                                                        data-bs-target="#product-carousel-{{ $productKey }}"
+                                                        data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>
                                                 </div>
-                                                <button class="carousel-control-prev" type="button"
-                                                    data-bs-target="#product-carousel-{{ $productKey }}"
-                                                    data-bs-slide="prev">
-                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Previous</span>
-                                                </button>
-                                                <button class="carousel-control-next" type="button"
-                                                    data-bs-target="#product-carousel-{{ $productKey }}"
-                                                    data-bs-slide="next">
-                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Next</span>
-                                                </button>
-                                            </div>
-                                        @endif
-                                    </div>
+                                            @endif
+                                        </div>
+                                    @endif
 
                                     <div class="card-body">
                                         <h5 class="card-title font-weight-bold">{{ $product['name'] }}</h5>

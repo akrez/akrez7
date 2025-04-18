@@ -19,9 +19,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-if (App::isProduction()) {
+$domains = DomainService::new()->getDomains();
+if ($domains) {
     Route::domain('{domain}')
-        ->whereIn('domain', DomainService::new()->getDomains())
+        ->whereIn('domain', $domains)
         ->get('/', [SummaryController::class, 'domain']);
 }
 
