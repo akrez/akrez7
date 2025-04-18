@@ -145,18 +145,23 @@
                                     @if ($product['packages'])
                                         @foreach ($product['packages'] as $package)
                                             <div class="card-footer text-body-secondary d-flex flex-column">
-                                                <div>
-                                                    <b class="d-inline-block">{{ number_format($package['price']) }}</b>
-                                                    <span class="ps-1 d-inline-block">﷼</span>
-                                                </div>
-                                                @if ($package['color'])
-                                                    <div>
-                                                        <span class="d-inline-block">رنگ</span>
-                                                        <b class="px-1 d-inline-block">{{ $package['color']['name'] }}</b>
-                                                        <span class="d-inline-block"
-                                                            style="color: {{ $package['color']['code'] }};">⦿</span>
+                                                <div class="d-flex flex-row">
+                                                    <div class="flex-grow-1">
+                                                        <b class="d-inline-block">
+                                                            {{ number_format($package['price']) }}
+                                                        </b>
+                                                        <span class="ps-1 d-inline-block">﷼</span>
                                                     </div>
-                                                @endif
+                                                    @if ($package['color'])
+                                                        <div>
+                                                            <span class="d-inline-block"
+                                                                style="color: {{ $package['color']['code'] }};">⦿</span>
+                                                            <b class="px-1 d-inline-block">
+                                                                {{ $package['color']['name'] }}
+                                                            </b>
+                                                        </div>
+                                                    @endif
+                                                </div>
                                                 @if ($package['guaranty'])
                                                     <div>
                                                         <b class="d-inline-block">گارانتی</b>
