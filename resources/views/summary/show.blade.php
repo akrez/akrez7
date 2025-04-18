@@ -144,29 +144,27 @@
                                     </div>
                                     @if ($product['packages'])
                                         @foreach ($product['packages'] as $package)
-                                            <div class="card-footer text-body-secondary">
-                                                <div class="d-flex">
-                                                    <div class="package-width">💲</div>
-                                                    <div>{{ number_format($package['price']) }} ﷼</div>
+                                            <div class="card-footer text-body-secondary d-flex flex-column">
+                                                <div>
+                                                    <b class="d-inline-block">{{ number_format($package['price']) }}</b>
+                                                    <span class="ps-1 d-inline-block">﷼</span>
                                                 </div>
                                                 @if ($package['color'])
-                                                    <div class="d-flex">
-                                                        <div class="package-width"
-                                                            style="color: {{ $package['color']['code'] }};">⦿</div>
-                                                        <div>{{ $package['color']['name'] }}</div>
+                                                    <div>
+                                                        <span class="d-inline-block">رنگ</span>
+                                                        <b class="px-1 d-inline-block">{{ $package['color']['name'] }}</b>
+                                                        <span class="d-inline-block"
+                                                            style="color: {{ $package['color']['code'] }};">⦿</span>
                                                     </div>
                                                 @endif
                                                 @if ($package['guaranty'])
-                                                    <div class="d-flex">
-                                                        <div class="package-width">💯</div>
-                                                        <div>{{ $package['guaranty'] }}</div>
+                                                    <div>
+                                                        <b class="d-inline-block">گارانتی</b>
+                                                        <span class="ps-1 d-inline-block">{{ $package['guaranty'] }}</span>
                                                     </div>
                                                 @endif
                                                 @if ($package['description'])
-                                                    <div class="d-flex">
-                                                        <div class="package-width">✔️</div>
-                                                        <div>{{ $package['description'] }}</div>
-                                                    </div>
+                                                    <span class="ps-1 d-inline-block">{{ $package['description'] }}</span>
                                                 @endif
                                             </div>
                                         @endforeach
