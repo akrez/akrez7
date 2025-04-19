@@ -226,7 +226,6 @@
                 </div>
             </footer>
         @endif
-        <script src="{{ asset('npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.js') }}"></script>
         <script>
             document.querySelectorAll("[data-filter-tag]").forEach(function(radioFilterElement) {
                 radioFilterElement.onclick = function() {
