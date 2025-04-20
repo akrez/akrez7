@@ -14,6 +14,15 @@ class SummaryController extends Controller
         protected BlogService $blogService
     ) {}
 
+    public function blog(Request $request, int $id)
+    {
+        $blog = $this->blogService->getUserBlog(Auth::id(), $id)->abortUnSuccessful();
+
+        return view('summary.show', [
+            'data' => SummaryService::new()->getApiResponse($id, request())->getData(),
+        ]);
+    }
+
     public function domain(Request $request, $summary)
     {
         $id = DomainService::new()->domainToBlogId($summary);
@@ -21,13 +30,6 @@ class SummaryController extends Controller
 
         $blog = $this->blogService->getApiResource($id);
         abort_unless($id, 404);
-
-        return $this->render($id);
-    }
-
-    public function blog(Request $request, int $id)
-    {
-        $blog = $this->blogService->getUserBlog(Auth::id(), $id)->abortUnSuccessful();
 
         return $this->render($id);
     }
@@ -43,7 +45,7 @@ class SummaryController extends Controller
     protected function render(int $id)
     {
         return view('summary.show', [
-            'data' => SummaryService::new()->getApiResponse($id, request())->getData(),
+            'data' => SummaryService::new()->getApiResponseCached($id, request())->getData(),
         ]);
     }
 }

@@ -7,12 +7,20 @@ use App\Models\Blog;
 use App\Models\Product;
 use App\Support\ApiResponse;
 use App\Support\Arr;
+use App\Support\Cache;
 
 class SummaryService
 {
     public static function new()
     {
         return app(self::class);
+    }
+
+    public function getApiResponseCached(int $blog_id, $request, $ttl = 60)
+    {
+        return Cache::remember(Cache::KEY_SUMMARIES.'.'.$blog_id, $ttl, function () use ($blog_id, $request) {
+            return $this->getApiResponse($blog_id, $request);
+        });
     }
 
     public function getApiResponse(int $blog_id, $request)
