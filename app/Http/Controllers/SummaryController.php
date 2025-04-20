@@ -19,7 +19,7 @@ class SummaryController extends Controller
         $blog = $this->blogService->getUserBlog(Auth::id(), $id)->abortUnSuccessful();
 
         return view('summary.show', [
-            'data' => SummaryService::new()->getApiResponse($id, request())->getData(),
+            'data' => SummaryService::new()->getApiResponse($id, request(), 0)->getData(),
         ]);
     }
 
@@ -42,10 +42,10 @@ class SummaryController extends Controller
         return $this->render($blog_id);
     }
 
-    protected function render(int $id)
+    protected function render(int $id, int $ttl = 60)
     {
         return view('summary.show', [
-            'data' => SummaryService::new()->getApiResponseCached($id, request())->getData(),
+            'data' => SummaryService::new()->getApiResponse($id, request(), $ttl)->getData(),
         ]);
     }
 }
