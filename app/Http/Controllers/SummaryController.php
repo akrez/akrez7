@@ -18,7 +18,7 @@ class SummaryController extends Controller
     {
         $blog = $this->blogService->getUserBlog(Auth::id(), $id)->abortUnSuccessful();
 
-        return $this->render($id, false);
+        return $this->render($id, true);
     }
 
     public function domain(Request $request, $summary)
@@ -40,13 +40,10 @@ class SummaryController extends Controller
         return $this->render($blog_id);
     }
 
-    protected function render(int $id, bool $returnCached = true)
+    protected function render(int $id, bool $forgetCache = false)
     {
         return view('summary.show', [
-            'data' => ($returnCached ?
-                SummaryService::new()->getApiResponseCached($id, request())->getData() :
-                SummaryService::new()->getApiResponse($id, request())->getData()
-            ),
+            'data' => SummaryService::new()->getApiResponseCached($id, request(), $forgetCache)->getData(),
         ]);
     }
 }

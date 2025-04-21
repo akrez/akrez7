@@ -16,21 +16,32 @@ class SummaryService
         return app(self::class);
     }
 
-    public function getApiResponseCached(int $blogId, $request, $ttl = 300)
+    public function getApiResponseCached(int $blogId, $request, bool $forgetCache = false)
     {
-        return Cache::remember(Cache::keyShowSummary($blogId), $ttl, function () use ($blogId, $request) {
-            return $this->getApiResponse($blogId, $request);
+        $cacheKey = Cache::keyShowSummary($blogId);
+
+        if ($forgetCache) {
+            Cache::forget($cacheKey);
+        }
+
+        $response = Cache::remember($cacheKey, 300, function () use ($blogId) {
+            return $this->getApiResponse($blogId);
         });
+
+        if ($response->isSuccessful()) {
+            PayvoiceService::new()->storePayvoice($blogId, $request);
+        }
+
+        return $response;
+
     }
 
-    public function getApiResponse(int $blogId, $request)
+    protected function getApiResponse(int $blogId)
     {
         $blogResponse = BlogService::new()->getBlog($blogId);
         if (! $blogResponse->isSuccessful()) {
             return ApiResponse::new($blogResponse->getStatus());
         }
-
-        PayvoiceService::new()->storePayvoice($blogId, $request);
 
         $raw = [
             'blog' => $blogResponse->getData('blog'),
