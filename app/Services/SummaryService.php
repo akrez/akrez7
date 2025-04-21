@@ -59,19 +59,19 @@ class SummaryService
         }
 
         foreach ($raw['packages'] as $package) {
-            $organized['packages'][$package['productId']][] = [
+            $organized['packages'][$package['product_id']][] = [
                 'id' => $package['id'],
-                'productId' => $package['productId'],
+                'product_id' => $package['product_id'],
                 'package_status' => $package['package_status'],
                 'price' => $package['price'],
                 'guaranty' => $package['guaranty'],
                 'description' => $package['description'],
-                'color' => Arr::get($organized['colors'], $package['colorId'], []),
+                'color' => Arr::get($organized['colors'], $package['color_id'], []),
             ];
         }
 
         foreach ($raw['galleries'] as $gallery) {
-            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['galleryId']][] = [
+            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
                 'name' => $gallery['name'],
                 'base_url' => $gallery['base_url'],
                 'url' => $gallery['url'],
@@ -80,17 +80,17 @@ class SummaryService
         }
 
         foreach ($raw['productTags'] as $productTag) {
-            $organized['productTags'][$productTag['productId']][] = $productTag['tag_name'];
+            $organized['productTags'][$productTag['product_id']][] = $productTag['tag_name'];
         }
 
         foreach ($raw['productProperties'] as $productProperty) {
-            if (! isset($organized['productProperties'][$productProperty['productId']][$productProperty['property_key']])) {
-                $organized['productProperties'][$productProperty['productId']][$productProperty['property_key']] = [
+            if (! isset($organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']])) {
+                $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']] = [
                     'property_key' => $productProperty['property_key'],
                     'property_values' => [],
                 ];
             }
-            $organized['productProperties'][$productProperty['productId']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
+            $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
         }
 
         $output = [
