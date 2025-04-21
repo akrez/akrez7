@@ -6,5 +6,8 @@ use Illuminate\Support\Facades\Cache as BaseCache;
 
 class Cache extends BaseCache
 {
-    const KEY_SUMMARIES = 'summaries';
+    public static function keyShowSummary($blogId)
+    {
+        return "summaries:{$blogId}:show";
+    }
 }

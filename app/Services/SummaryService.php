@@ -16,31 +16,31 @@ class SummaryService
         return app(self::class);
     }
 
-    public function getApiResponse(int $blog_id, $request, $ttl = 60)
+    public function getApiResponseCached(int $blogId, $request, $ttl = 300)
     {
-        return Cache::remember(Cache::KEY_SUMMARIES.'.'.$blog_id, $ttl, function () use ($blog_id, $request) {
-            return $this->getApiResponseRaw($blog_id, $request);
+        return Cache::remember(Cache::keyShowSummary($blogId), $ttl, function () use ($blogId, $request) {
+            return $this->getApiResponse($blogId, $request);
         });
     }
 
-    protected function getApiResponseRaw(int $blog_id, $request)
+    public function getApiResponse(int $blogId, $request)
     {
-        $blogResponse = BlogService::new()->getBlog($blog_id);
+        $blogResponse = BlogService::new()->getBlog($blogId);
         if (! $blogResponse->isSuccessful()) {
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        PayvoiceService::new()->storePayvoice($blog_id, $request);
+        PayvoiceService::new()->storePayvoice($blogId, $request);
 
         $raw = [
             'blog' => $blogResponse->getData('blog'),
-            'colors' => ColorService::new()->getApiCollection($blog_id)->getData('colors'),
-            'contacts' => ContactService::new()->getApiCollection($blog_id)->getData('contacts'),
-            'packages' => PackageService::new()->getApiCollection($blog_id)->getData('packages'),
-            'products' => ProductService::new()->getApiCollection($blog_id)->getData('products'),
-            'galleries' => GalleryService::new()->getApiCollection($blog_id)->getData('galleries'),
-            'productTags' => ProductTagService::new()->getApiCollection($blog_id)->getData('product_tags'),
-            'productProperties' => ProductPropertyService::new()->getApiCollection($blog_id)->getData('product_properties'),
+            'colors' => ColorService::new()->getApiCollection($blogId)->getData('colors'),
+            'contacts' => ContactService::new()->getApiCollection($blogId)->getData('contacts'),
+            'packages' => PackageService::new()->getApiCollection($blogId)->getData('packages'),
+            'products' => ProductService::new()->getApiCollection($blogId)->getData('products'),
+            'galleries' => GalleryService::new()->getApiCollection($blogId)->getData('galleries'),
+            'productTags' => ProductTagService::new()->getApiCollection($blogId)->getData('product_tags'),
+            'productProperties' => ProductPropertyService::new()->getApiCollection($blogId)->getData('product_properties'),
         ];
 
         $organized = [
@@ -59,19 +59,19 @@ class SummaryService
         }
 
         foreach ($raw['packages'] as $package) {
-            $organized['packages'][$package['product_id']][] = [
+            $organized['packages'][$package['productId']][] = [
                 'id' => $package['id'],
-                'product_id' => $package['product_id'],
+                'productId' => $package['productId'],
                 'package_status' => $package['package_status'],
                 'price' => $package['price'],
                 'guaranty' => $package['guaranty'],
                 'description' => $package['description'],
-                'color' => Arr::get($organized['colors'], $package['color_id'], []),
+                'color' => Arr::get($organized['colors'], $package['colorId'], []),
             ];
         }
 
         foreach ($raw['galleries'] as $gallery) {
-            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
+            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['galleryId']][] = [
                 'name' => $gallery['name'],
                 'base_url' => $gallery['base_url'],
                 'url' => $gallery['url'],
@@ -80,17 +80,17 @@ class SummaryService
         }
 
         foreach ($raw['productTags'] as $productTag) {
-            $organized['productTags'][$productTag['product_id']][] = $productTag['tag_name'];
+            $organized['productTags'][$productTag['productId']][] = $productTag['tag_name'];
         }
 
         foreach ($raw['productProperties'] as $productProperty) {
-            if (! isset($organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']])) {
-                $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']] = [
+            if (! isset($organized['productProperties'][$productProperty['productId']][$productProperty['property_key']])) {
+                $organized['productProperties'][$productProperty['productId']][$productProperty['property_key']] = [
                     'property_key' => $productProperty['property_key'],
                     'property_values' => [],
                 ];
             }
-            $organized['productProperties'][$productProperty['product_id']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
+            $organized['productProperties'][$productProperty['productId']][$productProperty['property_key']]['property_values'][] = $productProperty['property_value'];
         }
 
         $output = [
