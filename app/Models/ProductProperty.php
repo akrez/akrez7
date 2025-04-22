@@ -32,6 +32,12 @@ class ProductProperty extends Model
         'property_value',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::blogUpdatedboot();
+    }
+
     public function scopeDefaultOrder(Builder $query): void
     {
         $query = $query->orderBy('created_at', 'ASC');

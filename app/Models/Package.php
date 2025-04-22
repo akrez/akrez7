@@ -43,4 +43,10 @@ class Package extends Model
         'guaranty',
         'description',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::blogUpdatedboot();
+    }
 }

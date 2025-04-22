@@ -27,4 +27,10 @@ class Color extends Model
         'name',
         'blog_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::blogUpdatedboot();
+    }
 }

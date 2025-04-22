@@ -19,6 +19,6 @@ class SummaryController extends Controller
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        return SummaryService::new()->getApiResponseCached($blog_id, request());
+        return SummaryService::new()->getCachedApiResponse($blog_id, request());
     }
 }

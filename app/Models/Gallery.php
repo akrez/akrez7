@@ -44,6 +44,12 @@ class Gallery extends Model
         'selected_at',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::blogUpdatedboot();
+    }
+
     public function scopeDefaultOrder(Builder $query): void
     {
         $query = $query

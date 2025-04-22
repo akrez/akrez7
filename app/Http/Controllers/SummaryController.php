@@ -43,7 +43,7 @@ class SummaryController extends Controller
     protected function render(int $id, bool $forgetCache = false)
     {
         return view('summary.show', [
-            'data' => SummaryService::new()->getApiResponseCached($id, request(), $forgetCache)->getData(),
+            'data' => SummaryService::new()->getCachedApiResponse($id, request(), $forgetCache)->getData(),
         ]);
     }
 }

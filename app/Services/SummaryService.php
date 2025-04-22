@@ -16,15 +16,18 @@ class SummaryService
         return app(self::class);
     }
 
-    public function getApiResponseCached(int $blogId, $request, bool $forgetCache = false)
+    public function forgetCachedApiResponse(int $blogId)
     {
-        $cacheKey = Cache::keyShowSummary($blogId);
+        Cache::forget($this->showSummaryCacheKey($blogId));
+    }
 
+    public function getCachedApiResponse(int $blogId, $request, bool $forgetCache = false)
+    {
         if ($forgetCache) {
-            Cache::forget($cacheKey);
+            $this->forgetCachedApiResponse($blogId);
         }
 
-        $response = Cache::remember($cacheKey, 300, function () use ($blogId) {
+        $response = Cache::remember($this->showSummaryCacheKey($blogId), 300, function () use ($blogId) {
             return $this->getApiResponse($blogId);
         });
 
@@ -34,6 +37,11 @@ class SummaryService
 
         return $response;
 
+    }
+
+    protected function showSummaryCacheKey(int $blogId)
+    {
+        return Cache::keyShowSummary($blogId);
     }
 
     protected function getApiResponse(int $blogId)

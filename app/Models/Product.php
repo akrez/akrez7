@@ -39,6 +39,12 @@ class Product extends Model
         'product_order',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::blogUpdatedboot();
+    }
+
     public function scopeDefaultOrder(Builder $query): void
     {
         $query = $query
