@@ -15,7 +15,6 @@ use App\Http\Controllers\TelegramBotController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Providers\AppServiceProvider;
 use App\Services\DomainService;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
