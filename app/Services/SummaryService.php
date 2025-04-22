@@ -27,7 +27,7 @@ class SummaryService
             $this->forgetCachedApiResponse($blogId);
         }
 
-        $response = Cache::remember($this->showSummaryCacheKey($blogId), 300, function () use ($blogId) {
+        $response = Cache::remember($this->showSummaryCacheKey($blogId), 3600, function () use ($blogId) {
             return $this->getApiResponse($blogId);
         });
 
