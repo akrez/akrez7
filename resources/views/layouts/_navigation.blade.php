@@ -62,7 +62,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" target="_blank"
-                            href="{{ route('summaries.show', ['blog_id' => app('ActiveBlog')->id()]) }}">
+                            href="{{ route('blogs.show', ['blog_id' => app('ActiveBlog')->id()]) }}">
                             {{ __('View') }}
                         </a>
                     </li>
