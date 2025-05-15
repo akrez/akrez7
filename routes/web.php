@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 $domains = DomainService::new()->getDomains();
 if ($domains) {
-    Route::domain('{domain}')
-        ->whereIn('domain', $domains)
-        ->get('/', [SummaryController::class, 'domain']);
+    Route::domain('{domain}')->whereIn('domain', $domains)->group(function () {
+        Route::get('/', [SummaryController::class, 'domain']);
+    });
 }
 
 Auth::routes();
