@@ -48,6 +48,7 @@
 
     <body dir="rtl">
         @yield('POS_BEGIN')
+
         <div class="container-fluid">
             <div class="row align-items-center min-vh-100 bg">
                 <div class="col-md-1">
@@ -72,6 +73,7 @@
                 </div>
             </div>
         </div>
+
         <div class="container">
             <div class="row py-3">
                 <div class="col-12 text-center">
@@ -88,101 +90,100 @@
                     @endforeach
                 </div>
             </div>
+        </div>
 
-            <div class="row py-3">
-                <div class="container-fluid">
-                    <div class="row g-0">
-                        @foreach ($products as $productKey => $product)
-                            <div class="col-sm-6 col-md-4 col-lg-2"
-                                data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
-                                <div class="card rounded-0 h-100">
+        <div class="container">
+            <div class="row py-3 g-0">
+                @foreach ($products as $productKey => $product)
+                    <div class="col-sm-6 col-md-4 col-lg-2"
+                        data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
+                        <div class="card rounded-0 h-100">
 
-                                    @if (count($product['galleries']['product_image']) > 0)
-                                        <div class="p-3">
-                                            @if (count($product['galleries']['product_image']) == 1)
-                                                <img class="w-100 rounded"
-                                                    src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
-                                                    alt="{{ $product['name'] }}">
-                                            @elseif (count($product['galleries']['product_image']) > 1)
-                                                <div id="product-carousel-{{ $productKey }}"
-                                                    class="carousel carousel-dark slide">
-                                                    <div class="carousel-inner">
-                                                        @foreach ($product['galleries']['product_image'] as $productImage)
-                                                            <div
-                                                                class="carousel-item @if ($loop->first) active @endif">
-                                                                <img class="w-100 rounded"
-                                                                    src="{{ $productImage['base_url'] . '/576__contain/' . $productImage['name'] }}"
-                                                                    alt="{{ $product['name'] }}">
-                                                            </div>
-                                                        @endforeach
+                            @if (count($product['galleries']['product_image']) > 0)
+                                <div class="p-3">
+                                    @if (count($product['galleries']['product_image']) == 1)
+                                        <img class="w-100 rounded"
+                                            src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
+                                            alt="{{ $product['name'] }}">
+                                    @elseif (count($product['galleries']['product_image']) > 1)
+                                        <div id="product-carousel-{{ $productKey }}"
+                                            class="carousel carousel-dark slide">
+                                            <div class="carousel-inner">
+                                                @foreach ($product['galleries']['product_image'] as $productImage)
+                                                    <div
+                                                        class="carousel-item @if ($loop->first) active @endif">
+                                                        <img class="w-100 rounded"
+                                                            src="{{ $productImage['base_url'] . '/576__contain/' . $productImage['name'] }}"
+                                                            alt="{{ $product['name'] }}">
                                                     </div>
-                                                    <button class="carousel-control-prev" type="button"
-                                                        data-bs-target="#product-carousel-{{ $productKey }}"
-                                                        data-bs-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">Previous</span>
-                                                    </button>
-                                                    <button class="carousel-control-next" type="button"
-                                                        data-bs-target="#product-carousel-{{ $productKey }}"
-                                                        data-bs-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">Next</span>
-                                                    </button>
+                                                @endforeach
+                                            </div>
+                                            <button class="carousel-control-prev" type="button"
+                                                data-bs-target="#product-carousel-{{ $productKey }}"
+                                                data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button"
+                                                data-bs-target="#product-carousel-{{ $productKey }}"
+                                                data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">{{ $product['name'] }}</h5>
+                                <div class="card-text">
+                                    @foreach ($product['product_properties'] as $property)
+                                        <div>
+                                            <strong>{{ $property['property_key'] }}</strong>
+                                            {{ implode(', ', $property['property_values']) }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @if ($product['packages'])
+                                @foreach ($product['packages'] as $package)
+                                    <div class="card-footer text-body-secondary d-flex flex-column">
+                                        <div class="d-flex flex-row">
+                                            <div class="flex-grow-1">
+                                                <b class="d-inline-block">
+                                                    {{ number_format($package['price']) }}
+                                                </b>
+                                                <span class="ps-1 d-inline-block">﷼</span>
+                                            </div>
+                                            @if ($package['color'])
+                                                <div>
+                                                    <span class="d-inline-block"
+                                                        style="color: {{ $package['color']['code'] }};">⦿</span>
+                                                    <b class="px-1 d-inline-block">
+                                                        {{ $package['color']['name'] }}
+                                                    </b>
                                                 </div>
                                             @endif
                                         </div>
-                                    @endif
-
-                                    <div class="card-body">
-                                        <h5 class="card-title font-weight-bold">{{ $product['name'] }}</h5>
-                                        <div class="card-text">
-                                            @foreach ($product['product_properties'] as $property)
-                                                <div>
-                                                    <strong>{{ $property['property_key'] }}</strong>
-                                                    {{ implode(', ', $property['property_values']) }}
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    @if ($product['packages'])
-                                        @foreach ($product['packages'] as $package)
-                                            <div class="card-footer text-body-secondary d-flex flex-column">
-                                                <div class="d-flex flex-row">
-                                                    <div class="flex-grow-1">
-                                                        <b class="d-inline-block">
-                                                            {{ number_format($package['price']) }}
-                                                        </b>
-                                                        <span class="ps-1 d-inline-block">﷼</span>
-                                                    </div>
-                                                    @if ($package['color'])
-                                                        <div>
-                                                            <span class="d-inline-block"
-                                                                style="color: {{ $package['color']['code'] }};">⦿</span>
-                                                            <b class="px-1 d-inline-block">
-                                                                {{ $package['color']['name'] }}
-                                                            </b>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                @if ($package['guaranty'])
-                                                    <div>
-                                                        <b class="d-inline-block">گارانتی</b>
-                                                        <span class="ps-1 d-inline-block">{{ $package['guaranty'] }}</span>
-                                                    </div>
-                                                @endif
-                                                @if ($package['description'])
-                                                    <span class="ps-1 d-inline-block">{{ $package['description'] }}</span>
-                                                @endif
+                                        @if ($package['guaranty'])
+                                            <div>
+                                                <b class="d-inline-block">گارانتی</b>
+                                                <span class="ps-1 d-inline-block">{{ $package['guaranty'] }}</span>
                                             </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
+                                        @endif
+                                        @if ($package['description'])
+                                            <span class="ps-1 d-inline-block">{{ $package['description'] }}</span>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
         </div>
+
         @if ($contacts->count())
             <footer class="footer mt-auto py-3 bg-light">
                 <div class="container">
