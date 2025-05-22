@@ -18,7 +18,7 @@ use App\Services\DomainService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-$domains = DomainService::new()->getDomains();
+$domains = DomainService::new()->getDomainsArray()->getData('domains');
 if ($domains) {
     Route::domain('{domain}')->whereIn('domain', $domains)->group(function () {
         Route::get('/', [SummaryController::class, 'domain']);
