@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\ApiResponse;
 use App\Support\Arr;
 use Illuminate\Support\Facades\File;
 
@@ -12,36 +13,37 @@ class DomainService
         return app(self::class);
     }
 
-    public function getFilePath()
+    public function getDomainsArray(): ApiResponse
     {
-        return storage_path('domains.json');
+        return ApiResponse::new()->data([
+            'domains' => array_keys($this->getDomainsToBlogIdsArray()),
+        ]);
     }
 
-    public function getDomainsToBlogIdsArray()
-    {
-        $filePath = $this->getFilePath();
-
-        if (! File::exists($filePath)) {
-            return [];
-        }
-
-        return (array) File::json($filePath);
-    }
-
-    public function getDomains()
-    {
-        return array_keys($this->getDomainsToBlogIdsArray());
-    }
-
-    public function domainToBlogId($domain)
+    public function domainToBlogId($domain): ApiResponse
     {
         $domainsToBlogIdsArray = $this->getDomainsToBlogIdsArray();
 
         $blogId = Arr::get($domainsToBlogIdsArray, $domain);
-        if ($blogId) {
-            return $blogId;
+
+        return ApiResponse::new($blogId ? 200 : 404)->data([
+            'blog_id' => $blogId,
+        ]);
+    }
+
+    protected function getDomainFilePath()
+    {
+        return storage_path('domains.json');
+    }
+
+    protected function getDomainsToBlogIdsArray()
+    {
+        $filePath = $this->getDomainFilePath();
+
+        if (! File::exists($filePath)) {
+            File::put($filePath, json_encode([]));
         }
 
-        return null;
+        return (array) File::json($filePath);
     }
 }
