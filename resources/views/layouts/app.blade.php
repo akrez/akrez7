@@ -8,7 +8,7 @@
 
     <body dir="rtl">
         @include('layouts._navigation')
-        <div class="container mt-3">
+        <div class="container my-3">
             @hasSection('header')
                 <h1 class="fs-2 my-4">
                     @yield('header')

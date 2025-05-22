@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="align-items-center rounded-3 border overflow-hidden pb-xl-5 pb-lg-5 pb-md-5 pt-5 mb-5 bg-body">
-    <div class="row">
+    <div class="row align-items-center rounded-3 border p-5">
         <div class="col-lg-7 text-center">
             <h1 class="display-4 fw-bold lh-1">تجارت بدون مرز!</h1>
             <figure class="lead p-3 mb-0 rounded-3">
@@ -21,5 +20,4 @@
             <img class="rounded-3 img-fluid" src="{{asset('images/story/dashboard.svg')}}">
         </div>
     </div>
-</div>
 @endsection
