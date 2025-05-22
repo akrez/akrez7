@@ -23,11 +23,9 @@ class SummaryController extends Controller
 
     public function domain(Request $request, $summary)
     {
-        $id = DomainService::new()->domainToBlogId($summary);
-        abort_unless($id, 404);
+        $id = DomainService::new()->domainToBlogId($summary)->abortUnSuccessful()->getData('blog_id');
 
-        $blog = $this->blogService->getApiResource($id);
-        abort_unless($id, 404);
+        $blog = $this->blogService->getApiResource($id)->abortUnSuccessful();
 
         return $this->render($id);
     }
