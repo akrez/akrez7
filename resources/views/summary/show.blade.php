@@ -93,9 +93,9 @@
         </div>
 
         <div class="container">
-            <div class="row py-3 g-0">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 py-3 g-0">
                 @foreach ($products as $productKey => $product)
-                    <div class="col-sm-6 col-md-4 col-lg-2"
+                    <div class="col"
                         data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
                         <div class="card rounded-0 h-100">
 
