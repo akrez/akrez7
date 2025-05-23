@@ -22,6 +22,10 @@ class DomainService
 
     public function domainToBlogId($domain): ApiResponse
     {
+        if (empty($domain)) {
+            return ApiResponse::new(404);
+        }
+
         $domainsToBlogIdsArray = $this->getDomainsToBlogIdsArray();
 
         $blogId = Arr::get($domainsToBlogIdsArray, $domain);

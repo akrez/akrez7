@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Support\ApiResponse;
 use App\Support\Arr;
 use App\Support\Cache;
+use DateTime;
+use SimpleXMLElement;
 
 class SummaryService
 {
@@ -21,7 +23,7 @@ class SummaryService
         Cache::forget($this->showSummaryCacheKey($blogId));
     }
 
-    public function getCachedApiResponse(int $blogId, $request, bool $forgetCache = false)
+    public function getCachedApiResponse(int $blogId, \Illuminate\Http\Request $request, bool $forgetCache = false): ApiResponse
     {
         if ($forgetCache) {
             $this->forgetCachedApiResponse($blogId);
@@ -36,7 +38,37 @@ class SummaryService
         }
 
         return $response;
+    }
 
+    public function getSitemapResponse(int $blogId, \Illuminate\Http\Request $request, bool $forgetCache = false): ApiResponse
+    {
+        $blogResponse = $this->getCachedApiResponse($blogId, $request, $forgetCache);
+        if (! $blogResponse->isSuccessful()) {
+            return ApiResponse::new($blogResponse->getStatus());
+        }
+
+        $domain = $request->route()->parameter('domain');
+        if ($domain) {
+            $loc = route('domains.show', ['domain' => $domain]);
+        } else {
+            $loc = route('summaries.show', ['blog_id' => $blogId]);
+        }
+
+        $sitemap = new SimpleXMLElement(implode('', [
+            '<?xml version="1.0" encoding="UTF-8" ?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">',
+            '</urlset>',
+        ]));
+
+        $xmlurl = $sitemap->addChild('url');
+        $xmlurl->addChild('loc', $loc);
+        $xmlurl->addChild('lastmod', now()->format(DateTime::ATOM));
+        $xmlurl->addChild('changefreq', 'daily');
+        $xmlurl->addChild('priority', 1);
+
+        return ApiResponse::new($blogResponse->getStatus())->data([
+            'sitemap' => $sitemap->asXML(),
+        ]);
     }
 
     protected function showSummaryCacheKey(int $blogId)
@@ -44,7 +76,7 @@ class SummaryService
         return Cache::keyShowSummary($blogId);
     }
 
-    protected function getApiResponse(int $blogId)
+    protected function getApiResponse(int $blogId): ApiResponse
     {
         $blogResponse = BlogService::new()->getBlog($blogId);
         if (! $blogResponse->isSuccessful()) {

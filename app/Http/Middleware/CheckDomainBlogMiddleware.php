@@ -16,8 +16,10 @@ class CheckDomainBlogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $domain = $request->route()->parameter('domain');
+
         $request->merge([
-            'blog_id' => DomainService::new()->domainToBlogId($request->domain)->abortUnSuccessful()->getData('blog_id'),
+            'blog_id' => DomainService::new()->domainToBlogId($domain)->abortUnSuccessful()->getData('blog_id'),
         ]);
 
         return $next($request);

@@ -6,6 +6,7 @@ use App\Services\BlogService;
 use App\Services\SummaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class SummaryController extends Controller
 {
@@ -22,10 +23,11 @@ class SummaryController extends Controller
 
     public function show(Request $request)
     {
-        $blog_id = $request->blog_id;
-        $blog = $this->blogService->getApiResource($blog_id)->abortUnSuccessful();
+        $blogId = $request->blog_id;
 
-        return $this->render($blog_id);
+        $blog = $this->blogService->getApiResource($blogId)->abortUnSuccessful();
+
+        return $this->render($blogId);
     }
 
     protected function render(int $id, bool $forgetCache = false)
@@ -33,5 +35,17 @@ class SummaryController extends Controller
         return view('summary.show', [
             'data' => SummaryService::new()->getCachedApiResponse($id, request(), $forgetCache)->getData(),
         ]);
+    }
+
+    public function sitemap(Request $request)
+    {
+        $blogId = $request->blog_id;
+
+        $blog = $this->blogService->getApiResource($blogId)->abortUnSuccessful();
+
+        $response = SummaryService::new()->getSitemapResponse($blogId, request())->abortUnSuccessful();
+        
+        return Response::make($response->getData('sitemap'), $response->getStatus())
+            ->header('Content-Type', 'application/xml');
     }
 }
