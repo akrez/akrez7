@@ -13,6 +13,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
+use App\Http\Middleware\CheckDomainBlogMiddleware;
 use App\Providers\AppServiceProvider;
 use App\Services\DomainService;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,13 @@ use Illuminate\Support\Facades\Route;
 
 $domains = DomainService::new()->getDomainsArray()->getData('domains');
 if ($domains) {
-    Route::domain('{domain}')->whereIn('domain', $domains)->group(function () {
-        Route::get('/', [SummaryController::class, 'domain']);
-    });
+    Route::domain('{domain}')
+        ->whereIn('domain', $domains)
+        ->middleware(CheckDomainBlogMiddleware::class)
+        ->as('domains.')
+        ->group(function () {
+            Route::get('/', [SummaryController::class, 'show'])->name('show');
+        });
 }
 
 Auth::routes();
@@ -57,4 +62,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [SiteController::class, 'index'])->name('site');
 Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);
-Route::get('/summaries/{blog_id}', [SummaryController::class, 'show'])->name('summaries.show');
+
+Route::prefix('summaries/{blog_id}')
+->as('summaries.')
+->group(function () {
+    Route::get('/', [SummaryController::class, 'show'])->name('show');
+});

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\BlogService;
-use App\Services\DomainService;
 use App\Services\SummaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,19 +20,10 @@ class SummaryController extends Controller
         return $this->render($id, true);
     }
 
-    public function domain(Request $request, $summary)
+    public function show(Request $request)
     {
-        $id = DomainService::new()->domainToBlogId($summary)->abortUnSuccessful()->getData('blog_id');
-
-        $blog = $this->blogService->getApiResource($id)->abortUnSuccessful();
-
-        return $this->render($id);
-    }
-
-    public function show(Request $request, int $blog_id)
-    {
-        $blog = $this->blogService->getApiResource($blog_id);
-        abort_unless($blog, 404);
+        $blog_id = $request->blog_id;
+        $blog = $this->blogService->getApiResource($blog_id)->abortUnSuccessful();
 
         return $this->render($blog_id);
     }
