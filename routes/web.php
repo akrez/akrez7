@@ -26,7 +26,7 @@ if ($domains) {
         ->middleware(CheckDomainBlogMiddleware::class)
         ->as('domains.')
         ->group(function () {
-            Route::get('/', [SummaryController::class, 'show'])->name('show');
+            include 'summary.php';
         });
 }
 
@@ -64,7 +64,7 @@ Route::get('/', [SiteController::class, 'index'])->name('site');
 Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);
 
 Route::prefix('summaries/{blog_id}')
-->as('summaries.')
-->group(function () {
-    Route::get('/', [SummaryController::class, 'show'])->name('show');
-});
+    ->as('summaries.')
+    ->group(function () {
+        include 'summary.php';
+    });
