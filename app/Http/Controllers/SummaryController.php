@@ -44,7 +44,7 @@ class SummaryController extends Controller
         $blog = $this->blogService->getApiResource($blogId)->abortUnSuccessful();
 
         $response = SummaryService::new()->getSitemapResponse($blogId, request())->abortUnSuccessful();
-        
+
         return Response::make($response->getData('sitemap'), $response->getStatus())
             ->header('Content-Type', 'application/xml');
     }
