@@ -6,7 +6,7 @@ class StorePackageData extends PackageData
 {
     public function rules($context)
     {
-        return $this->prepareRules($this->getRules($context), [
+        return $this->prepareRules($this->getRawRules($context), [
             'product_id' => true,
             'blog_id' => true,
             'price' => true,

@@ -20,7 +20,7 @@ abstract class PackageData extends Data
         public $description
     ) {}
 
-    public function getRules($context)
+    public function getRawRules($context)
     {
         return [
             'id' => ['integer'],

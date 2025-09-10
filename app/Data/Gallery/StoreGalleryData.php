@@ -18,7 +18,7 @@ class StoreGalleryData extends GalleryData
 
     public function rules($context)
     {
-        return $this->prepareRules($this->getRules($context), [
+        return $this->prepareRules($this->getRawRules($context), [
             'blog_id' => true,
             'file' => true,
             'gallery_category' => true,

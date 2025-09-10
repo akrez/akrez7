@@ -21,7 +21,7 @@ abstract class GalleryData extends Data
         return 'App\\Models\\'.$this->short_gallery_type;
     }
 
-    public function getRules($context)
+    public function getRawRules($context)
     {
         return [
             'blog_id' => ['integer'],

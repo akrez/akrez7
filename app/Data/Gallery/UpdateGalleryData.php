@@ -13,7 +13,7 @@ class UpdateGalleryData extends GalleryData
 
     public function rules($context)
     {
-        return $this->prepareRules($this->getRules($context), [
+        return $this->prepareRules($this->getRawRules($context), [
             'blog_id' => true,
             'id' => true,
             'gallery_order' => false,
