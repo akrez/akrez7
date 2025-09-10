@@ -13,7 +13,7 @@ class UpdatePackageData extends PackageData
 
     public function rules($context)
     {
-        return $this->getRules($context, [
+        return $this->prepareRules($this->getRules($context), [
             'id' => true,
             'package_status' => true,
         ]);

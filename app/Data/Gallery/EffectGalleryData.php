@@ -45,7 +45,7 @@ class EffectGalleryData extends GalleryData
 
     public function rules($context)
     {
-        return static::getRules($context, [
+        return $this->prepareRules($this->getRules($context), [
             'gallery_category' => true,
             'whmq' => true,
             'name' => true,

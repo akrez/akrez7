@@ -20,9 +20,9 @@ abstract class PackageData extends Data
         public $description
     ) {}
 
-    public function getRules($context, $attributesToRequired)
+    public function getRules($context)
     {
-        $rules = [
+        return [
             'id' => ['integer'],
             'product_id' => ['integer'],
             'blog_id' => ['integer'],
@@ -43,15 +43,5 @@ abstract class PackageData extends Data
                 },
             ],
         ];
-
-        $result = [];
-        foreach ($attributesToRequired as $attribute => $required) {
-            $result[$attribute] = array_merge(
-                [$required ? 'required' : 'nullable'],
-                $rules[$attribute]
-            );
-        }
-
-        return $result;
     }
 }

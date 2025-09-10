@@ -21,9 +21,9 @@ abstract class GalleryData extends Data
         return 'App\\Models\\'.$this->short_gallery_type;
     }
 
-    public static function getRules($context, $attributesToRequired)
+    public function getRules($context)
     {
-        $rules = [
+        return [
             'blog_id' => ['integer'],
             'id' => [],
             'gallery_category' => [Rule::enum(GalleryCategoryEnum::class)],
@@ -50,15 +50,5 @@ abstract class GalleryData extends Data
                 },
             ],
         ];
-
-        $result = [];
-        foreach ($attributesToRequired as $attribute => $required) {
-            $result[$attribute] = array_merge(
-                [$required ? 'required' : 'nullable'],
-                $rules[$attribute]
-            );
-        }
-
-        return $result;
     }
 }

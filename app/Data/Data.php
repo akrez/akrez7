@@ -44,4 +44,17 @@ abstract class Data
             $this->attributes()
         );
     }
+
+    protected function prepareRules($rules, $attributesToRequired = [], $attributesPrefix = '')
+    {
+        $result = [];
+        foreach ($attributesToRequired as $attribute => $required) {
+            $result[$attributesPrefix.$attribute] = array_merge(
+                [$required ? 'required' : 'nullable'],
+                $rules[$attribute]
+            );
+        }
+
+        return $result;
+    }
 }

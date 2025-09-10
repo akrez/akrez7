@@ -11,7 +11,7 @@ class IndexCategoryGalleryData extends GalleryData
 
     public function rules($context)
     {
-        return static::getRules($context, [
+        return $this->prepareRules($this->getRules($context), [
             'blog_id' => true,
             'gallery_category' => true,
         ]);
