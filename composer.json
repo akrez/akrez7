@@ -18,7 +18,8 @@
         "laravel/telescope": "^5.7",
         "laravel/tinker": "^2.10.1",
         "laravel/ui": "*",
-        "spatie/laravel-permission": "*"
+        "spatie/laravel-permission": "*",
+        "akrez/http-proxy": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
