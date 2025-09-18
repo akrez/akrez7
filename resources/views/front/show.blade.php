@@ -41,6 +41,16 @@
             .bg {
                 background-image: url("{{ url('images/bg.png') }}");
             }
+
+            input.input-spin-none[type="number"]::-webkit-inner-spin-button,
+            input.input-spin-none[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input.input-spin-none[type="number"] {
+                -moz-appearance: textfield;
+            }
         </style>
 
         @yield('POS_HEAD')
@@ -95,8 +105,7 @@
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 py-3 g-0">
                 @foreach ($products as $productKey => $product)
-                    <div class="col"
-                        data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
+                    <div class="col" data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
                         <div class="card rounded-0 h-100">
 
                             @if (count($product['galleries']['product_image']) > 0)
@@ -149,31 +158,47 @@
                             @if ($product['packages'])
                                 @foreach ($product['packages'] as $package)
                                     <div class="card-footer text-body-secondary d-flex flex-column">
-                                        <div class="d-flex flex-row">
-                                            <div class="flex-grow-1">
+                                        @if ($package['show_price'])
+                                            <div>
                                                 <b class="d-inline-block">
                                                     {{ number_format($package['price']) }}
                                                 </b>
-                                                <span class="ps-1 d-inline-block">﷼</span>
+                                                <span class="ms-1 d-inline-block">﷼</span>
                                             </div>
-                                            @if ($package['color'])
-                                                <div>
-                                                    <span class="d-inline-block"
-                                                        style="color: {{ $package['color']['code'] }};">⦿</span>
-                                                    <b class="px-1 d-inline-block">
-                                                        {{ $package['color']['name'] }}
-                                                    </b>
-                                                </div>
-                                            @endif
-                                        </div>
+                                        @endif
                                         @if ($package['guaranty'])
-                                            <div>
+                                            <div class="pt-1">
                                                 <b class="d-inline-block">گارانتی</b>
-                                                <span class="ps-1 d-inline-block">{{ $package['guaranty'] }}</span>
+                                                <span class="ms-1 d-inline-block">{{ $package['guaranty'] }}</span>
+                                            </div>
+                                        @endif
+                                        @if ($package['color'])
+                                            <div class="pt-1">
+                                                <span class="d-inline-block rounded"
+                                                    style="border: 1px black solid; background-color: {{ $package['color']['code'] }};">⠀⠀⠀</span><span
+                                                    class="d-inline-block ms-1">{{ $package['color']['name'] }}</span>
                                             </div>
                                         @endif
                                         @if ($package['description'])
-                                            <span class="ps-1 d-inline-block">{{ $package['description'] }}</span>
+                                            <div class="pt-1 d-inline-block">{{ $package['description'] }}</div>
+                                        @endif
+
+                                        @if ($package['package_status']['value'] === 'active')
+                                            <div class="pt-1 input-group input-group-sm">
+                                                <button
+                                                    class="col-3 btn btn-light text-center border border-secondary-subtle plus-btn"
+                                                    type="button">➕</button>
+                                                <input class="col-6 form-control text-center input-spin-none" type="number"
+                                                    value="0" name="invoice_items[{{ $package['id'] }}][cnt]">
+                                                <input type="hidden" value="{{ $package['id'] }}"
+                                                    name="invoice_items[{{ $package['id'] }}][package_id]">
+                                                @if ($package['unit'])
+                                                    <span class="input-group-text">{{ $package['unit'] }}</span>
+                                                @endif
+                                                <button
+                                                    class="col-3 btn btn-light text-center border border-secondary-subtle minus-btn"
+                                                    type="button">➖</button>
+                                            </div>
                                         @endif
                                     </div>
                                 @endforeach
@@ -227,7 +252,29 @@
                 </div>
             </footer>
         @endif
+
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var plusButtons = document.querySelectorAll('.plus-btn');
+                plusButtons.forEach(function(button) {
+                    button.addEventListener('click', function(e) {
+                        var input = this.closest('div').querySelector('input');
+                        var value = parseInt(input.value, 10) || 0;
+                        input.value = value + 1;
+                    });
+                });
+            });
+            document.addEventListener('DOMContentLoaded', function() {
+                var minusButtons = document.querySelectorAll('.minus-btn');
+                minusButtons.forEach(function(button) {
+                    button.addEventListener('click', function(e) {
+                        var input = this.closest('div').querySelector('input');
+                        var value = parseInt(input.value, 10) || 0;
+                        input.value = (value > 1 ? value - 1 : 0);
+                    });
+                });
+            });
+
             document.querySelectorAll("[data-filter-tag]").forEach(function(radioFilterElement) {
                 radioFilterElement.onclick = function() {
                     tag = this.getAttribute('data-filter-tag');
