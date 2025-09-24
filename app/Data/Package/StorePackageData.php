@@ -13,6 +13,8 @@ class StorePackageData extends PackageData
             'package_status' => true,
             'color_id' => false,
             'guaranty' => false,
+            'unit' => false,
+            'show_price' => false,
             'description' => false,
         ]);
     }

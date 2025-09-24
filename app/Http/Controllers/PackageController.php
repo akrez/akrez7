@@ -61,6 +61,8 @@ class PackageController extends Controller
             $request->package_status,
             $request->color_id,
             $request->guaranty,
+            $request->unit,
+            $request->show_price,
             $request->description
         );
 
@@ -96,7 +98,9 @@ class PackageController extends Controller
             $id,
             $product_id,
             $this->blogId(),
-            $request->package_status
+            $request->package_status,
+            $request->price,
+            $request->show_price,
         );
 
         $response = $this->packageService->updatePackage($updatePackageData);
