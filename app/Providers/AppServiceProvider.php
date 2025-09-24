@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Support\ActiveBlog;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Pagination\Paginator;
@@ -10,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -50,5 +52,9 @@ class AppServiceProvider extends ServiceProvider
         });
         //
         Paginator::useBootstrapFive();
+        //
+        RateLimiter::for('frontPost', function () {
+            return Limit::perMinute(6);
+        });
     }
 }
