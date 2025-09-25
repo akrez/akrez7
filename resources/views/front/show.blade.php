@@ -84,8 +84,8 @@
             </div>
         </div>
 
-        <div class="container">
-            <div class="row py-3">
+        <div class="container mt-3">
+            <div class="row">
                 <div class="col-12 text-center">
                     <button class="btn rounded-pill px-4 mb-2 btn-success" data-filter-tag="">
                         {{ 'همه محصولات ' . $title }}
@@ -102,8 +102,8 @@
             </div>
         </div>
 
-        <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 py-3 g-0">
+        <div class="container mt-3">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 mb-3 g-0">
                 @foreach ($products as $productKey => $product)
                     <div class="col" data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
                         <div class="card rounded-0 h-100">
@@ -149,8 +149,7 @@
                                 <div class="card-text">
                                     @foreach ($product['product_properties'] as $property)
                                         <div>
-                                            <strong>{{ $property['property_key'] }}</strong>
-                                            {{ implode(', ', $property['property_values']) }}
+                                            <strong>{{ $property['property_key'] }}</strong> {{ implode(', ', $property['property_values']) }}
                                         </div>
                                     @endforeach
                                 </div>
@@ -189,9 +188,8 @@
                                                     class="col-3 btn btn-light text-center border border-secondary-subtle plus-btn"
                                                     type="button">➕</button>
                                                 <input class="col-6 form-control text-center input-spin-none" type="number"
-                                                    value="0" name="invoice_items[{{ $package['id'] }}][cnt]">
-                                                <input type="hidden" value="{{ $package['id'] }}"
-                                                    name="invoice_items[{{ $package['id'] }}][package_id]">
+                                                    value="{{ old('invoice_items[' . $package['id'] . ']cnt', 0) }}"
+                                                    name="invoice_items[{{ $package['id'] }}][cnt]" form="invoice-form">
                                                 @if ($package['unit'])
                                                     <span class="input-group-text">{{ $package['unit'] }}</span>
                                                 @endif
@@ -206,6 +204,47 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+
+            <div class="row sticky-bottom g-0">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 pb-3 g-0">
+                    <button class="btn btn-secondary btn-lg w-100" href="#invoice-form" data-bs-toggle="modal"
+                        data-bs-target="#invoice-modal">
+                        <span>
+                            ثبت فاکتور
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal" id="invoice-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">ثبت فاکتور</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <x-form method="POST" action="{{ $storeInvoiceAction }}" id="invoice-form">
+                            <x-input :label="__('validation.attributes.name')" :md="12" name="invoice_delivery[name]" :errors="$errors"
+                                :value="isset($invoice_delivery['name']) ? $invoice_delivery['name'] : ''" :mt="0" />
+                            <x-input :label="__('validation.attributes.mobile')" :md="12" name="invoice_delivery[mobile]" :errors="$errors"
+                                :value="isset($invoice_delivery['mobile']) ? $invoice_delivery['mobile'] : ''" />
+                            <x-input :label="__('validation.attributes.city')" :md="12" name="invoice_delivery[city]" :errors="$errors"
+                                :value="isset($invoice_delivery['city']) ? $invoice_delivery['city'] : ''" />
+                            <x-input type="textarea" rows="2" :label="__('validation.attributes.address')" :md="12"
+                                name="invoice_delivery[address]" :errors="$errors" :value="isset($invoice_delivery['address']) ? $invoice_delivery['address'] : ''" />
+                            <x-input type="textarea" rows="2" :label="__('validation.attributes.invoice_description')" :md="12"
+                                name="invoice[invoice_description]" :errors="$errors" :value="isset($invoice['invoice_description'])
+                                    ? $invoice['invoice_description']
+                                    : ''" />
+                            <x-button-submit :md="8" name="submit" :errors="$errors"
+                                :class="'btn-success'">ثبت</x-button-submit>
+                        </x-form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -263,8 +302,7 @@
                         input.value = value + 1;
                     });
                 });
-            });
-            document.addEventListener('DOMContentLoaded', function() {
+
                 var minusButtons = document.querySelectorAll('.minus-btn');
                 minusButtons.forEach(function(button) {
                     button.addEventListener('click', function(e) {
@@ -294,6 +332,99 @@
                         productElement.style.display = (tag && !hasTag ? 'none' : 'block');
                     });
                 }
+            });
+
+            document.querySelector('form#invoice-form').addEventListener('submit', function(event) {
+
+                event.preventDefault();
+
+                $requiredAttributesMessage = {
+                    'invoice_delivery[name]': 'فیلد نام الزامی است.',
+                    'invoice_delivery[mobile]': 'فیلد شماره همراه الزامی است.',
+                    'invoice_delivery[city]': 'فیلد شهر الزامی است.',
+                    'invoice_delivery[address]': 'فیلد نشانی الزامی است.',
+                };
+
+                const oldFormData = new FormData(this);
+                const newFormData = new FormData();
+
+                let hasInvoiceItems = false;
+                let validationErrors = [];
+
+                for (let [key, value] of oldFormData.entries()) {
+                    const nameParts = key.match(/invoice_items\[(\d+)\]\[cnt\]/);
+                    if (nameParts) {
+                        const packageId = nameParts[1];
+                        const cnt = parseInt(value, 10);
+                        if (cnt > 0) {
+                            newFormData.append(`invoice_items[${packageId}][package_id]`, packageId);
+                            newFormData.append(`invoice_items[${packageId}][cnt]`, cnt);
+                            hasInvoiceItems = true;
+                        }
+                    } else {
+                        if ((key in $requiredAttributesMessage) && value.trim() === '') {
+                            validationErrors.push($requiredAttributesMessage[key]);
+                        } else {
+                            newFormData.append(key, value);
+                        }
+                    }
+                }
+
+                if (!hasInvoiceItems) {
+                    validationErrors.push('سبد خرید شما خالی است.');
+                }
+
+                if (validationErrors.length > 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        html: validationErrors.join('<br>'),
+                        confirmButtonText: 'بستن'
+                    });
+                    return;
+                }
+
+                fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                        body: newFormData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 422) {
+                            let errorMessage = '';
+                            for (const key in data.errors) {
+                                errorMessage += data.errors[key].join('<br>') + '<br>';
+                            }
+                            Swal.fire({
+                                icon: 'warning',
+                                html: errorMessage,
+                                confirmButtonText: 'بستن'
+                            });
+                        } else if (data.status === 200 || data.status === 201) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: data.message,
+                                confirmButtonText: 'بستن'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: data.message,
+                                confirmButtonText: 'بستن'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'خطا',
+                            confirmButtonText: 'بستن'
+                        });
+                    });
             });
         </script>
         @yield('POS_END')
