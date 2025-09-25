@@ -303,7 +303,20 @@ return [
         //
         'guaranty' => 'گارانتی',
         'color_id' => 'رنگ',
+        'unit' => 'واحد',
+        'show_price' => 'نمایش قیمت',
         //
         'telegram_token' => 'توکن بات تلگرام',
+        //
+        'invoice_description' => 'توضیحات فاکتور',
+        //
+        'invoice_delivery' => [
+            'name' => 'نام',
+            'mobile' => 'شماره همراه',
+            'city' => 'شهر',
+            'address' => 'نشانی',
+        ],
+        //
+        'invoice_items' => 'اقلام فاکتور',
     ],
 ];
