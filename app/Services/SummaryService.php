@@ -116,6 +116,8 @@ class SummaryService
                 'package_status' => $package['package_status'],
                 'price' => $package['price'],
                 'guaranty' => $package['guaranty'],
+                'unit' => $package['unit'],
+                'show_price' => $package['show_price'],
                 'description' => $package['description'],
                 'color' => Arr::get($organized['colors'], $package['color_id'], []),
             ];
