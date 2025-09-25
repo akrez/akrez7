@@ -8,7 +8,7 @@ use App\Services\SummaryService;
 use App\Support\ApiResponse;
 use Illuminate\Http\Request;
 
-class SummaryController extends Controller
+class BlogController extends Controller
 {
     public function __construct(protected BlogService $blogService) {}
 
