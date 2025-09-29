@@ -11,7 +11,8 @@
         @if ('textarea' === $type)
             <textarea name="{{ $name }}" id="{{ $id }}" class="{{ $class }}" rows="{{ $rows }}">{{ $value }}</textarea>
         @elseif('select' === $type)
-            <select name="{{ $name }}" id="{{ $id }}" class="{{ $class }}">
+            <select name="{{ $name }}" id="{{ $id }}" class="{{ $class }}"
+                {{ $attributes }}>
                 @foreach ($options as $optionValue => $option)
                     <option value="{{ $optionValue }}" {{ $value == $optionValue ? ' selected ' : '' }}>
                         {{ $option }}

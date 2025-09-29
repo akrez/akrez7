@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\BlogService;
-use App\Services\SummaryService;
+use App\Services\PresentService;
 use App\Support\ApiResponse;
 use Illuminate\Http\Request;
 
-class SummaryController extends Controller
+class BlogController extends Controller
 {
     public function __construct(protected BlogService $blogService) {}
 
@@ -19,6 +19,6 @@ class SummaryController extends Controller
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        return SummaryService::new()->getCachedApiResponse($blog_id, request());
+        return PresentService::new()->getCachedApiResponse($blog_id, request());
     }
 }

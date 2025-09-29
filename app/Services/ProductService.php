@@ -61,6 +61,15 @@ class ProductService extends Service
         ]);
     }
 
+    public function getLatestProductsByIds(int $blogId, array $ids)
+    {
+        $products = $this->getLatestBlogQuery($blogId)->whereIn('id', $ids)->get();
+
+        return WebResponse::new()->data([
+            'products' => (new ProductCollection($products))->toArr(),
+        ]);
+    }
+
     public function storeProduct(StoreProductData $storeProductData)
     {
         $webResponse = WebResponse::new()->input($storeProductData);

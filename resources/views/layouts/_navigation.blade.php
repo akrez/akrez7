@@ -62,7 +62,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" target="_blank"
-                            href="{{ route('blogs.show', ['id' => app('ActiveBlog')->id()]) }}">
+                            href="{{ route('preview.show', ['blog_id' => app('ActiveBlog')->id()]) }}">
                             {{ __('View') }}
                         </a>
                     </li>
@@ -94,6 +94,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ route('contacts.index') }}">
                             {{ __('Contacts') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('invoices.index') }}">
+                            {{ __('Invoices') }}
                         </a>
                     </li>
                 </ul>

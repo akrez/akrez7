@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header', __('Edit :name', ['name' => __('Package')]))
-@section('subheader', $package['guaranty'] . ' ' . $package['description'])
+@section('subheader', $product['name'])
 
 @section('content')
     @include('package._form', [

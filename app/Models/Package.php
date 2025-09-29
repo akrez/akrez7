@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $blog_id
  * @property int $product_id
  * @property string|null $guaranty
+ * @property string|null $unit
+ * @property bool|null $show_price
  * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -30,6 +32,7 @@ class Package extends Model
         'price' => 'float',
         'color_id' => 'int',
         'blog_id' => 'int',
+        'show_price' => 'boolean',
         'product_id' => 'int',
         'package_status' => PackageStatusEnum::class,
     ];
@@ -41,6 +44,8 @@ class Package extends Model
         'blog_id',
         'product_id',
         'guaranty',
+        'unit',
+        'show_price',
         'description',
     ];
 

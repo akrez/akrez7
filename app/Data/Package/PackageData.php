@@ -17,6 +17,8 @@ abstract class PackageData extends Data
         public $package_status,
         public $color_id,
         public $guaranty,
+        public $unit,
+        public $show_price,
         public $description
     ) {}
 
@@ -28,6 +30,8 @@ abstract class PackageData extends Data
             'blog_id' => ['integer'],
             'price' => ['numeric'],
             'guaranty' => ['string', 'max:256'],
+            'unit' => ['string', 'max:256'],
+            'show_price' => ['boolean'],
             'description' => ['string', 'max:2048'],
             'package_status' => [Rule::in(PackageStatusEnum::values())],
             'color_id' => [

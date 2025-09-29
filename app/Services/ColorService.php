@@ -54,6 +54,15 @@ class ColorService extends Service
         ]);
     }
 
+    public function getLatestColorsByIds(int $blogId, array $ids)
+    {
+        $colors = $this->getLatestBlogQuery($blogId)->whereIn('id', $ids)->get();
+
+        return WebResponse::new()->data([
+            'colors' => (new ColorCollection($colors))->toArr(),
+        ]);
+    }
+
     public function storeColor(StoreColorData $storeColorData)
     {
         $webResponse = WebResponse::new()->input($storeColorData);

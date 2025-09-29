@@ -24,6 +24,8 @@ return new class extends Migration
             $table->unsignedBigInteger('blog_id')->index();
             $table->unsignedBigInteger('product_id')->index();
             $table->string('guaranty', 256)->nullable();
+            $table->string('unit', 256)->nullable();
+            $table->boolean('show_price')->default(false)->nullable();
             $table->string('description', 2048)->nullable();
             $table->softDeletes();
             $table->timestamps();

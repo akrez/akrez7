@@ -1,19 +1,20 @@
 <?php
 
+use App\Enums\PresenterEnum;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPropertyController;
 use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Middleware\CheckActiveBlogMiddleware;
-use App\Http\Middleware\CheckDomainBlogMiddleware;
+use App\Http\Middleware\CheckPresenterMiddleware;
 use App\Providers\AppServiceProvider;
 use App\Services\DomainService;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,10 @@ $domains = DomainService::new()->getDomainsArray()->getData('domains');
 if ($domains) {
     Route::domain('{domain}')
         ->whereIn('domain', $domains)
-        ->middleware(CheckDomainBlogMiddleware::class)
-        ->as('domains.')
+        ->middleware(CheckPresenterMiddleware::class.':'.PresenterEnum::DOMAIN->value)
+        ->as('domain.')
         ->group(function () {
-            include 'summary.php';
+            include 'present.php';
         });
 }
 
@@ -37,9 +38,17 @@ Route::middleware('auth')->group(function () {
     Route::get(AppServiceProvider::HOME, [BlogController::class, 'index'])->name('home');
     Route::patch('blogs/{id}/active', [BlogController::class, 'active'])->name('blogs.active');
     Route::resource('blogs', BlogController::class)->parameter('blogs', 'id')->except(['show', 'destroy']);
-    Route::get('/blogs/{id}', [SummaryController::class, 'blog'])->name('blogs.show');
     //
     Route::middleware(CheckActiveBlogMiddleware::class)->group(function () {
+        Route::resource('invoices', InvoiceController::class)->parameter('invoices', 'id')->only(['index', 'update']);
+        //
+        Route::prefix('preview/{blog_id}')
+            ->middleware(CheckPresenterMiddleware::class.':'.PresenterEnum::PREVIEW->value)
+            ->as('preview.')
+            ->group(function () {
+                include 'present.php';
+            });
+        //
         Route::get('payvoices', [PayvoiceController::class, 'index'])->name('payvoices.index');
         //
         Route::get('galleries/index/{gallery_category}/{short_gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
@@ -63,8 +72,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [SiteController::class, 'index'])->name('site');
 Route::get('/gallery/{gallery_category}/{whmq}/{name}', [GalleryController::class, 'effect']);
 
-Route::prefix('summaries/{blog_id}')
-    ->as('summaries.')
+Route::prefix('front/{blog_id}')
+    ->middleware(CheckPresenterMiddleware::class.':'.PresenterEnum::FRONT->value)
+    ->as('front.')
     ->group(function () {
-        include 'summary.php';
+        include 'present.php';
     });

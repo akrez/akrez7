@@ -12,8 +12,10 @@
             <table class="table table-hover table-bordered align-middle rounded-3 text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">@lang('validation.attributes.status')</th>
                         <th scope="col">@lang('validation.attributes.price')</th>
+                        <th scope="col">@lang('validation.attributes.show_price')</th>
+                        <th scope="col">@lang('validation.attributes.status')</th>
+                        <th scope="col">@lang('validation.attributes.unit')</th>
                         <th scope="col">@lang('validation.attributes.color_id')</th>
                         <th scope="col">@lang('validation.attributes.guaranty')</th>
                         <th scope="col">@lang('validation.attributes.description')</th>
@@ -30,26 +32,31 @@
                                     ? 'table-warning'
                                     : 'table-success') }}">
 
+                            <td scope="col">{{ number_format($package['price']) }}</td>
+
+                            <td scope="col">{{ $package['show_price'] ? __('Yes') : __('No') }}</td>
+
                             <td>{{ $package['package_status'] ? $package['package_status']['trans'] : '' }}</td>
 
-                            <td scope="col">{{ number_format($package['price']) }}</td>
+                            <td>{{ $package['unit'] }}</td>
 
                             <td scope="col">
                                 @if ($package['color_id'] && \Arr::get($colorsIdArray, $package['color_id']))
-                                    <span
-                                        style="border: 1px solid black; background-color: {{ \Arr::get($colorsIdArray, $package['color_id'] . '.code') }};">
-                                        ⠀⠀⠀
-                                    </span>
-                                    <span class="px-1"> {{ \Arr::get($colorsIdArray, $package['color_id'] . '.name') }}
-                                    </span>
+                                    <div>
+                                        <span class="d-inline-block rounded"
+                                            style="border: 1px black solid; background-color: {{ \Arr::get($colorsIdArray, $package['color_id'] . '.code') }};">⠀⠀⠀</span>
+                                        <span
+                                            class="d-inline-block me-1">{{ \Arr::get($colorsIdArray, $package['color_id'] . '.name') }}</span>
+                                    </div>
                                 @endif
                             </td>
                             <td scope="col">{{ $package['guaranty'] }}</td>
                             <td scope="col">{{ $package['description'] }}</td>
                             <td>
-                                <div dir="rtl">
-                                    @include('package._form', ['package' => $package])
-                                </div>
+                                <a class="btn btn-light border border-dark w-100"
+                                    href="{{ route('products.packages.edit', ['product_id' => $product['id'], 'id' => $package['id']]) }}">
+                                    @lang('Edit')
+                                </a>
                             </td>
                             <td>
                                 <form

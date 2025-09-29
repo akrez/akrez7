@@ -20,6 +20,21 @@ class DomainService
         ]);
     }
 
+    public function blogIdToDomains($blogId): ApiResponse
+    {
+        if (empty($blogId)) {
+            return ApiResponse::new(404);
+        }
+
+        $domainsToBlogIdsArray = $this->getDomainsToBlogIdsArray();
+
+        $domains = array_keys($domainsToBlogIdsArray, 2);
+
+        return ApiResponse::new($domains ? 200 : 404)->data([
+            'domains' => $domains,
+        ]);
+    }
+
     public function domainToBlogId($domain): ApiResponse
     {
         if (empty($domain)) {
