@@ -73,7 +73,7 @@ class PresentService
      */
     public function routeByPresentInfo(array $presentInfo, $name, $parameters = [], $absolute = true)
     {
-        if ($presentInfo['presenter'] === PresenterEnum::DOMAIN->name) {
+        if ($presentInfo['presenter'] === PresenterEnum::DOMAIN->value) {
             $parameters['domain'] = $presentInfo['domain'];
         } else {
             $parameters['blog_id'] = $presentInfo['blog_id'];
