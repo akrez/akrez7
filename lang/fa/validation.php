@@ -308,7 +308,10 @@ return [
         //
         'telegram_token' => 'توکن بات تلگرام',
         //
-        'invoice_description' => 'توضیحات فاکتور',
+        'invoice' => [
+            'invoice_status' => 'وضعیت فاکتور',
+            'invoice_description' => 'توضیحات فاکتور',
+        ],
         //
         'invoice_delivery' => [
             'name' => 'نام',
@@ -318,5 +321,6 @@ return [
         ],
         //
         'invoice_items' => 'اقلام فاکتور',
+        'cnt' => 'تعداد',
     ],
 ];

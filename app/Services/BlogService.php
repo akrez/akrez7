@@ -24,9 +24,7 @@ class BlogService
             ->where('blog_status', BlogStatusEnum::ACTIVE->value)
             ->first();
 
-        return ApiResponse::new($blog ? 200 : 404)->data([
-            'blog' => (new BlogResource($blog))->toArr(),
-        ]);
+        return $this->getBlogResource($blog);
     }
 
     public function getBlog(int $id)
@@ -35,7 +33,12 @@ class BlogService
             ->where('id', $id)
             ->first();
 
-        return WebResponse::new($blog ? 200 : 404)->data([
+        return $this->getBlogResource($blog);
+    }
+
+    public function getBlogResource(?Blog $blog)
+    {
+        return ApiResponse::new($blog ? 200 : 404)->data([
             'blog' => (new BlogResource($blog))->toArr(),
         ]);
     }

@@ -2,25 +2,89 @@
 
 namespace App\Services;
 
+use App\Enums\CacheKeyEnum;
 use App\Enums\GalleryCategoryEnum;
+use App\Enums\PresenterEnum;
 use App\Models\Blog;
 use App\Models\Product;
 use App\Support\ApiResponse;
 use App\Support\Arr;
-use App\Support\Cache;
 use DateTime;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use SimpleXMLElement;
 
-class SummaryService
+class PresentService
 {
+    const PRESENT_INFO_REQUEST_KEY = '__present_info';
+
     public static function new()
     {
         return app(self::class);
     }
 
+    public function makePresentInfo($userId, $presenter, $blogId, ?string $domain): ?array
+    {
+        if ($presenter === PresenterEnum::DOMAIN->value) {
+            if (empty($domain)) {
+                return null;
+            }
+            $blogId = DomainService::new()->domainToBlogId($domain)->getData('blog_id');
+        }
+
+        if (empty($blogId)) {
+            return null;
+        }
+
+        if ($presenter === PresenterEnum::PREVIEW->value) {
+            $blogModel = BlogService::new()->getUserBlog($userId, $blogId)->getData('blog');
+            if (empty($blogModel)) {
+                return null;
+            }
+            $blog = BlogService::new()->getBlogResource($blogModel)->getData('blog');
+        } else {
+            $blog = BlogService::new()->getApiResource($blogId)->getData('blog');
+        }
+
+        if (empty($blog)) {
+            return null;
+        }
+
+        return [
+            PresentService::PRESENT_INFO_REQUEST_KEY => [
+                'presenter' => $presenter,
+                'blog_id' => $blogId,
+                'domain' => $domain,
+            ],
+        ];
+    }
+
+    public function getRequestPresentInfo(Request $request): array
+    {
+        return (array) Arr::get($request, PresentService::PRESENT_INFO_REQUEST_KEY);
+    }
+
+    /**
+     * Generate the URL to a named route.
+     *
+     * @param  \BackedEnum|string  $name
+     * @param  mixed  $parameters
+     * @param  bool  $absolute
+     */
+    public function routeByPresentInfo(array $presentInfo, $name, $parameters = [], $absolute = true)
+    {
+        if ($presentInfo['presenter'] === PresenterEnum::DOMAIN->name) {
+            $parameters['domain'] = $presentInfo['domain'];
+        } else {
+            $parameters['blog_id'] = $presentInfo['blog_id'];
+        }
+
+        return route($presentInfo['presenter'].'.'.$name, $parameters, $absolute);
+    }
+
     public function forgetCachedApiResponse(int $blogId)
     {
-        Cache::forget($this->showSummaryCacheKey($blogId));
+        Cache::forget($this->showBlogCacheKey($blogId));
     }
 
     public function getCachedApiResponse(int $blogId, \Illuminate\Http\Request $request, bool $forgetCache = false): ApiResponse
@@ -29,7 +93,7 @@ class SummaryService
             $this->forgetCachedApiResponse($blogId);
         }
 
-        $response = Cache::remember($this->showSummaryCacheKey($blogId), 3600, function () use ($blogId) {
+        $response = Cache::remember($this->showBlogCacheKey($blogId), 3600, function () use ($blogId) {
             return $this->getApiResponse($blogId);
         });
 
@@ -47,12 +111,8 @@ class SummaryService
             return ApiResponse::new($blogResponse->getStatus());
         }
 
-        $domain = $request->route()->parameter('domain');
-        if ($domain) {
-            $loc = route('domains.show', ['domain' => $domain]);
-        } else {
-            $loc = route('summaries.show', ['blog_id' => $blogId]);
-        }
+        $presentInfo = $this->getRequestPresentInfo($request);
+        $loc = $this->routeByPresentInfo($presentInfo, 'show');
 
         $sitemap = new SimpleXMLElement(implode('', [
             '<?xml version="1.0" encoding="UTF-8" ?>',
@@ -71,9 +131,9 @@ class SummaryService
         ]);
     }
 
-    protected function showSummaryCacheKey(int $blogId)
+    protected function showBlogCacheKey(int $blogId)
     {
-        return Cache::keyShowSummary($blogId);
+        return CacheKeyEnum::PRESENT_BLOG_SHOW->name.':'.$blogId;
     }
 
     protected function getApiResponse(int $blogId): ApiResponse

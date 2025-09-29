@@ -13,6 +13,7 @@ use Carbon\Carbon;
  * Class Invoice
  *
  * @property int $id
+ * @property string $invoice_uuid
  * @property string $invoice_status
  * @property array $invoice_params
  * @property int $blog_id
@@ -30,8 +31,19 @@ class Invoice extends Model
     ];
 
     protected $fillable = [
+        'invoice_uuid',
         'invoice_status',
         'invoice_params',
         'blog_id',
     ];
+
+    public function invoiceDelivery()
+    {
+        return $this->hasOne(InvoiceDelivery::class, 'invoice_id');
+    }
+
+    public function invoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class, 'invoice_id');
+    }
 }

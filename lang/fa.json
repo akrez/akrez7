@@ -313,5 +313,8 @@
     "out_of_stock": "اتمام موجودی",
     "Upload": "آپلود",
     "Invoice": "فاکتور",
+    "Invoices": "فاکتورها",
+    "total :name": "مجموع :name",
+    ":name uuid": "شناسه جهانی :name",
     "Upload :name Attribute": "آپلود اطلاعات :name"
 }

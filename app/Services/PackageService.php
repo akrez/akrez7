@@ -61,6 +61,15 @@ class PackageService extends Service
         ]);
     }
 
+    public function getLatestPackagesWithTrashedByIds(int $blogId, array $ids)
+    {
+        $packages = $this->getLatestBlogQuery($blogId)->withTrashed()->whereIn('id', $ids)->get();
+
+        return WebResponse::new()->data([
+            'packages' => (new PackageCollection($packages))->toArr(),
+        ]);
+    }
+
     public function storePackage(StorePackageData $storePackageData)
     {
         $webResponse = WebResponse::new()->input($storePackageData);

@@ -17,4 +17,13 @@ return [
     'instagram' => 'اینستاگرام',
     //
     'out_of_stock' => 'اتمام موجودی',
+    //
+    'pending' => 'منتظر تایید',
+    'on_hold' => 'در انتظار',
+    'waiting_for_payment' => 'منتظر پرداخت',
+    'waiting_for_payment_verification' => 'منتظر تایید پرداخت',
+    'processing' => 'در حال آماده سازی',
+    'shipped' => 'ارسال شده',
+    'completed' => 'تحویل شده',
+    'refunded' => 'مرجوع شده',
 ];

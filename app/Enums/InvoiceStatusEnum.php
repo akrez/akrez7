@@ -12,6 +12,6 @@ enum InvoiceStatusEnum: string
     case WAITING_FOR_PAYMENT_VERIFICATION = 'waiting_for_payment_verification';
     case PROCESSING = 'processing';
     case SHIPPED = 'shipped';
-    case COMPLETED = 'complete';
-    case REFUNDED = 'refund';
+    case COMPLETED = 'completed';
+    case REFUNDED = 'refunded';
 }

@@ -18,17 +18,19 @@ class InvoiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'invoice_uuid' => $this->invoice_uuid,
             'invoice_status' => $this->invoice_status ? $this->invoice_status->toResource() : null,
             'invoice_description' => $this->invoice_params['invoice_description'] ?? null,
+            'present_info' => $this->invoice_params['present_info'] ?? null,
             'created_at' => $this->formatCarbonDateTime($this->created_at),
             'updated_at' => $this->formatCarbonDateTime($this->updated_at),
             'invoiceDelivery' => $this->whenLoaded(
                 'invoiceDelivery',
-                $this->invoiceDelivery ? new InvoiceDeliveryResource($this->invoiceDelivery) : null,
+                $this->invoiceDelivery ? (new InvoiceDeliveryResource($this->invoiceDelivery))->toArr($request) : null,
             ),
             'invoiceItems' => $this->whenLoaded(
                 'invoiceItems',
-                new InvoiceItemCollection($this->invoiceItems),
+                (new InvoiceItemCollection($this->invoiceItems))->toArr($request),
             ),
         ];
     }
