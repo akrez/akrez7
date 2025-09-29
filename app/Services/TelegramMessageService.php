@@ -23,7 +23,7 @@ class TelegramMessageService
 
     public function getWebhookUrl($blogId, $telegramToken)
     {
-        return route('telegram_messages.webhook', [
+        return route('api.telegram_messages.webhook', [
             'blog_id' => $blogId,
             'telegram_token' => $telegramToken,
         ]);
