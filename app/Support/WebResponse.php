@@ -9,7 +9,7 @@ class WebResponse extends ApiResponse
 {
     protected ?string $successfulRoute;
 
-    protected null|Paginator|LengthAwarePaginator $paginator;
+    protected ?array $paginator;
 
     public function reset(): self
     {
@@ -33,22 +33,35 @@ class WebResponse extends ApiResponse
         return $this->successfulRoute;
     }
 
-    public function paginator(null|Paginator|LengthAwarePaginator $paginator): self
+    public function paginator(null|Paginator|LengthAwarePaginator $paginator, $itemsDataKey = null): self
     {
-        $this->paginator = ($paginator ? app($paginator::class, [
-            'items' => [],
-            'perPage' => $paginator->perPage(),
-            'currentPage' => $paginator->currentPage(),
-            'options' => [],
-            'total' => ($paginator instanceof LengthAwarePaginator ? $paginator->total() : null),
-        ]) : null);
+        $this->paginator = ($paginator ? [
+            'class' => $paginator::class,
+            'parameters' => [
+                'items' => [],
+                'perPage' => $paginator->perPage(),
+                'currentPage' => $paginator->currentPage(),
+                'options' => $paginator->getOptions(),
+                'total' => ($paginator instanceof LengthAwarePaginator ? $paginator->total() : null),
+            ],
+        ] : null);
 
         return $this;
     }
 
-    public function getPaginator($path, $pageName = 'page'): null|Paginator|LengthAwarePaginator
+    public function getPaginator($path, $itemsDataKey = null, $pageName = 'page'): null|Paginator|LengthAwarePaginator
     {
-        return $this->paginator ? $this->paginator->setPath($path)->setPageName($pageName) : null;
+        if (! $this->paginator) {
+            return null;
+        }
+
+        if ($itemsDataKey) {
+            $this->paginator['parameters']['items'] = (Arr::get($this->data, $itemsDataKey) ?: []);
+        }
+
+        return app($this->paginator['class'], $this->paginator['parameters'])
+            ->setPath($path)
+            ->setPageName($pageName);
     }
 
     public function toResponse($request)

@@ -23,7 +23,7 @@ class PayvoiceController extends Controller
 
         return view('payvoice.index', [
             'payvoices' => $response->getData('payvoices'),
-            'paginator' => $response->getPaginator(route('payvoices.index')),
+            'paginator' => $response->getPaginator(route('payvoices.index'), 'payvoices'),
         ]);
     }
 }
