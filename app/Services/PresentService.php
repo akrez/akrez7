@@ -226,6 +226,8 @@ class PresentService
                 'contact_key' => $contact['contact_key'],
                 'contact_value' => $contact['contact_value'],
                 'contact_link' => $contact['contact_link'],
+                'presenter_visible' => $contact['presenter_visible'],
+                'invoice_visible' => $contact['invoice_visible'],
             ];
         }
 

@@ -297,6 +297,8 @@ return [
         'contact_link' => 'لینک',
         'contact_value' => 'مقدار',
         'contact_order' => 'ترتیب',
+        'presenter_visible' => 'نمایش در ارایه دهنده ها',
+        'invoice_visible' => 'نمایش در فاکتور',
         'contact_type' => 'نوع',
         //
         'token' => 'توکن',

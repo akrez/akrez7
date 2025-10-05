@@ -16,6 +16,8 @@
                         <th scope="col">@lang('validation.attributes.contact_value')</th>
                         <th scope="col">@lang('validation.attributes.contact_link')</th>
                         <th scope="col">@lang('validation.attributes.contact_order')</th>
+                        <th scope="col">@lang('validation.attributes.presenter_visible')</th>
+                        <th scope="col">@lang('validation.attributes.invoice_visible')</th>
                         <th scope="col">@lang('validation.attributes.created_at')</th>
                         <th scope="col">@lang('validation.attributes.updated_at')</th>
                         <th scope="col"></th>
@@ -30,6 +32,8 @@
                             <td scope="col">{{ $contact['contact_value'] }}</td>
                             <td scope="col">{{ $contact['contact_link'] }}</td>
                             <td scope="col">{{ $contact['contact_order'] }}</td>
+                            <td scope="col">{{ $contact['presenter_visible'] ? '✔️' : '❌' }}</td>
+                            <td scope="col">{{ $contact['invoice_visible'] ? '✔️' : '❌' }}</td>
                             <td scope="col">{{ \Arr::get($contact, 'created_at.fa') }}</td>
                             <td scope="col">{{ \Arr::get($contact, 'updated_at.fa') }}</td>
                             <td>

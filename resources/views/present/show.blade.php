@@ -6,11 +6,17 @@
     $tags = collect(Arr::get($data, 'products', []))->pluck('product_tags')->flatten()->unique()->sort()->toArray();
     $products = collect(Arr::get($data, 'products', []));
     $contacts = collect(Arr::get($data, 'contacts', []));
-    $contactSize = $contacts->count() ? max(4, intval(12 / count($contacts))) : 4;
     $whmq = '__contain';
     $logoGallery = \Arr::get($data, 'blog.galleries.blog_logo.0');
     $logoUrl = $logoGallery ? $logoGallery['base_url'] . '/576__contain/' . $logoGallery['name'] : null;
     $heroUrl = url('images/hero.jpg');
+    $presenterContacts = collect($contacts)->filter(function ($contact, int $key) {
+        return $contact['presenter_visible'];
+    });
+    $presenterContactSize = $presenterContacts->count() ? max(4, intval(12 / $presenterContacts->count())) : 4;
+    $invoiceContacts = collect($contacts)->filter(function ($contact, int $key) {
+        return $contact['invoice_visible'];
+    });
 @endphp
 
 @spaceless
@@ -269,7 +275,7 @@
                                     $icon = 'bi bi-telephone';
                                 }
                             @endphp
-                            <div class="col-lg-{{ $contactSize }} py-3">
+                            <div class="col-lg-{{ $presenterContactSize }} py-3">
                                 <div class="info-item text-center">
                                     <div class="contact d-inline-block text-center">
                                         <div class="d-flex justify-content-center">

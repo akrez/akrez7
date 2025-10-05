@@ -31,12 +31,21 @@ class ContactService extends Service
     public function getApiCollection(int $blogId): ApiResponse
     {
         $models = $this->getLatestApiQuery($blogId)
-            ->where('contact_order', '>', 0)
             ->get();
 
         return ApiResponse::new(200)->data([
             'contacts' => (new ContactCollection($models))->toArr(),
         ]);
+    }
+
+    protected function getLatestApiQuery($blogId)
+    {
+        return $this->getLatestBaseQuery($blogId)
+            ->where(function ($subQuery) {
+                $subQuery
+                    ->orWhere('presenter_visible', true)
+                    ->orWhere('invoice_visible', true);
+            });
     }
 
     protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
@@ -70,6 +79,8 @@ class ContactService extends Service
             'contact_value' => $storeContactData->contact_value,
             'contact_link' => $storeContactData->contact_link,
             'contact_order' => $storeContactData->contact_order,
+            'presenter_visible' => $storeContactData->presenter_visible,
+            'invoice_visible' => $storeContactData->invoice_visible,
             'blog_id' => $storeContactData->blog_id,
         ]);
         if (! $contact) {
@@ -115,6 +126,8 @@ class ContactService extends Service
             'contact_value' => $updateContactData->contact_value,
             'contact_link' => $updateContactData->contact_link,
             'contact_order' => $updateContactData->contact_order,
+            'presenter_visible' => $updateContactData->presenter_visible,
+            'invoice_visible' => $updateContactData->invoice_visible,
             'blog_id' => $updateContactData->blog_id,
         ]);
         if (! $contact->save()) {

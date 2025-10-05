@@ -15,7 +15,9 @@ class ContactData extends Data
         public $contact_key,
         public $contact_value,
         public $contact_link,
-        public $contact_order
+        public $contact_order,
+        public $presenter_visible,
+        public $invoice_visible,
     ) {}
 
     public function rules($context)
@@ -33,6 +35,8 @@ class ContactData extends Data
             'contact_value' => ['required', 'max:1023'],
             'contact_link' => ['nullable'],
             'contact_order' => ['nullable', 'numeric'],
+            'presenter_visible' => ['nullable', 'boolean'],
+            'invoice_visible' => ['nullable', 'boolean'],
         ];
     }
 }

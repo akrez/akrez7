@@ -43,7 +43,9 @@ class ContactController extends Controller
             $request->contact_key,
             $request->contact_value,
             $request->contact_link,
-            $request->contact_order
+            $request->contact_order,
+            $request->presenter_visible,
+            $request->invoice_visible,
         );
 
         $response = $this->contactService->storeContact($storeContactData);
@@ -75,7 +77,9 @@ class ContactController extends Controller
             $request->contact_key,
             $request->contact_value,
             $request->contact_link,
-            $request->contact_order
+            $request->contact_order,
+            $request->presenter_visible,
+            $request->invoice_visible,
         );
 
         $response = $this->contactService->updateContact($updateContactData);

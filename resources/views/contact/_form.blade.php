@@ -12,6 +12,8 @@
     <x-input :md="3" :row="!$isVertical" name="contact_value" :errors="$errors" :value="isset($contact) ? $contact['contact_value'] : ''" />
     <x-input :md="3" :row="!$isVertical" name="contact_link" :errors="$errors" :value="isset($contact) ? $contact['contact_link'] : ''" />
     <x-input :md="3" :row="!$isVertical" name="contact_order" :errors="$errors" :value="isset($contact) ? $contact['contact_order'] : ''" />
+    <x-input :md="3" :row="!$isVertical" name="presenter_visible" :errors="$errors" :value="isset($contact) ? $contact['presenter_visible'] : ''" type="checkbox" />
+    <x-input :md="3" :row="!$isVertical" name="invoice_visible" :errors="$errors" :value="isset($contact) ? $contact['invoice_visible'] : ''" type="checkbox" />
     @if ($isVertical)
         </div>
     @endif

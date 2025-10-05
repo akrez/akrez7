@@ -10,6 +10,11 @@
 
         @if ('textarea' === $type)
             <textarea name="{{ $name }}" id="{{ $id }}" class="{{ $class }}" rows="{{ $rows }}">{{ $value }}</textarea>
+        @elseif ('checkbox' === $type)
+            <div class="input-group-text form-control">
+                <input name="{{ $name }}" id="{{ $id }}" class="mt-0 px-0 form-check-input {{ $class }}"
+                    type="{{ $type }}" @checked($value) value="1" {{ $attributes }} />
+            </div>
         @elseif('select' === $type)
             <select name="{{ $name }}" id="{{ $id }}" class="{{ $class }}"
                 {{ $attributes }}>

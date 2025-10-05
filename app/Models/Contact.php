@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string|null $contact_value
  * @property string|null $contact_link
  * @property float|null $contact_order
+ * @property bool|null $presenter_visible
+ * @property bool|null $invoice_visible
  * @property int $blog_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -25,6 +27,8 @@ class Contact extends Model
 
     protected $casts = [
         'contact_order' => 'float',
+        'presenter_visible' => 'boolean',
+        'invoice_visible' => 'boolean',
         'blog_id' => 'int',
         'contact_type' => ContactTypeEnum::class,
     ];
@@ -35,6 +39,8 @@ class Contact extends Model
         'contact_value',
         'contact_link',
         'contact_order',
+        'presenter_visible',
+        'invoice_visible',
         'blog_id',
     ];
 
@@ -48,6 +54,6 @@ class Contact extends Model
     {
         $query = $query
             ->orderBy('contact_order', 'DESC')
-            ->orderBy('updated_at', 'ASC');
+            ->orderBy('created_at', 'ASC');
     }
 }

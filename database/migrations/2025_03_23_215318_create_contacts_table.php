@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('contact_value', 1023)->nullable();
             $table->string('contact_link', 1023)->nullable();
             $table->decimal('contact_order')->nullable();
+            $table->boolean('presenter_visible')->nullable();
+            $table->boolean('invoice_visible')->nullable();
             $table->unsignedBigInteger('blog_id')->index();
             $table->timestamps();
         });

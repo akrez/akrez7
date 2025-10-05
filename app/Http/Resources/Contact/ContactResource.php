@@ -21,6 +21,8 @@ class ContactResource extends JsonResource
             'contact_value' => $this->contact_value,
             'contact_link' => $this->contact_link,
             'contact_order' => $this->contact_order,
+            'presenter_visible' => $this->presenter_visible,
+            'invoice_visible' => $this->invoice_visible,
             'created_at' => $this->formatCarbonDateTime($this->created_at),
             'updated_at' => $this->formatCarbonDateTime($this->updated_at),
         ];

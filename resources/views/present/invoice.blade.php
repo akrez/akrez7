@@ -6,11 +6,17 @@
     $tags = collect(Arr::get($data, 'products', []))->pluck('product_tags')->flatten()->unique()->sort()->toArray();
     $products = collect(Arr::get($data, 'products', []));
     $contacts = collect(Arr::get($data, 'contacts', []));
-    $contactSize = $contacts->count() ? max(4, intval(12 / count($contacts))) : 4;
     $whmq = '__contain';
     $logoGallery = \Arr::get($data, 'blog.galleries.blog_logo.0');
     $logoUrl = $logoGallery ? $logoGallery['base_url'] . '/576__contain/' . $logoGallery['name'] : null;
     $heroUrl = url('images/hero.jpg');
+    $presenterContacts = collect($contacts)->filter(function ($contact, int $key) {
+        return $contact['presenter_visible'];
+    });
+    $presenterContactSize = $presenterContacts->count() ? max(4, intval(12 / $presenterContacts->count())) : 4;
+    $invoiceContacts = collect($contacts)->filter(function ($contact, int $key) {
+        return $contact['invoice_visible'];
+    });
 @endphp
 
 @spaceless
@@ -51,6 +57,11 @@
             input.input-spin-none[type="number"] {
                 -moz-appearance: textfield;
             }
+
+            table .td-fit {
+                width: 1%;
+                white-space: nowrap;
+            }
         </style>
 
         @yield('POS_HEAD')
@@ -64,16 +75,26 @@
                     <table class="table table-bordered m-0 w-100 my-3">
                         <tbody>
                             <tr>
-                                <th class="text-center table-light" rowspan="3" style="width: 80px;">
+                                <td class="text-center table-light td-fit" rowspan="2" style="width: 80px;">
                                     @if ($logoUrl)
                                         <img style="width: 64px; height: 64px;" alt="{{ $title }}"
                                             src="{{ $logoUrl }}">
                                     @endif
-                                </th>
-                                <td>{{ $title }}</td>
+                                </td>
+                                <td colspan="{{ $invoiceContacts->count() * 2 + 2 }}">
+                                    {{ $title }}
+                                </td>
                             </tr>
                             <tr>
-                                <td>{{ Arr::get($invoice, 'invoice_uuid') }}</td>
+                                @forelse ($invoiceContacts as $invoiceContact)
+                                    <td class="table-light td-fit">{{ Arr::get($invoiceContact, 'contact_key') }}</td>
+                                    <td>{{ Arr::get($invoiceContact, 'contact_value') }}</td>
+                                @empty
+                                @endforelse
+                                <td class="table-light td-fit">@lang(':name id', ['name' => __('Invoice')])</td>
+                                <td class="">
+                                    {{ Arr::get($invoice, 'invoice_uuid') }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
