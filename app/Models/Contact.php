@@ -48,6 +48,6 @@ class Contact extends Model
     {
         $query = $query
             ->orderBy('contact_order', 'DESC')
-            ->orderBy('created_at', 'ASC');
+            ->orderBy('updated_at', 'ASC');
     }
 }

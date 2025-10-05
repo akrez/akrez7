@@ -31,6 +31,7 @@ class ContactService extends Service
     public function getApiCollection(int $blogId): ApiResponse
     {
         $models = $this->getLatestApiQuery($blogId)
+            ->where('contact_order', '>', 0)
             ->get();
 
         return ApiResponse::new(200)->data([
