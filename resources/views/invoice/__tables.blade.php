@@ -43,7 +43,7 @@
         @foreach ($invoice['invoiceItems'] as $invoiceItem)
             @php
                 $totalCnt += $invoiceItem['cnt'];
-                $totalPrice += $invoiceItem['price'];
+                $totalPrice += $invoiceItem['cnt'] * $invoiceItem['price'];
             @endphp
             <tr>
                 <th>{{ $invoiceItem['package']['product']['name'] ?? '' }}</th>
