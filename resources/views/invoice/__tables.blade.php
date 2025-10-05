@@ -31,7 +31,7 @@
             <th scope="col">@lang('validation.attributes.description')</th>
             <th scope="col">@lang('validation.attributes.unit')</th>
             <th scope="col">@lang('validation.attributes.cnt')</th>
-            <th scope="col">@lang('validation.attributes.price')</th>
+            <th scope="col">@lang('validation.attributes.unit_price')</th>
             <th scope="col">@lang('total :name', ['name' => ''])</th>
         </tr>
     </thead>
