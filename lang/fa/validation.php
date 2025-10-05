@@ -309,8 +309,8 @@ return [
         'telegram_token' => 'توکن بات تلگرام',
         //
         'invoice' => [
-            'invoice_status' => 'وضعیت فاکتور',
-            'invoice_description' => 'توضیحات فاکتور',
+            'invoice_status' => 'وضعیت پیش فاکتور',
+            'invoice_description' => 'توضیحات پیش فاکتور',
         ],
         //
         'invoice_delivery' => [
@@ -320,7 +320,7 @@ return [
             'address' => 'نشانی',
         ],
         //
-        'invoice_items' => 'اقلام فاکتور',
+        'invoice_items' => 'اقلام پیش فاکتور',
         'cnt' => 'تعداد',
         //
         'unit_price' => 'قیمت واحد',

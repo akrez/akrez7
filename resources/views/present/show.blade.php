@@ -149,7 +149,8 @@
                                 <div class="card-text">
                                     @foreach ($product['product_properties'] as $property)
                                         <div>
-                                            <strong>{{ $property['property_key'] }}</strong> {{ implode(', ', $property['property_values']) }}
+                                            <strong>{{ $property['property_key'] }}</strong>
+                                            {{ implode(', ', $property['property_values']) }}
                                         </div>
                                     @endforeach
                                 </div>
@@ -211,7 +212,7 @@
                     <button class="btn btn-secondary btn-lg w-100" href="#invoice-form" data-bs-toggle="modal"
                         data-bs-target="#invoice-modal">
                         <span>
-                            ثبت فاکتور
+                            ثبت پیش فاکتور
                         </span>
                     </button>
                 </div>
@@ -223,7 +224,7 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">ثبت فاکتور</h5>
+                        <h5 class="modal-title">ثبت پیش فاکتور</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
