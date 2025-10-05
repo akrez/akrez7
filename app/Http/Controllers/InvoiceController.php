@@ -59,7 +59,7 @@ class InvoiceController extends Controller
             'invoice_delivery' => $request->query('invoice_delivery'),
             //
             'invoices' => $latestInvoicesResponse->getData('invoices'),
-            'paginator' => $latestInvoicesResponse->getPaginator(route('invoices.index')),
+            'paginator' => $latestInvoicesResponse->getPaginator(route('invoices.index'), 'invoices'),
             //
             'presentService' => PresentService::new(),
             'presentInfos' => $presentInfos,

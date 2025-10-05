@@ -108,7 +108,7 @@ class InvoiceService extends Service
     public function getLatestBlogInvoices(
         IndexInvoiceData $indexInvoiceData,
         ?int $page = null,
-        ?int $perPage = 2
+        ?int $perPage = 7
     ) {
         $webResponse = WebResponse::new()->input($indexInvoiceData);
 
