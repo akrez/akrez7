@@ -28,7 +28,7 @@ class DomainService
 
         $domainsToBlogIdsArray = $this->getDomainsToBlogIdsArray();
 
-        $domains = array_keys($domainsToBlogIdsArray, 2);
+        $domains = array_keys($domainsToBlogIdsArray, $blogId);
 
         return ApiResponse::new($domains ? 200 : 404)->data([
             'domains' => $domains,
