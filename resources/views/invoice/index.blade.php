@@ -53,8 +53,13 @@
                                                 );
                                             @endphp
                                             <div class="input-group mb-0">
+                                                <a class="input-group-text" target="_blank" href="{{ $invoiceUrl }}">
+                                                    <i class="bi bi-box-arrow-up-right"></i>
+                                                </a>
                                                 @if ($presentInfo == $invoice['present_info'])
-                                                    <span class="input-group-text">⭐</span>
+                                                    <span class="input-group-text text-color-warning">
+                                                        <i class="bi bi-star"></i>
+                                                    </span>
                                                 @endif
                                                 <input type="text" class="form-control text-end" disabled="disabled"
                                                     value="{{ $invoiceUrl }}">
