@@ -62,7 +62,7 @@
         @yield('POS_HEAD')
     </head>
 
-    <body dir="rtl bg">
+    <body dir="rtl" class="bg">
         @yield('POS_BEGIN')
 
         <div class="container">
