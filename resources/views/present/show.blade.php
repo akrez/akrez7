@@ -57,6 +57,10 @@
             input.input-spin-none[type="number"] {
                 -moz-appearance: textfield;
             }
+
+            .btn-outline-bg:not(:hover):not(:active):not(:focus):not(.active) {
+                background-color: white;
+            }
         </style>
 
         @yield('POS_HEAD')
@@ -65,7 +69,7 @@
     <body dir="rtl" class="bg">
         @yield('POS_BEGIN')
 
-        <div class="container">
+        <div class="container mt-3">
             <div class="row align-items-center">
                 <div class="col-md-2 text-center mb-md-0">
                     @if ($logoUrl)
@@ -94,7 +98,7 @@
                 </div>
                 <div class="col-12 text-center">
                     @foreach ($tags as $tagKey => $tag)
-                        <button class="btn rounded-pill px-4 mb-1 btn-outline-success"
+                        <button class="btn rounded-pill px-4 mb-1 btn-outline-success btn-outline-bg"
                             data-filter-tag="{{ md5($tag) }}">
                             {{ $tag }}
                         </button>
