@@ -327,9 +327,11 @@
                         if (tagBtn == selectedTagBtn) {
                             tagBtn.classList.remove('btn-outline-success');
                             tagBtn.classList.add('btn-success');
+                            tagBtn.classList.add('active');
                         } else {
                             tagBtn.classList.add('btn-outline-success');
                             tagBtn.classList.remove('btn-success');
+                            tagBtn.classList.remove('active');
                         }
                     });
                     document.querySelectorAll("[data-filter-tags]").forEach(productElement => {
