@@ -92,7 +92,7 @@
         <div class="container mt-3">
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn rounded-pill px-4 mb-2 btn-success" data-filter-tag="">
+                    <button class="btn rounded-pill px-4 mb-2 btn-success btn-outline-bg" data-filter-tag="">
                         {{ 'همه محصولات ' . $title }}
                     </button>
                 </div>
