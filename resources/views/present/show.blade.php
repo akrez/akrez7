@@ -92,13 +92,13 @@
         <div class="container mt-3">
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn rounded-pill px-4 mb-2 btn-success btn-outline-bg" data-filter-tag="">
+                    <button class="btn rounded-pill px-4 mb-2 btn-outline-bg btn-success active" data-filter-tag="">
                         {{ 'همه محصولات ' . $title }}
                     </button>
                 </div>
                 <div class="col-12 text-center">
                     @foreach ($tags as $tagKey => $tag)
-                        <button class="btn rounded-pill px-4 mb-1 btn-outline-success btn-outline-bg"
+                        <button class="btn rounded-pill px-4 mb-1 btn-outline-bg btn-outline-success"
                             data-filter-tag="{{ md5($tag) }}">
                             {{ $tag }}
                         </button>
