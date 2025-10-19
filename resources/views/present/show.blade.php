@@ -69,7 +69,7 @@
     <body dir="rtl" class="bg">
         @yield('POS_BEGIN')
 
-        <div class="container mt-3">
+        <div class="container mt-5">
             <div class="row align-items-center">
                 <div class="col-md-2 text-center mb-md-0">
                     @if ($logoUrl)
