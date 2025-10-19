@@ -254,7 +254,7 @@
             <footer class="footer mt-auto py-3 bg-light">
                 <div class="container">
                     <div class="row">
-                        @foreach ($contacts as $contact)
+                        @foreach ($presenterContacts->toArray() as $contact)
                             @php
                                 if ('address' == $contact['contact_type']['value']) {
                                     $icon = 'bi bi-geo-alt';
