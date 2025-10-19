@@ -62,29 +62,24 @@
         @yield('POS_HEAD')
     </head>
 
-    <body dir="rtl">
+    <body dir="rtl bg">
         @yield('POS_BEGIN')
 
-        <div class="container-fluid">
-            <div class="row align-items-center min-vh-100 bg">
-                <div class="col-md-1">
-                </div>
-                <div class="col-md-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center mb-md-0">
                     @if ($logoUrl)
-                        <img class="w-100 rounded m-auto" alt="{{ $title }}" src="{{ $logoUrl }}">
+                        <img class="img-fluid rounded" alt="{{ $title }}" src="{{ $logoUrl }}">
                     @endif
                 </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12 d-flex justify-content-center">
-                            <h1 class="me-2 text-shadow-white">{{ $title }}</h1>
-                            <h2 class="h1 text-secondary text-shadow-white ">{{ $shortDescription }}</h2>
+                <div class="col-md-10">
+                    <div class="d-flex flex-column flex-grow-1 text-center text-md-start">
+                        <div
+                            class="d-flex flex-column flex-sm-row align-items-center align-items-sm-baseline justify-content-center justify-content-md-start gap-2">
+                            <h1 class="h2 text-shadow-white">{{ $title }}</h1>
+                            <h2 class="h3 text-secondary text-shadow-white">{{ $shortDescription }}</h2>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <h4 class="text-justify text-shadow-white">{{ $description }}</h4>
-                        </div>
+                        <h4 class="h5 text-justify text-shadow-white">{{ $description }}</h4>
                     </div>
                 </div>
             </div>
