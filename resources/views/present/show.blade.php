@@ -69,8 +69,8 @@
     <body dir="rtl" class="bg">
         @yield('POS_BEGIN')
 
-        <div class="container mt-5">
-            <div class="row align-items-center">
+        <div class="container">
+            <div class="row mt-5 align-items-center">
                 <div class="col-md-2 text-center mb-md-0">
                     @if ($logoUrl)
                         <img class="img-fluid rounded" alt="{{ $title }}" src="{{ $logoUrl }}">
@@ -80,17 +80,16 @@
                     <div class="d-flex flex-column flex-grow-1 text-center text-md-start">
                         <div
                             class="d-flex flex-column flex-sm-row align-items-center align-items-sm-baseline justify-content-center justify-content-md-start gap-2">
-                            <h1 class="h2 text-shadow-white">{{ $title }}</h1>
-                            <h2 class="h3 text-secondary text-shadow-white">{{ $shortDescription }}</h2>
+                            <h1 class="h3 text-shadow-white">{{ $title }}</h1>
+                            <h2 class="h4 text-secondary text-shadow-white">{{ $shortDescription }}</h2>
                         </div>
                         <h4 class="h5 text-justify text-shadow-white">{{ $description }}</h4>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="container mt-3">
-            <div class="row">
+        <div class="container-fluid">
+            <div class="row mt-3">
                 <div class="col-12 text-center">
                     <button class="btn rounded-pill px-4 mb-2 btn-outline-bg btn-success active" data-filter-tag="">
                         {{ 'همه محصولات ' . $title }}
@@ -105,10 +104,7 @@
                     @endforeach
                 </div>
             </div>
-        </div>
-
-        <div class="container mt-3">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 mb-3 g-0">
+            <div class="row mt-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 mb-3 g-0">
                 @foreach ($products as $productKey => $product)
                     <div class="col" data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
                         <div class="card rounded-0 h-100">
@@ -211,7 +207,6 @@
                     </div>
                 @endforeach
             </div>
-
             <div class="row sticky-bottom g-0">
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 pb-3 g-0">
                     <button class="btn btn-secondary btn-lg w-100" href="#invoice-form" data-bs-toggle="modal"
@@ -222,7 +217,6 @@
                     </button>
                 </div>
             </div>
-
         </div>
 
         <div class="modal" id="invoice-modal" tabindex="-1" aria-hidden="true">
