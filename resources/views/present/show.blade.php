@@ -67,6 +67,10 @@
             .category-menu:hover {
                 border-bottom: 3px solid rgb(220, 53, 69);
             }
+
+            .max-height-40px {
+                max-height: 40px
+            }
         </style>
 
         @yield('POS_HEAD')
@@ -79,8 +83,13 @@
             <div class="container">
                 <div class="d-flex align-items-center justify-content-between w-100">
                     <div class="d-flex align-items-center flex-grow-1">
+                        @if ($logoUrl)
+                            <img class="img-fluid p-0 ps-2 m-0 max-height-40px" alt="{{ $title }}"
+                                src="{{ $logoUrl }}">
+                        @endif
                         <h1 class="h4 text-danger p-2 m-0 flex-shrink-0">{{ $title }}</h1>
-                        <h2 class="h5 text-danger p-2 m-0 flex-shrink-0 me-2 d-none d-md-inline">{{ $shortDescription }}</h2>
+                        <h2 class="h5 text-danger p-2 m-0 flex-shrink-0 me-2 d-none d-md-inline">{{ $shortDescription }}
+                        </h2>
                         <input class="form-control p-2 m-0 me-2" type="text">
                     </div>
 
