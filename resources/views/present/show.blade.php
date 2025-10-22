@@ -58,8 +58,14 @@
                 -moz-appearance: textfield;
             }
 
-            .btn-outline-bg:not(:hover):not(:active):not(:focus):not(.active) {
-                background-color: white;
+            .category-menu {
+                border-bottom: 3px solid transparent;
+                font-size: var(--bs-btn-font-size);
+            }
+
+            .category-menu-active,
+            .category-menu:hover {
+                border-bottom: 3px solid rgb(220, 53, 69);
             }
         </style>
 
@@ -69,41 +75,52 @@
     <body dir="rtl" class="bg">
         @yield('POS_BEGIN')
 
-        <div class="container">
-            <div class="row mt-5 align-items-center">
-                <div class="col-md-2 text-center mb-md-0">
-                    @if ($logoUrl)
-                        <img class="img-fluid rounded" alt="{{ $title }}" src="{{ $logoUrl }}">
-                    @endif
+        <nav class="navbar navbar-expand-sm p-0 py-2 bg-body-tertiary sticky-top border-bottom">
+            <div class="container">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="d-flex align-items-center flex-grow-1">
+                        <h1 class="h4 text-danger p-2 m-0 flex-shrink-0">{{ $title }}</h1>
+                        <h2 class="h5 text-danger p-2 m-0 flex-shrink-0 me-2 d-none d-md-inline">{{ $shortDescription }}</h2>
+                        <input class="form-control p-2 m-0 me-2" type="text">
+                    </div>
+
+                    <button class="btn btn-outline-danger flex-shrink-0" href="#invoice-form" data-bs-toggle="modal"
+                        data-bs-target="#invoice-modal">
+                        <span class="d-none d-md-inline pe-1">
+                            ثبت پیش فاکتور
+                        </span>
+                        <i class="bi bi-cart"></i>
+                    </button>
                 </div>
-                <div class="col-md-10">
-                    <div class="d-flex flex-column flex-grow-1 text-center text-md-start">
-                        <div
-                            class="d-flex flex-column flex-sm-row align-items-center align-items-sm-baseline justify-content-center justify-content-md-start gap-2">
-                            <h1 class="h3 text-shadow-white">{{ $title }}</h1>
-                            <h2 class="h4 text-secondary text-shadow-white">{{ $shortDescription }}</h2>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-expand-sm py-2 p-md-0 bg-body-tertiary">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                            دسته‌بندی کالاها
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <nav class="nav nav-underline gap-0">
+                                <button class="btn p-2 m-0 me-2 rounded-0 category-menu fw-bold" data-filter-tag="">
+                                    {{ 'همه محصولات ' . $title }}
+                                </button>
+                                @foreach ($tags as $tagKey => $tag)
+                                    <button class="btn p-2 m-0 me-2 rounded-0 category-menu"
+                                        data-filter-tag="{{ md5($tag) }}">{{ $tag }}</button>
+                                @endforeach
+                            </nav>
                         </div>
-                        <h4 class="h5 text-justify text-shadow-white">{{ $description }}</h4>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row mt-3">
-                <div class="col-12 text-center">
-                    <button class="btn rounded-pill px-4 mb-2 btn-outline-bg btn-success active" data-filter-tag="">
-                        {{ 'همه محصولات ' . $title }}
-                    </button>
-                </div>
-                <div class="col-12 text-center">
-                    @foreach ($tags as $tagKey => $tag)
-                        <button class="btn rounded-pill px-4 mb-1 btn-outline-bg btn-outline-success"
-                            data-filter-tag="{{ md5($tag) }}">
-                            {{ $tag }}
-                        </button>
-                    @endforeach
-                </div>
-            </div>
+        </nav>
+
+        <div class="container">
             <div class="row mt-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 mb-3 g-0">
                 @foreach ($products as $productKey => $product)
                     <div class="col" data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
@@ -189,7 +206,8 @@
                                                 <button
                                                     class="col-3 btn btn-light text-center border border-secondary-subtle plus-btn"
                                                     type="button">➕</button>
-                                                <input class="col-6 form-control text-center input-spin-none" type="number"
+                                                <input class="col-6 form-control text-center input-spin-none"
+                                                    type="number"
                                                     value="{{ old('invoice_items[' . $package['id'] . ']cnt', 0) }}"
                                                     name="invoice_items[{{ $package['id'] }}][cnt]" form="invoice-form">
                                                 @if ($package['unit'])
@@ -206,16 +224,6 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
-            <div class="row sticky-bottom g-0">
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 pb-3 g-0">
-                    <button class="btn btn-secondary btn-lg w-100" href="#invoice-form" data-bs-toggle="modal"
-                        data-bs-target="#invoice-modal">
-                        <span>
-                            ثبت پیش فاکتور
-                        </span>
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -250,7 +258,7 @@
 
         @if ($presenterContacts->count())
             <footer class="footer mt-auto py-3 bg-light">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         @foreach ($presenterContacts->toArray() as $contact)
                             @php
@@ -319,13 +327,9 @@
                     selectedTagBtn = this;
                     document.querySelectorAll("[data-filter-tag]").forEach(tagBtn => {
                         if (tagBtn == selectedTagBtn) {
-                            tagBtn.classList.remove('btn-outline-success');
-                            tagBtn.classList.add('btn-success');
-                            tagBtn.classList.add('active');
+                            tagBtn.classList.add('category-menu-active');
                         } else {
-                            tagBtn.classList.add('btn-outline-success');
-                            tagBtn.classList.remove('btn-success');
-                            tagBtn.classList.remove('active');
+                            tagBtn.classList.remove('category-menu-active');
                         }
                     });
                     document.querySelectorAll("[data-filter-tags]").forEach(productElement => {
