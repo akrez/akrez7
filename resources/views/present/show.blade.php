@@ -172,7 +172,7 @@
                             @endif
 
                             <div class="card-body">
-                                <h5 class="card-title font-weight-bold">{{ $product['name'] }}</h5>
+                                <h5 class="h6 card-title font-weight-bold">{{ $product['name'] }}</h5>
                                 <div class="card-text">
                                     @foreach ($product['product_properties'] as $property)
                                         <div>
