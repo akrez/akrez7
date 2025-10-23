@@ -87,18 +87,18 @@
                             <img class="img-fluid p-0 ps-2 m-0 max-height-40px" alt="{{ $title }}"
                                 src="{{ $logoUrl }}">
                         @endif
-                        <h1 class="h4 text-danger p-2 m-0 flex-shrink-0">{{ $title }}</h1>
-                        <h2 class="h5 text-danger p-2 m-0 flex-shrink-0 me-2 d-none d-md-inline">{{ $shortDescription }}
+                        <h1 class="h4 text-danger p-0 ps-2 m-0 flex-shrink-0">{{ $title }}</h1>
+                        <h2 class="h5 text-danger p-0 px-2 m-0 flex-shrink-0 m-0 d-none d-md-inline">{{ $shortDescription }}
                         </h2>
-                        <input class="form-control p-2 m-0 me-2" type="text">
+                        <input class="form-control p-2 m-0 mx-2" type="text">
                     </div>
 
-                    <button class="btn btn-outline-danger flex-shrink-0" href="#invoice-form" data-bs-toggle="modal"
+                    <button class="btn btn-outline-danger flex-shrink-0 p-2" href="#invoice-form" data-bs-toggle="modal"
                         data-bs-target="#invoice-modal">
                         <span class="d-none d-md-inline pe-1">
                             ثبت پیش فاکتور
                         </span>
-                        <i class="bi bi-cart"></i>
+                        <i class="bi bi-cart mx-1"></i>
                     </button>
                 </div>
             </div>
