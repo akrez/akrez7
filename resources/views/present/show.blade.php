@@ -172,11 +172,11 @@
                             @endif
 
                             <div class="card-body">
-                                <h5 class="h6 card-title font-weight-bold">{{ $product['name'] }}</h5>
+                                <h5 class="h6 card-title fw-bold">{{ $product['name'] }}</h5>
                                 <div class="card-text">
                                     @foreach ($product['product_properties'] as $property)
                                         <div>
-                                            <strong>{{ $property['property_key'] }}</strong>
+                                            <span class="fw-bold">{{ $property['property_key'] }}</span>
                                             {{ implode(', ', $property['property_values']) }}
                                         </div>
                                     @endforeach
