@@ -179,7 +179,7 @@ class PresentService
                 'unit' => $package['unit'],
                 'show_price' => $package['show_price'],
                 'description' => $package['description'],
-                'color' => Arr::get($organized['colors'], $package['color_id'], []),
+                'color' => Arr::get($organized['colors'], strval($package['color_id']), []),
             ];
         }
 
