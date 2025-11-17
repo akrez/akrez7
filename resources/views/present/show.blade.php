@@ -202,7 +202,7 @@
                                         @if ($package['color'])
                                             <div class="pt-1">
                                                 <span class="d-inline-block rounded"
-                                                    >⠀⠀⠀</span><span
+                                                    style="border: 1px black solid; background-color: {{ $package['color']['code'] }};">⠀⠀⠀</span><span
                                                     class="d-inline-block ms-1">{{ $package['color']['name'] }}</span>
                                             </div>
                                         @endif
