@@ -217,7 +217,7 @@ class PresentService
             'name' => $raw['blog']['name'],
             'short_description' => $raw['blog']['short_description'],
             'description' => $raw['blog']['description'],
-            'galleries' => $this->getOrganizedGalleries($organized['galleries'], Blog::class.'.'.$raw['blog']['id']),
+            'galleries' => $this->getOrganizedGalleries($organized['galleries'], 'blog'.'.'.$raw['blog']['id']),
         ];
 
         foreach ($raw['contacts'] as $contact) {
@@ -240,7 +240,7 @@ class PresentService
                 'product_tags' => array_values(Arr::get($organized['productTags'], $product['id'], [])),
                 'product_properties' => array_values(Arr::get($organized['productProperties'], $product['id'], [])),
                 'packages' => array_values(Arr::get($organized['packages'], $product['id'], [])),
-                'galleries' => $this->getOrganizedGalleries($organized['galleries'], Product::class.'.'.$product['id']),
+                'galleries' => $this->getOrganizedGalleries($organized['galleries'], 'product'.'.'.$product['id']),
             ];
         }
 
