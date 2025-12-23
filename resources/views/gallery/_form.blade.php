@@ -4,7 +4,7 @@
 
 <x-form :method="isset($gallery) ? 'PUT' : 'POST'" :action="isset($gallery) ? route('galleries.update', ['id' => $gallery['id']]) : route('galleries.store')">
     <input type="hidden" name="gallery_category" value="{{ $gallery_category }}" />
-    <input type="hidden" name="short_gallery_type" value="{{ $short_gallery_type }}" />
+    <input type="hidden" name="gallery_type" value="{{ $gallery_type }}" />
     <input type="hidden" name="gallery_id" value="{{ $gallery_id }}" />
     @if ($isVertical)
         <div class="row">

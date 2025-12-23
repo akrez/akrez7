@@ -7,7 +7,7 @@ class IndexModelGalleryData extends GalleryData
     public function __construct(
         public int $blog_id,
         public $gallery_category,
-        public $short_gallery_type,
+        public $gallery_type,
         public $gallery_id
     ) {}
 
@@ -16,7 +16,7 @@ class IndexModelGalleryData extends GalleryData
         return $this->prepareRules($this->getRawRules($context), [
             'blog_id' => true,
             'gallery_category' => true,
-            'short_gallery_type' => true,
+            'gallery_type' => true,
             'gallery_id' => true,
         ]);
     }

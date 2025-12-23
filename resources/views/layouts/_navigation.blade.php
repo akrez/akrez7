@@ -70,7 +70,7 @@
                         <a class="nav-link active" aria-current="page"
                             href="{{ route('galleries.index', [
                                 'gallery_category' => \App\Enums\GalleryCategoryEnum::BLOG_LOGO->value,
-                                'short_gallery_type' => \App\Models\Blog::getClassName(),
+                                'gallery_type' => \Illuminate\Database\Eloquent\Relations\Relation::getMorphAlias(\App\Models\Blog::class),
                                 'gallery_id' => app('ActiveBlog')->id(),
                             ]) }}">
                             {{ \App\Enums\GalleryCategoryEnum::BLOG_LOGO->trans() }}

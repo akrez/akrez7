@@ -8,18 +8,12 @@ use App\Models\Blog;
 use App\Models\Product;
 use App\Services\GalleryService;
 use Closure;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Validation\Rule;
 
 abstract class GalleryData extends Data
 {
-    public $short_gallery_type;
-
     public function __construct() {}
-
-    public function toGalleryType()
-    {
-        return 'App\\Models\\'.$this->short_gallery_type;
-    }
 
     public function getRawRules($context)
     {
@@ -27,7 +21,7 @@ abstract class GalleryData extends Data
             'blog_id' => ['integer'],
             'id' => [],
             'gallery_category' => [Rule::enum(GalleryCategoryEnum::class)],
-            'short_gallery_type' => [Rule::in([Blog::getClassName(), Product::getClassName()])],
+            'gallery_type' => [Rule::in(array_flip(Relation::morphMap()))],
             'gallery_id' => ['integer'],
             'gallery_order' => ['numeric'],
             'is_selected' => ['boolean'],

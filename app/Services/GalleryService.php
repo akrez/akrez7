@@ -14,6 +14,7 @@ use App\Support\ApiResponse;
 use App\Support\WebResponse;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\AutoEncoder;
@@ -93,7 +94,7 @@ class GalleryService extends Service
         $galleries = $this->getLatestModelBlogQuery(
             $indexModelGalleryData->blog_id,
             $indexModelGalleryData->gallery_category,
-            $indexModelGalleryData->toGalleryType(),
+            $indexModelGalleryData->gallery_type,
             $indexModelGalleryData->gallery_id
         )->get();
 
@@ -124,7 +125,7 @@ class GalleryService extends Service
             'ext' => $ext,
             'name' => $name,
             'gallery_category' => $storeGalleryData->gallery_category,
-            'gallery_type' => $storeGalleryData->toGalleryType(),
+            'gallery_type' => $storeGalleryData->gallery_type,
             'gallery_id' => $storeGalleryData->gallery_id,
         ]);
         if (! $gallery->save()) {

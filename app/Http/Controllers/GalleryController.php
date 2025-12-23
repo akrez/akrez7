@@ -29,13 +29,13 @@ class GalleryController extends Controller
         );
     }
 
-    public function index(string $gallery_category, string $short_gallery_type, string $gallery_id)
+    public function index(string $gallery_category, string $gallery_type, string $gallery_id)
     {
         $response = $this->galleryService->getLatestModelGalleries(
             new IndexModelGalleryData(
                 $this->blogId(),
                 $gallery_category,
-                $short_gallery_type,
+                $gallery_type,
                 $gallery_id,
             )
         )->abortUnSuccessful();
@@ -43,7 +43,7 @@ class GalleryController extends Controller
         return view('gallery.index', [
             'galleries' => $response->getData('galleries'),
             'gallery_category' => $gallery_category,
-            'short_gallery_type' => $short_gallery_type,
+            'gallery_type' => $gallery_type,
             'gallery_id' => $gallery_id,
         ]);
     }
@@ -55,7 +55,7 @@ class GalleryController extends Controller
                 $this->blogId(),
                 $request->file('file'),
                 $request->gallery_category,
-                $request->short_gallery_type,
+                $request->gallery_type,
                 $request->gallery_id,
                 $request->gallery_order,
                 $request->is_selected,
@@ -89,7 +89,7 @@ class GalleryController extends Controller
         if ($gallery) {
             $successfulRoute = route('galleries.index', [
                 'gallery_category' => $gallery['gallery_category']['value'],
-                'short_gallery_type' => $gallery['short_gallery_type'],
+                'gallery_type' => $gallery['gallery_type'],
                 'gallery_id' => $gallery['gallery_id'],
             ]);
         } else {

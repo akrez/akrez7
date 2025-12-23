@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Blog;
+use App\Models\Product;
 use App\Support\ActiveBlog;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
@@ -23,7 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Relation::morphMap([
+            'blog' => Blog::class,
+            'product' => Product::class,
+        ]);
     }
 
     /**

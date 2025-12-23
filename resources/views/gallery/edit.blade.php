@@ -13,7 +13,7 @@
                         @include('gallery._form', [
                             'gallery' => $gallery,
                             'gallery_category' => $gallery['gallery_category']['value'],
-                            'short_gallery_type' => $gallery['short_gallery_type'],
+                            'gallery_type' => $gallery['gallery_type'],
                             'gallery_id' => $gallery['gallery_id'],
                         ])
                     </div>
