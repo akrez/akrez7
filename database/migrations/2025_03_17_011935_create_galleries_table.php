@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
             $table->string('name', 60)->index();
-            $table->morphs('gallery');
+            $table->unsignedBigInteger('gallery_id');
             $table->unsignedBigInteger('blog_id')->index();
             $table->string('ext', 8);
             $table->string('gallery_category');
