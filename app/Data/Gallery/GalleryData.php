@@ -21,7 +21,6 @@ abstract class GalleryData extends Data
             'blog_id' => ['integer'],
             'id' => [],
             'gallery_category' => [Rule::enum(GalleryCategoryEnum::class)],
-            'gallery_type' => [Rule::in(array_flip(Relation::morphMap()))],
             'gallery_id' => ['integer'],
             'gallery_order' => ['numeric'],
             'is_selected' => ['boolean'],

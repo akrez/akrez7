@@ -184,7 +184,7 @@ class PresentService
         }
 
         foreach ($raw['galleries'] as $gallery) {
-            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_type']][$gallery['gallery_id']][] = [
+            $organized['galleries'][$gallery['gallery_category']['value']][$gallery['gallery_id']][] = [
                 'name' => $gallery['name'],
                 'base_url' => $gallery['base_url'],
                 'url' => $gallery['url'],
@@ -217,7 +217,7 @@ class PresentService
             'name' => $raw['blog']['name'],
             'short_description' => $raw['blog']['short_description'],
             'description' => $raw['blog']['description'],
-            'galleries' => $this->getOrganizedGalleries($organized['galleries'], 'blog'.'.'.$raw['blog']['id']),
+            'galleries' => $this->getOrganizedGalleries($organized['galleries'], GalleryCategoryEnum::BLOG_LOGO->value, $raw['blog']['id']),
         ];
 
         foreach ($raw['contacts'] as $contact) {
@@ -240,20 +240,15 @@ class PresentService
                 'product_tags' => array_values(Arr::get($organized['productTags'], $product['id'], [])),
                 'product_properties' => array_values(Arr::get($organized['productProperties'], $product['id'], [])),
                 'packages' => array_values(Arr::get($organized['packages'], $product['id'], [])),
-                'galleries' => $this->getOrganizedGalleries($organized['galleries'], 'product'.'.'.$product['id']),
+                'galleries' => $this->getOrganizedGalleries($organized['galleries'], GalleryCategoryEnum::PRODUCT_IMAGE->value, $product['id']),
             ];
         }
 
         return ApiResponse::new()->data($output);
     }
 
-    protected function getOrganizedGalleries(&$galleries, $key, $default = [])
+    protected function getOrganizedGalleries(&$galleries, $galleryCategory, $galleryId, $default = [])
     {
-        $result = [];
-        foreach (GalleryCategoryEnum::values() as $galleryCategoryEnumValue) {
-            $result[$galleryCategoryEnumValue] = Arr::get($galleries, $galleryCategoryEnumValue.'.'.$key, $default);
-        }
-
-        return $result;
+        return [$galleryCategory => Arr::get($galleries, $galleryCategory.'.'.$galleryId, $default)];
     }
 }

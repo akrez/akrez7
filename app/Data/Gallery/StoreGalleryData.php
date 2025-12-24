@@ -10,7 +10,6 @@ class StoreGalleryData extends GalleryData
         public int $blog_id,
         public ?UploadedFile $file,
         public $gallery_category,
-        public $gallery_type,
         public $gallery_id,
         public $gallery_order,
         public $is_selected
@@ -22,7 +21,6 @@ class StoreGalleryData extends GalleryData
             'blog_id' => true,
             'file' => true,
             'gallery_category' => true,
-            'gallery_type' => true,
             'gallery_id' => true,
             'gallery_order' => false,
             'is_selected' => false,

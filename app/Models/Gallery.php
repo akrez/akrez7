@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
  * Class Gallery
  *
  * @property string $name
- * @property string $gallery_type
  * @property int $gallery_id
  * @property int $blog_id
  * @property string $ext
@@ -35,7 +34,6 @@ class Gallery extends Model
 
     protected $fillable = [
         'name',
-        'gallery_type',
         'gallery_id',
         'blog_id',
         'ext',
@@ -53,7 +51,7 @@ class Gallery extends Model
     public function scopeDefaultOrder(Builder $query): void
     {
         $query = $query
-            ->orderBy('gallery_type', 'ASC')
+            ->orderBy('gallery_category', 'ASC')
             ->orderBy('gallery_id', 'ASC')
             ->orderBy('selected_at', 'DESC')
             ->orderBy('gallery_order', 'DESC')

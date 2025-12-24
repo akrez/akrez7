@@ -94,7 +94,6 @@ class GalleryService extends Service
         $galleries = $this->getLatestModelBlogQuery(
             $indexModelGalleryData->blog_id,
             $indexModelGalleryData->gallery_category,
-            $indexModelGalleryData->gallery_type,
             $indexModelGalleryData->gallery_id
         )->get();
 
@@ -125,7 +124,6 @@ class GalleryService extends Service
             'ext' => $ext,
             'name' => $name,
             'gallery_category' => $storeGalleryData->gallery_category,
-            'gallery_type' => $storeGalleryData->gallery_type,
             'gallery_id' => $storeGalleryData->gallery_id,
         ]);
         if (! $gallery->save()) {
@@ -321,11 +319,10 @@ class GalleryService extends Service
             ->where('gallery_category', $galleryCategory);
     }
 
-    protected function getLatestModelBlogQuery(int $blogId, string $galleryCategory, string $galleryType, string $galleryId): Builder
+    protected function getLatestModelBlogQuery(int $blogId, string $galleryCategory, string $galleryId): Builder
     {
         return $this->getLatestCategoryBlogQuery($blogId, $galleryCategory)
-            ->where('gallery_id', $galleryId)
-            ->where('gallery_type', $galleryType);
+            ->where('gallery_id', $galleryId);
     }
 
     protected function upload($image, $category, $name, $quality, $whmq = null)
@@ -356,7 +353,6 @@ class GalleryService extends Service
         $shouldSelect = $this->getLatestModelBlogQuery(
             $blogId,
             $gallery->gallery_category->value,
-            $gallery->gallery_type,
             $gallery->gallery_id
         )->first();
 
@@ -372,7 +368,6 @@ class GalleryService extends Service
         $shouldNotSelects = $this->getLatestModelBlogQuery(
             $blogId,
             $gallery->gallery_category->value,
-            $gallery->gallery_type,
             $gallery->gallery_id
         )->whereNotNull('selected_at')->where('id', '<>', $shouldSelect->id)->get();
 

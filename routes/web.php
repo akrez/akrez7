@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         //
         Route::get('payvoices', [PayvoiceController::class, 'index'])->name('payvoices.index');
         //
-        Route::get('galleries/index/{gallery_category}/{gallery_type}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
+        Route::get('galleries/index/{gallery_category}/{gallery_id}', [GalleryController::class, 'index'])->name('galleries.index');
         Route::resource('galleries', GalleryController::class)->parameter('galleries', 'id')->except(['index', 'show']);
         //
         Route::post('telegram_bots/{id}/upload', [TelegramBotController::class, 'upload'])->name('telegram_bots.upload');

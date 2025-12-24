@@ -21,7 +21,6 @@ class GalleryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'gallery_category' => $this->gallery_category ? $this->gallery_category->toResource() : null,
-            'gallery_type' => $this->gallery_type,
             'gallery_id' => $this->gallery_id,
             'selected_at' => $this->formatCarbonDateTime($this->selected_at),
             'created_at' => $this->formatCarbonDateTime($this->created_at),
