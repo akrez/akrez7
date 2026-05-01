@@ -49,9 +49,11 @@
                 <th>{{ $invoiceItem['package']['product']['name'] ?? '' }}</th>
                 <td>{{ $invoiceItem['package']['guaranty'] }}</td>
                 <td>
-                    <span class="d-inline-block rounded"
-                        style="border: 1px black solid; background-color: {{ $invoiceItem['package']['color']['code'] }};">⠀⠀⠀</span>
-                    <span class="d-inline-block ms-1">{{ $invoiceItem['package']['color']['name'] }}</span>
+                    @if (isset($invoiceItem['package']['color']['code']))
+                        <span class="d-inline-block rounded"
+                            style="border: 1px black solid; background-color: {{ $invoiceItem['package']['color']['code'] }};">⠀⠀⠀</span>
+                        <span class="d-inline-block ms-1">{{ $invoiceItem['package']['color']['name'] }}</span>
+                    @endif
                 </td>
                 <td>{{ $invoiceItem['package']['description'] }}</td>
                 <td>{{ $invoiceItem['package']['unit'] }}</td>
