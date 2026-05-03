@@ -27,7 +27,7 @@ class PackageController extends Controller
 
         $response = $this->packageService->getLatestPackages($this->blogId(), $product_id);
 
-        return view('package.index', [
+        return view('product.package.index', [
             'packages' => $response->getData('packages'),
             'product' => $productResponse->getData('product'),
             'colorsIdArray' => $this->getColorsIdArray($this->blogId()),
@@ -41,7 +41,7 @@ class PackageController extends Controller
     {
         $productResponse = $this->productService->getProduct($this->blogId(), $product_id)->abortUnSuccessful();
 
-        return view('package.create', [
+        return view('product.package.create', [
             'product' => $productResponse->getData('product'),
             'colorsIdArray' => $this->getColorsIdArray($this->blogId()),
         ]);
@@ -81,7 +81,7 @@ class PackageController extends Controller
 
         $response = $this->packageService->getPackage($this->blogId(), $id)->abortUnSuccessful();
 
-        return view('package.edit', [
+        return view('product.package.edit', [
             'package' => $response->getData('package'),
             'product' => $productResponse->getData('product'),
             'colorsIdArray' => $this->getColorsIdArray($this->blogId()),
