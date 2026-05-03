@@ -52,12 +52,16 @@ class PackageService extends Service
             ->defaultOrder();
     }
 
-    public function getLatestPackages(int $blogId, int $productId)
+    public function getLatestPackages(int $blogId, ?int $productId = null)
     {
-        $packages = $this->getLatestBlogQuery($blogId)->where('product_id', $productId)->get();
+        $query = $this->getLatestBlogQuery($blogId);
+
+        if ($productId !== null) {
+            $query->where('product_id', $productId);
+        }
 
         return WebResponse::new()->data([
-            'packages' => (new PackageCollection($packages))->toArr(),
+            'packages' => (new PackageCollection($query->get()))->toArr(),
         ]);
     }
 

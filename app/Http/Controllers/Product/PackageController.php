@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
 use App\Data\Package\StorePackageData;
 use App\Data\Package\UpdatePackageData;
+use App\Http\Controllers\Controller;
 use App\Services\ColorService;
 use App\Services\PackageService;
 use App\Services\ProductService;
