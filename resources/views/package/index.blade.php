@@ -4,7 +4,14 @@
 
 @php
     $params = [
-        'base_url' => route('packages.index'),
+        'package_statuses' => \App\Enums\PackageStatusEnum::toArray(),
+        'show_prices' => ['' => __('No'), '1' => __('Yes')],
+        'urls' => [
+            'packages' => [
+                'list' => route('packages.index') . '/list',
+                'update' => route('packages.index'),
+            ],
+        ],
     ];
 @endphp
 
@@ -35,9 +42,9 @@
                 </thead>
                 <tbody>
                     <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
-                        :key="'product-id-' + productId">
+                        :key="'product-id-' + '-' + (Math.random())">
                         <template x-for="(packageId, packageIndex) in productIdToPackageIds[productId]"
-                            :key="'package-id-' + packageId">
+                            :key="'package-id-' + '-' + productId + '-' + packageId">
                             <tr :class="packageIndex === 0 ? 'border-top' : ''">
                                 <td x-bind:rowspan="productIdToPackageIds[productId].length"
                                     x-text="products[productId].name" x-show="packageIndex === 0"></td>
@@ -124,14 +131,14 @@
                                         x-model="packages[packageId]['description']">
                                 </td>
                                 <td class="">
-                                    <div class="btn btn-primary p-1">@lang('Update')</div>
+                                    <div class="btn btn-primary p-1" @click="persist(packageId)">@lang('Update')</div>
                                 </td>
                                 <td class=""></td>
                             </tr>
                         </template>
                     </template>
                 </tbody>
-                <tbody x-show="loading.syncLists">
+                <tbody x-show="loading.indexPackages">
                     <tr>
                         <td colspan="99">
                             <div class="spinner-border text-secondary"></div>
@@ -145,7 +152,7 @@
     <script>
         function data() {
             return {
-                base_url: null,
+                urls: null,
                 products: [],
                 packages: [],
                 packages_const: [],
@@ -155,11 +162,28 @@
                 show_prices: [],
                 productIdToPackageIds: [],
                 loading: {
-                    syncLists: false
+                    indexPackages: false,
+                    updatePackage: false,
+                },
+                persist(packageId) {
+                    data = {
+                        product_id: this.packages[packageId].product_id,
+                        price: this.packages[packageId].price,
+                        show_price: this.packages[packageId].show_price,
+                        package_status: this.packages[packageId].package_status.value,
+                        unit: this.packages[packageId].unit,
+                        color_id: this.packages[packageId].color_id,
+                        guaranty: this.packages[packageId].guaranty,
+                        description: this.packages[packageId].description,
+                    };
+
+                    this.updatePackage(packageId, data);
                 },
                 async initData(initParams) {
-                    this.base_url = initParams.base_url;
-                    await this.syncLists();
+                    this.urls = initParams.urls;
+                    this.package_statuses = initParams.package_statuses;
+                    this.show_prices = initParams.show_prices;
+                    await this.indexPackages();
                 },
                 getReverseColorCode(colorCode) {
                     colorCode = colorCode.replace('#', '');
@@ -178,14 +202,52 @@
                     if (value === null) return '';
                     return String(value);
                 },
-                async syncLists() {
+                async updatePackage(id, data) {
                     try {
-                        if (this.loading.syncLists) {
+                        if (this.loading.updatePackage) return;
+                        this.loading.updatePackage = true;
+
+                        const gameRes = await fetch(this.urls.packages.update + '/' + id, {
+                            method: 'PUT',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        const gameResJson = await gameRes.json();
+
+                        if (gameRes.ok) {
+                            this.alertSuccess(gameResJson.message);
+                            this.syncPackage(gameResJson.data.package, false);
+                        } else {
+                            this.alertError(gameResJson.message);
+                        }
+
+                    } catch (err) {
+                        console.log(err);
+                        this.alertError('خطا');
+                    } finally {
+                        this.loading.updatePackage = false;
+                    }
+                },
+                syncPackage(package, add = true) {
+                    this.packages[package.id] = this.cloneJson(package);
+                    this.packages_const[package.id] = this.cloneJson(package);
+                    if (add) {
+                        this.productIdToPackageIds[package.product_id].push(package.id);
+                    }
+                },
+                async indexPackages() {
+                    try {
+                        if (this.loading.indexPackages) {
                             return;
                         }
-                        this.loading.syncLists = true;
+                        this.loading.indexPackages = true;
 
-                        let res = await fetch(this.base_url + "/list");
+                        let res = await fetch(this.urls.packages.list);
                         if (!res.ok) {
                             return;
                         }
@@ -195,8 +257,6 @@
                         products = json.data.products || [];
                         packages = json.data.packages || [];
                         colors = json.data.colors || [];
-                        this.package_statuses = json.data.package_statuses || [];
-                        this.show_prices = json.data.show_prices || [];
 
                         this.productIdToPackageIds = [];
 
@@ -206,9 +266,7 @@
                         });
 
                         packages.forEach(package => {
-                            this.packages[package.id] = this.cloneJson(package);
-                            this.packages_const[package.id] = this.cloneJson(package);
-                            this.productIdToPackageIds[package.product_id].push(package.id);
+                            this.syncPackage(package);
                         });
 
                         colors.forEach(color => {
@@ -218,9 +276,33 @@
                     } catch (e) {
                         console.log(e);
                     } finally {
-                        this.loading.syncLists = false;
+                        this.loading.indexPackages = false;
                     }
-                }
+                },
+                alertError(text) {
+                    Swal.fire({
+                        text: text,
+                        icon: 'error',
+                        timer: 1500,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        toast: true,
+                        position: 'bottom',
+                    });
+                },
+                alertSuccess(text) {
+                    Swal.fire({
+                        text: text,
+                        icon: 'success',
+                        timer: 1500,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        toast: true,
+                        position: 'bottom',
+                    });
+                },
             };
         }
     </script>
