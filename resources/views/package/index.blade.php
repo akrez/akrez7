@@ -34,33 +34,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template x-for="(product, productIndex) in products" :key="'product-id-' + product.id">
-                        <template x-for="(package, packageIndex) in packages[product.id]" :key="'package-id-' + package.id">
+                    <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
+                        :key="'product-id-' + productId">
+                        <template x-for="(packageId, packageIndex) in productIdToPackageIds[productId]"
+                            :key="'package-id-' + packageId">
                             <tr :class="packageIndex === 0 ? 'border-top' : ''">
-                                <td x-bind:rowspan="Object.keys(packages[product.id]).length" x-text="product.name"
-                                    x-show="packageIndex === 0"></td>
-                                <td class="" x-bind:rowspan="Object.keys(packages[product.id]).length" x-text="'+'"
+                                <td x-bind:rowspan="productIdToPackageIds[productId].length"
+                                    x-text="products[productId].name" x-show="packageIndex === 0"></td>
+                                <td x-bind:rowspan="productIdToPackageIds[productId].length" x-text="'+'"
                                     x-show="packageIndex === 0"></td>
                                 <td
                                     :class="{
-                                        'bg-info': strval(packages[product.id][packageIndex]['price']) !==
-                                            strval(packages_const[package.id]['price'])
+                                        'bg-info': strval(packages[packageId]['price']) !==
+                                            strval(packages_const[packageId]['price'])
                                     }">
-                                    <input class="form-control p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['price']">
+                                    <input class="form-control p-1 text-center" x-model="packages[packageId]['price']">
                                 </td>
 
                                 <td
                                     :class="{
-                                        'bg-info': boolval(packages[product.id][packageIndex]['show_price']) !=
-                                            boolval(packages_const[package.id]['show_price'])
+                                        'bg-info': boolval(packages[packageId]['show_price']) !=
+                                            boolval(packages_const[packageId]['show_price'])
                                     }">
-                                    <select class="form-select p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['show_price']">
+                                    <select class="form-select p-1 text-center" x-model="packages[packageId]['show_price']">
                                         <template x-for="(show_price, show_price_key) in show_prices">
                                             <option
-                                                :selected="boolval(show_price_key) == boolval(getPackage(product?.id, packageIndex)
-                                                    ?.show_price)"
+                                                :selected="boolval(show_price_key) == boolval(packages[packageId].show_price)"
                                                 :value="boolval(show_price_key)" x-text="show_price">
                                             </option>
                                         </template>
@@ -68,16 +67,15 @@
                                 </td>
                                 <td
                                     :class="{
-                                        'bg-info': packages[product.id][packageIndex]['package_status']['value'] !==
-                                            packages_const[package.id]['package_status']['value']
+                                        'bg-info': packages[packageId]['package_status']['value'] !==
+                                            packages_const[packageId]['package_status']['value']
                                     }">
                                     <select class="form-select p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['package_status']['value']">
+                                        x-model="packages[packageId]['package_status']['value']">
                                         <template x-for="(package_status, package_status_key) in package_statuses"
                                             :key="package_status_key">
                                             <option
-                                                :selected="package_status_key == getPackage(product?.id, packageIndex)
-                                                    ?.package_status['value']"
+                                                :selected="package_status_key == packages[packageId]['package_status']['value']"
                                                 :value="package_status_key" x-text="package_status">
                                             </option>
                                         </template>
@@ -87,22 +85,20 @@
 
                                 <td
                                     :class="{
-                                        'bg-info': (packages[product.id][packageIndex]['unit']) !==
-                                            (packages_const[package.id]['unit'])
+                                        'bg-info': (packages[packageId]['unit']) !==
+                                            (packages_const[packageId]['unit'])
                                     }">
-                                    <input class="form-control p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['unit']">
+                                    <input class="form-control p-1 text-center" x-model="packages[packageId]['unit']">
                                 </td>
                                 <td
                                     :class="{
-                                        'bg-info': parseInt(packages[product.id][packageIndex]['color_id']) !==
-                                            parseInt(packages_const[package.id]['color_id'])
+                                        'bg-info': parseInt(packages[packageId]['color_id']) !==
+                                            parseInt(packages_const[packageId]['color_id'])
                                     }">
-                                    <select class="form-select p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['color_id']">
+                                    <select class="form-select p-1 text-center" x-model="packages[packageId]['color_id']">
                                         <option></option>
                                         <template x-for="color in colors" :key="color.id">
-                                            <option :selected="color.id == getPackage(product?.id, packageIndex)?.color_id"
+                                            <option :selected="color.id == packages[packageId]['color_id']"
                                                 :value="color.id" x-text="color.name"
                                                 :style="{
                                                     'color': getReverseColorCode(color.code),
@@ -114,19 +110,18 @@
                                 </td>
                                 <td
                                     :class="{
-                                        'bg-info': strval(packages[product.id][packageIndex]['guaranty']) !=
-                                            strval(packages_const[package.id]['guaranty'])
+                                        'bg-info': strval(packages[packageId]['guaranty']) !=
+                                            strval(packages_const[packageId]['guaranty'])
                                     }">
-                                    <input class="form-control p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['guaranty']">
+                                    <input class="form-control p-1 text-center" x-model="packages[packageId]['guaranty']">
                                 </td>
                                 <td
                                     :class="{
-                                        'bg-info': strval(packages[product.id][packageIndex]['description']) !=
-                                            strval(packages_const[package.id]['description'])
+                                        'bg-info': strval(packages[packageId]['description']) !=
+                                            strval(packages_const[packageId]['description'])
                                     }">
                                     <input class="form-control p-1 text-center"
-                                        x-model="packages[product.id][packageIndex]['description']">
+                                        x-model="packages[packageId]['description']">
                                 </td>
                                 <td class="">
                                     <div class="btn btn-primary p-1">@lang('Update')</div>
@@ -158,6 +153,7 @@
                 list: [],
                 package_statuses: [],
                 show_prices: [],
+                productIdToPackageIds: [],
                 loading: {
                     syncLists: false
                 },
@@ -169,29 +165,8 @@
                     colorCode = colorCode.replace('#', '');
                     return '#' + (0xFFFFFF ^ parseInt(colorCode, 16)).toString(16).padStart(6, '0');
                 },
-                getColorCode(productId, packageIndex, def = null, reverse = false) {
-                    colorCode = this.getColorAttr(productId, packageIndex, 'code');
-                    if (!colorCode) {
-                        return def;
-                    }
-                    if (!reverse) {
-                        return colorCode;
-                    }
-                    return this.getReverseColorCode(colorCode);
-                },
-                getColorAttr(productId, packageIndex, attr, def = null) {
-                    const packageModel = this.getPackage(productId, packageIndex);
-                    if (!packageModel) return def;
-
-                    const colorId = packageModel.color_id;
-                    const colorModel = this.colors[colorId];
-                    if (!colorModel) return def;
-
-                    const attrValue = colorModel[attr];
-                    return attrValue ?? def;
-                },
-                getPackage(productId, packageIndex) {
-                    return this.packages[productId][packageIndex];
+                cloneJson(obj) {
+                    return JSON.parse(JSON.stringify(obj));
                 },
                 boolval(value) {
                     if (value === 'false') return 0;
@@ -223,17 +198,18 @@
                         this.package_statuses = json.data.package_statuses || [];
                         this.show_prices = json.data.show_prices || [];
 
+                        this.productIdToPackageIds = [];
+
                         products.forEach(product => {
-                            this.products.push(product);
-                            this.packages[product.id] = [];
+                            this.products[product.id] = product;
+                            this.productIdToPackageIds[product.id] = [];
                         });
 
                         packages.forEach(package => {
-                            this.packages[package.product_id].push(JSON.parse(JSON.stringify(package)));
-                            this.packages_const[package.id] = JSON.parse(JSON.stringify(package));
+                            this.packages[package.id] = this.cloneJson(package);
+                            this.packages_const[package.id] = this.cloneJson(package);
+                            this.productIdToPackageIds[package.product_id].push(package.id);
                         });
-
-                        console.log(this.packages_const);
 
                         colors.forEach(color => {
                             this.colors[color.id] = color;
