@@ -13,6 +13,21 @@
                 'update' => route('packages.index'),
             ],
         ],
+        'trans' => [
+            'Create' => __('Create'),
+            'Edit' => __('Edit'),
+            'validation' => [
+                'attributes' => [
+                    'price' => __('validation.attributes.price'),
+                    'show_price' => __('validation.attributes.show_price'),
+                    'status' => __('validation.attributes.status'),
+                    'unit' => __('validation.attributes.unit'),
+                    'color_id' => __('validation.attributes.color_id'),
+                    'guaranty' => __('validation.attributes.guaranty'),
+                    'description' => __('validation.attributes.description'),
+                ],
+            ],
+        ],
     ];
 @endphp
 
@@ -27,25 +42,25 @@
         <div class="col-12">
             <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
                 :key="'productId-' + '-' + productId">
-                <div class="card text-bg-light mb-1">
-                    <div class="card-header d-flex p-0">
-                        <span class="flex-grow-1 p-2" x-text="products[productId].name">
+                <div class="card text-bg-light rounded-0 mb-1">
+                    <div class="card-header d-flex p-0 rounded-0">
+                        <span class="flex-grow-1 p-2 text-center" x-text="products[productId].name">
                         </span>
                         <span class="flex-grow-0 p-1 pt-2 border-start btn rounded-0" @click="addEmpty(productId)">
                             <div class="p-0 px-1">➕</div>
                         </span>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-borderless align-middle text-center m-0 mb-1">
+                        <table class="table table-borderless align-middle text-center m-0">
                             <thead>
                                 <tr class="table-light">
-                                    <th class="fw-normal">@lang('validation.attributes.price')</th>
-                                    <th class="fw-normal">@lang('validation.attributes.show_price')</th>
-                                    <th class="fw-normal">@lang('validation.attributes.status')</th>
-                                    <th class="fw-normal">@lang('validation.attributes.unit')</th>
-                                    <th class="fw-normal">@lang('validation.attributes.color_id')</th>
-                                    <th class="fw-normal">@lang('validation.attributes.guaranty')</th>
-                                    <th class="fw-normal">@lang('validation.attributes.description')</th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.price"></th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.show_price"></th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.status"></th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.unit"></th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.color_id"></th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.guaranty"></th>
+                                    <th class="fw-normal" x-text="trans.validation.attributes.description"></th>
                                     <th class="fw-normal"></th>
                                 </tr>
                             </thead>
@@ -100,7 +115,7 @@
                                                 packages[packageId]?.unit,
                                                 packages_const[packageId]?.unit,
                                                 'strval')">
-                                            <input class="form-control p-1 text-center"
+                                            <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
                                                 x-model="packages[packageId]['unit']">
                                         </td>
                                         <td
@@ -108,7 +123,7 @@
                                                 packages[packageId]?.color_id,
                                                 packages_const[packageId]?.color_id,
                                                 'parseInt')">
-                                            <select class="form-select p-1 text-center"
+                                            <select class="form-select p-1 text-center" :disabled="!isNewId(packageId)"
                                                 x-model="packages[packageId]['color_id']">
                                                 <option></option>
                                                 <template x-for="color in colors" :key="color.id">
@@ -127,7 +142,7 @@
                                                 packages[packageId]?.guaranty,
                                                 packages_const[packageId]?.guaranty,
                                                 'parseInt')">
-                                            <input class="form-control p-1 text-center"
+                                            <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
                                                 x-model="packages[packageId]['guaranty']">
                                         </td>
                                         <td
@@ -135,11 +150,13 @@
                                                 packages[packageId]?.description,
                                                 packages_const[packageId]?.description,
                                                 'strval')">
-                                            <input class="form-control p-1 text-center"
+                                            <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
                                                 x-model="packages[packageId]['description']">
                                         </td>
-                                        <td>
-                                            <div class="btn btn-primary p-1" @click="persist(packageId)">@lang('Update')
+                                        <td :class="detectBgColor(packageId, null, null, '')">
+                                            <div class="btn w-100 p-1 border-dark" @click="persist(packageId)"
+                                                :class="isNewId(packageId) ? 'bg-success-subtle' : 'bg-primary-subtle'"
+                                                x-text="isNewId(packageId) ? trans.Create : trans.Edit">
                                             </div>
                                         </td>
                                     </tr>
@@ -163,6 +180,7 @@
         function data() {
             return {
                 urls: null,
+                trans: [],
                 products: [],
                 packages: [],
                 packages_const: [],
@@ -216,7 +234,7 @@
                         description: this.packages[packageId].description,
                     };
 
-                    if (this.isIdNew(packageId)) {
+                    if (this.isNewId(packageId)) {
                         this.storePackage(data, packageId);
                     } else {
                         this.updatePackage(data, packageId);
@@ -225,13 +243,14 @@
                 isNumeric(v) {
                     return (v !== null && v !== "" && !Number.isNaN(Number(v)));
                 },
-                isIdNew(packageId) {
+                isNewId(packageId) {
                     return !this.isNumeric(packageId);
                 },
                 async initData(initParams) {
                     this.urls = initParams.urls;
                     this.package_statuses = initParams.package_statuses;
                     this.show_prices = initParams.show_prices;
+                    this.trans = initParams.trans;
                     await this.indexPackages();
                 },
                 getReverseColorCode(colorCode) {
@@ -365,7 +384,7 @@
                     }
                 },
                 detectBgColor(packageId, newValue, oldValue, fnc) {
-                    if (!this.isNumeric(this.packages[packageId].id)) {
+                    if (this.isNewId(this.packages[packageId].id)) {
                         return 'bg-success-subtle';
                     }
 
