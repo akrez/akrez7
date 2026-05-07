@@ -9,6 +9,7 @@
         'urls' => [
             'packages' => [
                 'list' => route('packages.index') . '/list',
+                'store' => route('packages.store'),
                 'update' => route('packages.index'),
             ],
         ],
@@ -49,20 +50,12 @@
                                 <td x-bind:rowspan="productIdToPackageIds[productId].length"
                                     x-text="products[productId].name" x-show="packageIndex === 0"></td>
                                 <td x-bind:rowspan="productIdToPackageIds[productId].length" x-text="'+'"
-                                    x-show="packageIndex === 0"></td>
-                                <td
-                                    :class="{
-                                        'bg-info': strval(packages[packageId]['price']) !==
-                                            strval(packages_const[packageId]['price'])
-                                    }">
+                                    x-show="packageIndex === 0" @click="addEmpty(productId)"></td>
+                                <td :class="detectBgColor(packageId, 'price', 'strval')">
                                     <input class="form-control p-1 text-center" x-model="packages[packageId]['price']">
                                 </td>
 
-                                <td
-                                    :class="{
-                                        'bg-info': boolval(packages[packageId]['show_price']) !=
-                                            boolval(packages_const[packageId]['show_price'])
-                                    }">
+                                <td :class="detectBgColor(packageId, 'show_price', 'boolval')">
                                     <select class="form-select p-1 text-center" x-model="packages[packageId]['show_price']">
                                         <template x-for="(show_price, show_price_key) in show_prices">
                                             <option
@@ -72,17 +65,14 @@
                                         </template>
                                     </select>
                                 </td>
-                                <td
-                                    :class="{
-                                        'bg-info': packages[packageId]['package_status']['value'] !==
-                                            packages_const[packageId]['package_status']['value']
-                                    }">
+                                <td :class="''">
                                     <select class="form-select p-1 text-center"
-                                        x-model="packages[packageId]['package_status']['value']">
+                                        x-model="packages[packageId].package_status.value">
+                                        <option></option>
                                         <template x-for="(package_status, package_status_key) in package_statuses"
                                             :key="package_status_key">
                                             <option
-                                                :selected="package_status_key == packages[packageId]['package_status']['value']"
+                                                :selected="package_status_key == packages[packageId]?.package_status?.value"
                                                 :value="package_status_key" x-text="package_status">
                                             </option>
                                         </template>
@@ -90,18 +80,10 @@
                                 </td>
 
 
-                                <td
-                                    :class="{
-                                        'bg-info': (packages[packageId]['unit']) !==
-                                            (packages_const[packageId]['unit'])
-                                    }">
+                                <td :class="detectBgColor(packageId, 'unit', 'strval')">
                                     <input class="form-control p-1 text-center" x-model="packages[packageId]['unit']">
                                 </td>
-                                <td
-                                    :class="{
-                                        'bg-info': parseInt(packages[packageId]['color_id']) !==
-                                            parseInt(packages_const[packageId]['color_id'])
-                                    }">
+                                <td :class="detectBgColor(packageId, 'color_id', 'parseInt')">
                                     <select class="form-select p-1 text-center" x-model="packages[packageId]['color_id']">
                                         <option></option>
                                         <template x-for="color in colors" :key="color.id">
@@ -115,18 +97,10 @@
                                         </template>
                                     </select>
                                 </td>
-                                <td
-                                    :class="{
-                                        'bg-info': strval(packages[packageId]['guaranty']) !=
-                                            strval(packages_const[packageId]['guaranty'])
-                                    }">
+                                <td :class="detectBgColor(packageId, 'guaranty', 'parseInt')">
                                     <input class="form-control p-1 text-center" x-model="packages[packageId]['guaranty']">
                                 </td>
-                                <td
-                                    :class="{
-                                        'bg-info': strval(packages[packageId]['description']) !=
-                                            strval(packages_const[packageId]['description'])
-                                    }">
+                                <td :class="detectBgColor(packageId, 'description', 'strval')">
                                     <input class="form-control p-1 text-center"
                                         x-model="packages[packageId]['description']">
                                 </td>
@@ -165,6 +139,26 @@
                     indexPackages: false,
                     updatePackage: false,
                 },
+                addEmpty(productId) {
+                    id = 'id-' + (Math.random() * 100000);
+                    psv = Object.keys(this.package_statuses)[0];
+                    psn = this.package_statuses[psv];
+                    data = {
+                        id: id,
+                        product_id: productId,
+                        price: null,
+                        show_price: null,
+                        package_status: {
+                            name: psn,
+                            value: psv
+                        },
+                        unit: null,
+                        color_id: null,
+                        guaranty: null,
+                        description: null,
+                    };
+                    this.syncPackage(data, null, true);
+                },
                 persist(packageId) {
                     data = {
                         product_id: this.packages[packageId].product_id,
@@ -177,7 +171,14 @@
                         description: this.packages[packageId].description,
                     };
 
-                    this.updatePackage(packageId, data);
+                    if (this.isNumeric(packageId)) {
+                        this.updatePackage(data, packageId);
+                    } else {
+                        this.storePackage(data, packageId);
+                    }
+                },
+                isNumeric(v) {
+                    return (v !== null && v !== "" && !Number.isNaN(Number(v)));
                 },
                 async initData(initParams) {
                     this.urls = initParams.urls;
@@ -202,7 +203,38 @@
                     if (value === null) return '';
                     return String(value);
                 },
-                async updatePackage(id, data) {
+                async storePackage(data, tempId) {
+                    try {
+                        if (this.loading.storePackage) return;
+                        this.loading.storePackage = true;
+
+                        const gameRes = await fetch(this.urls.packages.store, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        const gameResJson = await gameRes.json();
+
+                        if (gameRes.ok) {
+                            this.alertSuccess(gameResJson.message);
+                            this.syncPackage(gameResJson.data, tempId, true);
+                        } else {
+                            this.alertError(gameResJson.message);
+                        }
+
+                    } catch (err) {
+                        console.log(err);
+                        this.alertError('خطا');
+                    } finally {
+                        this.loading.storePackage = false;
+                    }
+                },
+                async updatePackage(data, id) {
                     try {
                         if (this.loading.updatePackage) return;
                         this.loading.updatePackage = true;
@@ -221,7 +253,7 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.syncPackage(gameResJson.data.package, false);
+                            this.syncPackage(gameResJson.data.package, null, true);
                         } else {
                             this.alertError(gameResJson.message);
                         }
@@ -233,10 +265,14 @@
                         this.loading.updatePackage = false;
                     }
                 },
-                syncPackage(package, add = true) {
+                syncPackage(package, removeId = null, addPackageId = false) {
                     this.packages[package.id] = this.cloneJson(package);
                     this.packages_const[package.id] = this.cloneJson(package);
-                    if (add) {
+                    if (removeId) {
+                        const idx = this.productIdToPackageIds[package.product_id].indexOf(removeId);
+                        if (idx !== -1) this.productIdToPackageIds[package.product_id].splice(idx, 1);
+                    }
+                    if (addPackageId) {
                         this.productIdToPackageIds[package.product_id].push(package.id);
                     }
                 },
@@ -266,7 +302,7 @@
                         });
 
                         packages.forEach(package => {
-                            this.syncPackage(package);
+                            this.syncPackage(package, null, true);
                         });
 
                         colors.forEach(color => {
@@ -278,6 +314,24 @@
                     } finally {
                         this.loading.indexPackages = false;
                     }
+                },
+                detectBgColor(packageId, attr, fnc) {
+                    if (this.packages[packageId] && !this.isNumeric(this.packages[packageId].id)) {
+                        return 'bg-success-subtle';
+                    }
+
+                    oldValue = this.packages_const[packageId][attr];
+                    newValue = this.packages[packageId][attr];
+
+                    if (
+                        (fnc === '' && (oldValue) != (newValue)) ||
+                        (fnc === 'strval' && this.strval(oldValue) !== this.strval(newValue)) ||
+                        (fnc === 'boolval' && this.boolval(oldValue) !== this.boolval(newValue))
+                    ) {
+                        return 'bg-info-subtle';
+                    }
+
+                    return '';
                 },
                 alertError(text) {
                     Swal.fire({
