@@ -59,7 +59,8 @@
                                                 packages_const[packageId]?.price,
                                                 'strval')">
                                             <input class="form-control p-1 text-center"
-                                                x-model="packages[packageId]['price']">
+                                                x-bind:value="formattedPrice(packages[packageId]['price'])"
+                                                @input="packages[packageId]['price'] = unformatPrice($event.target.value)">
                                         </td>
                                         <td
                                             :class="detectBgColor(packageId,
@@ -174,6 +175,15 @@
                     indexPackages: false,
                     updatePackage: false,
                 },
+                formattedPrice(v) {
+                    if (v === null || v === undefined || v === '') return '';
+                    const s = String(v);
+                    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                },
+                unformatPrice(str) {
+                    const digits = String(str).replace(/,/g, '').replace(/[^\d]/g, '');
+                    return digits === '' ? '' : Number(digits);
+                },
                 addEmpty(productId) {
                     id = 'id-' + (Math.random() * 100000);
                     psv = Object.keys(this.package_statuses)[0];
@@ -206,14 +216,17 @@
                         description: this.packages[packageId].description,
                     };
 
-                    if (this.isNumeric(packageId)) {
-                        this.updatePackage(data, packageId);
-                    } else {
+                    if (this.isIdNew(packageId)) {
                         this.storePackage(data, packageId);
+                    } else {
+                        this.updatePackage(data, packageId);
                     }
                 },
                 isNumeric(v) {
                     return (v !== null && v !== "" && !Number.isNaN(Number(v)));
+                },
+                isIdNew(packageId) {
+                    return !this.isNumeric(packageId);
                 },
                 async initData(initParams) {
                     this.urls = initParams.urls;
@@ -271,7 +284,6 @@
                 },
                 async updatePackage(data, id) {
                     try {
-                        console.log(data);
                         if (this.loading.updatePackage) return;
                         this.loading.updatePackage = true;
 
@@ -304,7 +316,6 @@
                 syncPackage(package, removeId = null, addPackageId = false) {
                     this.packages[package.id] = this.cloneJson(package);
                     this.packages_const[package.id] = this.cloneJson(package);
-                    console.log(package, removeId, addPackageId);
                     if (
                         removeId &&
                         ((index = this.productIdToPackageIds[package.product_id].indexOf(removeId)) !== -1)
@@ -348,6 +359,7 @@
 
                     } catch (e) {
                         console.log(e);
+                        this.alertError('خطا');
                     } finally {
                         this.loading.indexPackages = false;
                     }
