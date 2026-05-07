@@ -358,6 +358,14 @@
                         return 'bg-info-subtle';
                     }
 
+                    if (this.packages_const[packageId]?.package_status.value === 'deactive') {
+                        return 'bg-danger-subtle';
+                    }
+
+                    if (this.packages_const[packageId]?.package_status.value === 'out_of_stock') {
+                        return 'bg-warning-subtle';
+                    }
+
                     return '';
                 },
                 alertError(text) {
