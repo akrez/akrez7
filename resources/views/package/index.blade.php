@@ -11,11 +11,17 @@
                 'list' => route('packages.index') . '/list',
                 'store' => route('packages.store'),
                 'update' => route('packages.index'),
+                'destroy' => route('packages.index'),
             ],
         ],
         'trans' => [
             'Create' => __('Create'),
             'Edit' => __('Edit'),
+            'Delete' => __('Delete'),
+            'Yes' => __('Yes'),
+            'No' => __('No'),
+            'Are you sure?' => __('Are you sure?'),
+            'Reset' => __('Reset'),
             'validation' => [
                 'attributes' => [
                     'price' => __('validation.attributes.price'),
@@ -61,6 +67,8 @@
                                     <th class="fw-normal" x-text="trans.validation.attributes.color_id"></th>
                                     <th class="fw-normal" x-text="trans.validation.attributes.guaranty"></th>
                                     <th class="fw-normal" x-text="trans.validation.attributes.description"></th>
+                                    <th class="fw-normal"></th>
+                                    <th class="fw-normal"></th>
                                     <th class="fw-normal"></th>
                                 </tr>
                             </thead>
@@ -159,6 +167,16 @@
                                                 x-text="isNewId(packageId) ? trans.Create : trans.Edit">
                                             </div>
                                         </td>
+                                        <td :class="detectBgColor(packageId, null, null, '')">
+                                            <div class="btn w-100 p-1 border-dark bg-danger-subtle"
+                                                @click="destroy(packageId, productId)" x-text="trans.Delete">
+                                            </div>
+                                        </td>
+                                        <td :class="detectBgColor(packageId, null, null, '')">
+                                            <div class="btn w-100 p-1 border-dark bg-warning-subtle"
+                                                @click="reset(packageId, productId)" x-text="trans.Reset">
+                                            </div>
+                                        </td>
                                     </tr>
                                 </template>
                             </tbody>
@@ -192,6 +210,7 @@
                 loading: {
                     indexPackages: false,
                     updatePackage: false,
+                    destroyPackage: false,
                 },
                 formattedPrice(v) {
                     if (v === null || v === undefined || v === '') return '';
@@ -222,6 +241,9 @@
                     };
                     this.syncPackage(data, null, true);
                 },
+                reset(packageId, productId) {
+                    this.packages[packageId] = this.cloneJson(this.packages_const[packageId]);
+                },
                 persist(packageId) {
                     data = {
                         product_id: this.packages[packageId].product_id,
@@ -239,6 +261,22 @@
                     } else {
                         this.updatePackage(data, packageId);
                     }
+                },
+                destroy(packageId, productId) {
+                    that = this;
+                    this.alertConfirm(
+                        that.trans['Are you sure?'],
+                        function(result) {
+                            if (!result.isConfirmed) {
+                                return;
+                            }
+                            if (that.isNewId(packageId)) {
+                                that.removePackage(packageId, productId);
+                            } else {
+                                that.destroyPackage(packageId, productId);
+                            }
+                        }
+                    );
                 },
                 isNumeric(v) {
                     return (v !== null && v !== "" && !Number.isNaN(Number(v)));
@@ -301,6 +339,35 @@
                         this.loading.storePackage = false;
                     }
                 },
+                async destroyPackage(id, productId) {
+                    try {
+                        if (this.loading.destroyPackage) return;
+                        this.loading.destroyPackage = true;
+
+                        const formData = new FormData();
+                        formData.append('_method', 'DELETE');
+
+                        const gameRes = await fetch(this.urls.packages.destroy + '/' + id, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const gameResJson = await gameRes.json();
+
+                        if (gameRes.ok) {
+                            this.alertSuccess(gameResJson.message);
+                            this.removePackage(id, productId);
+                        } else {
+                            this.alertError(gameResJson.message);
+                        }
+
+                    } catch (err) {
+                        console.log(err);
+                        this.alertError('خطا');
+                    } finally {
+                        this.loading.destroyPackage = false;
+                    }
+                },
                 async updatePackage(data, id) {
                     try {
                         if (this.loading.updatePackage) return;
@@ -331,6 +398,12 @@
                     } finally {
                         this.loading.updatePackage = false;
                     }
+                },
+                removePackage(packageId, productId) {
+                    if (!packageId) return;
+                    index = this.productIdToPackageIds[productId].indexOf(packageId);
+                    if (index === -1) return;
+                    this.productIdToPackageIds[productId].splice(index, 1);
                 },
                 syncPackage(package, removeId = null, addPackageId = false) {
                     this.packages[package.id] = this.cloneJson(package);
@@ -430,6 +503,18 @@
                         position: 'bottom',
                     });
                 },
+                alertConfirm(text, func) {
+                    that = this;
+                    Swal.fire({
+                        text: text,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "red",
+                        confirmButtonText: that.trans.Yes,
+                        cancelButtonText: that.trans.No,
+                        position: 'center',
+                    }).then((result) => func(result));
+                }
             };
         }
     </script>
