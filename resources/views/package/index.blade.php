@@ -42,7 +42,7 @@
         <div class="col-12">
             <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
                 :key="'productId-' + '-' + productId">
-                <div class="card text-bg-light rounded-0 mb-1">
+                <div class="card text-bg-light rounded-0">
                     <div class="card-header d-flex p-0 rounded-0">
                         <span class="flex-grow-1 p-2 text-center" x-text="products[productId].name">
                         </span>
