@@ -78,7 +78,6 @@
                                         '')">
                                     <select class="form-select p-1 text-center"
                                         x-model="packages[packageId].package_status.value">
-                                        <option></option>
                                         <template x-for="(package_status, package_status_key) in package_statuses"
                                             :key="package_status_key">
                                             <option
@@ -300,6 +299,13 @@
                         this.productIdToPackageIds[package.product_id].push(package.id);
                     }
                 },
+                checkEmptyProductIdToPackageIds() {
+                    this.products.forEach(product => {
+                        if (this.productIdToPackageIds[product.id].length == 0) {
+                            this.addEmpty(product.id);
+                        }
+                    });
+                },
                 async indexPackages() {
                     try {
                         if (this.loading.indexPackages) {
@@ -318,8 +324,6 @@
                         packages = json.data.packages || [];
                         colors = json.data.colors || [];
 
-                        this.productIdToPackageIds = [];
-
                         products.forEach(product => {
                             this.products[product.id] = product;
                             this.productIdToPackageIds[product.id] = [];
@@ -328,6 +332,8 @@
                         packages.forEach(package => {
                             this.syncPackage(package, null, true);
                         });
+
+                        this.checkEmptyProductIdToPackageIds();
 
                         colors.forEach(color => {
                             this.colors[color.id] = color;
