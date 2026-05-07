@@ -38,7 +38,6 @@
                         <th scope="col">@lang('validation.attributes.guaranty')</th>
                         <th scope="col">@lang('validation.attributes.description')</th>
                         <th scope="col"></th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,11 +50,18 @@
                                     x-text="products[productId].name" x-show="packageIndex === 0"></td>
                                 <td x-bind:rowspan="productIdToPackageIds[productId].length" x-text="'+'"
                                     x-show="packageIndex === 0" @click="addEmpty(productId)"></td>
-                                <td :class="detectBgColor(packageId, 'price', 'strval')">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.price,
+                                        packages_const[packageId]?.price,
+                                        'strval')">
                                     <input class="form-control p-1 text-center" x-model="packages[packageId]['price']">
                                 </td>
-
-                                <td :class="detectBgColor(packageId, 'show_price', 'boolval')">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.show_price,
+                                        packages_const[packageId]?.show_price,
+                                        'boolval')">
                                     <select class="form-select p-1 text-center" x-model="packages[packageId]['show_price']">
                                         <template x-for="(show_price, show_price_key) in show_prices">
                                             <option
@@ -65,7 +71,11 @@
                                         </template>
                                     </select>
                                 </td>
-                                <td :class="''">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.package_status.value,
+                                        packages_const[packageId]?.package_status.value,
+                                        '')">
                                     <select class="form-select p-1 text-center"
                                         x-model="packages[packageId].package_status.value">
                                         <option></option>
@@ -79,11 +89,18 @@
                                     </select>
                                 </td>
 
-
-                                <td :class="detectBgColor(packageId, 'unit', 'strval')">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.unit,
+                                        packages_const[packageId]?.unit,
+                                        'strval')">
                                     <input class="form-control p-1 text-center" x-model="packages[packageId]['unit']">
                                 </td>
-                                <td :class="detectBgColor(packageId, 'color_id', 'parseInt')">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.color_id,
+                                        packages_const[packageId]?.color_id,
+                                        'parseInt')">
                                     <select class="form-select p-1 text-center" x-model="packages[packageId]['color_id']">
                                         <option></option>
                                         <template x-for="color in colors" :key="color.id">
@@ -97,17 +114,24 @@
                                         </template>
                                     </select>
                                 </td>
-                                <td :class="detectBgColor(packageId, 'guaranty', 'parseInt')">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.guaranty,
+                                        packages_const[packageId]?.guaranty,
+                                        'parseInt')">
                                     <input class="form-control p-1 text-center" x-model="packages[packageId]['guaranty']">
                                 </td>
-                                <td :class="detectBgColor(packageId, 'description', 'strval')">
+                                <td
+                                    :class="detectBgColor(packageId,
+                                        packages[packageId]?.description,
+                                        packages_const[packageId]?.description,
+                                        'strval')">
                                     <input class="form-control p-1 text-center"
                                         x-model="packages[packageId]['description']">
                                 </td>
-                                <td class="">
+                                <td>
                                     <div class="btn btn-primary p-1" @click="persist(packageId)">@lang('Update')</div>
                                 </td>
-                                <td class=""></td>
                             </tr>
                         </template>
                     </template>
@@ -315,16 +339,13 @@
                         this.loading.indexPackages = false;
                     }
                 },
-                detectBgColor(packageId, attr, fnc) {
-                    if (this.packages[packageId] && !this.isNumeric(this.packages[packageId].id)) {
+                detectBgColor(packageId, newValue, oldValue, fnc) {
+                    if (!this.isNumeric(this.packages[packageId].id)) {
                         return 'bg-success-subtle';
                     }
 
-                    oldValue = this.packages_const[packageId][attr];
-                    newValue = this.packages[packageId][attr];
-
                     if (
-                        (fnc === '' && (oldValue) != (newValue)) ||
+                        (fnc === '' && (oldValue) !== (newValue)) ||
                         (fnc === 'strval' && this.strval(oldValue) !== this.strval(newValue)) ||
                         (fnc === 'boolval' && this.boolval(oldValue) !== this.boolval(newValue))
                     ) {
