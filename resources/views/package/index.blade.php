@@ -42,9 +42,9 @@
                 </thead>
                 <tbody>
                     <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
-                        :key="'product-id-' + '-' + (Math.random())">
+                        :key="'productId-' + '-' + productId">
                         <template x-for="(packageId, packageIndex) in productIdToPackageIds[productId]"
-                            :key="'package-id-' + '-' + productId + '-' + packageId">
+                            :key="'packageId-' + '-' + packageId">
                             <tr :class="packageIndex === 0 ? 'border-top' : ''">
                                 <td x-bind:rowspan="productIdToPackageIds[productId].length"
                                     x-text="products[productId].name" x-show="packageIndex === 0"></td>
