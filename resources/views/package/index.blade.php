@@ -24,125 +24,137 @@
     </style>
 
     <div class="row" x-data="data()" x-init="initData({{ json_encode($params) }})">
-        <div class="table-responsive">
-            <table class="table table-borderless align-middle rounded-3 text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                        <th scope="col">@lang('validation.attributes.price')</th>
-                        <th scope="col">@lang('validation.attributes.show_price')</th>
-                        <th scope="col">@lang('validation.attributes.status')</th>
-                        <th scope="col">@lang('validation.attributes.unit')</th>
-                        <th scope="col">@lang('validation.attributes.color_id')</th>
-                        <th scope="col">@lang('validation.attributes.guaranty')</th>
-                        <th scope="col">@lang('validation.attributes.description')</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
-                        :key="'productId-' + '-' + productId">
-                        <template x-for="(packageId, packageIndex) in productIdToPackageIds[productId]"
-                            :key="'packageId-' + '-' + packageId">
-                            <tr :class="packageIndex === 0 ? 'border-top' : ''">
-                                <td x-bind:rowspan="productIdToPackageIds[productId].length"
-                                    x-text="products[productId].name" x-show="packageIndex === 0"></td>
-                                <td x-bind:rowspan="productIdToPackageIds[productId].length" x-text="'+'"
-                                    x-show="packageIndex === 0" @click="addEmpty(productId)"></td>
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.price,
-                                        packages_const[packageId]?.price,
-                                        'strval')">
-                                    <input class="form-control p-1 text-center" x-model="packages[packageId]['price']">
-                                </td>
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.show_price,
-                                        packages_const[packageId]?.show_price,
-                                        'boolval')">
-                                    <select class="form-select p-1 text-center" x-model="packages[packageId]['show_price']">
-                                        <template x-for="(show_price, show_price_key) in show_prices">
-                                            <option
-                                                :selected="boolval(show_price_key) == boolval(packages[packageId].show_price)"
-                                                :value="boolval(show_price_key)" x-text="show_price">
-                                            </option>
-                                        </template>
-                                    </select>
-                                </td>
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.package_status.value,
-                                        packages_const[packageId]?.package_status.value,
-                                        '')">
-                                    <select class="form-select p-1 text-center"
-                                        x-model="packages[packageId].package_status.value">
-                                        <template x-for="(package_status, package_status_key) in package_statuses"
-                                            :key="package_status_key">
-                                            <option
-                                                :selected="package_status_key == packages[packageId]?.package_status?.value"
-                                                :value="package_status_key" x-text="package_status">
-                                            </option>
-                                        </template>
-                                    </select>
-                                </td>
+        <div class="col-12">
+            <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
+                :key="'productId-' + '-' + productId">
+                <div class="card text-bg-light mb-1">
+                    <div class="card-header d-flex p-0">
+                        <span class="flex-grow-1 p-2" x-text="products[productId].name">
+                        </span>
+                        <span class="flex-grow-0 p-1 pt-2 border-start btn rounded-0" @click="addEmpty(productId)">
+                            <div class="p-0 px-1">➕</div>
+                        </span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle text-center m-0 mb-1">
+                            <thead>
+                                <tr class="table-light">
+                                    <th class="fw-normal">@lang('validation.attributes.price')</th>
+                                    <th class="fw-normal">@lang('validation.attributes.show_price')</th>
+                                    <th class="fw-normal">@lang('validation.attributes.status')</th>
+                                    <th class="fw-normal">@lang('validation.attributes.unit')</th>
+                                    <th class="fw-normal">@lang('validation.attributes.color_id')</th>
+                                    <th class="fw-normal">@lang('validation.attributes.guaranty')</th>
+                                    <th class="fw-normal">@lang('validation.attributes.description')</th>
+                                    <th class="fw-normal"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="(packageId, packageIndex) in productIdToPackageIds[productId]"
+                                    :key="'packageId-' + '-' + packageId">
+                                    <tr :class="packageIndex === 0 ? 'border-top' : ''">
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.price,
+                                                packages_const[packageId]?.price,
+                                                'strval')">
+                                            <input class="form-control p-1 text-center"
+                                                x-model="packages[packageId]['price']">
+                                        </td>
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.show_price,
+                                                packages_const[packageId]?.show_price,
+                                                'boolval')">
+                                            <select class="form-select p-1 text-center"
+                                                x-model="packages[packageId]['show_price']">
+                                                <template x-for="(show_price, show_price_key) in show_prices">
+                                                    <option
+                                                        :selected="boolval(show_price_key) == boolval(packages[packageId]
+                                                            .show_price)"
+                                                        :value="boolval(show_price_key)" x-text="show_price">
+                                                    </option>
+                                                </template>
+                                            </select>
+                                        </td>
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.package_status.value,
+                                                packages_const[packageId]?.package_status.value,
+                                                '')">
+                                            <select class="form-select p-1 text-center"
+                                                x-model="packages[packageId].package_status.value">
+                                                <template x-for="(package_status, package_status_key) in package_statuses"
+                                                    :key="package_status_key">
+                                                    <option
+                                                        :selected="package_status_key == packages[packageId]?.package_status?.value"
+                                                        :value="package_status_key" x-text="package_status">
+                                                    </option>
+                                                </template>
+                                            </select>
+                                        </td>
 
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.unit,
-                                        packages_const[packageId]?.unit,
-                                        'strval')">
-                                    <input class="form-control p-1 text-center" x-model="packages[packageId]['unit']">
-                                </td>
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.color_id,
-                                        packages_const[packageId]?.color_id,
-                                        'parseInt')">
-                                    <select class="form-select p-1 text-center" x-model="packages[packageId]['color_id']">
-                                        <option></option>
-                                        <template x-for="color in colors" :key="color.id">
-                                            <option :selected="color.id == packages[packageId]['color_id']"
-                                                :value="color.id" x-text="color.name"
-                                                :style="{
-                                                    'color': getReverseColorCode(color.code),
-                                                    'background-color': color.code,
-                                                }">
-                                            </option>
-                                        </template>
-                                    </select>
-                                </td>
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.guaranty,
-                                        packages_const[packageId]?.guaranty,
-                                        'parseInt')">
-                                    <input class="form-control p-1 text-center" x-model="packages[packageId]['guaranty']">
-                                </td>
-                                <td
-                                    :class="detectBgColor(packageId,
-                                        packages[packageId]?.description,
-                                        packages_const[packageId]?.description,
-                                        'strval')">
-                                    <input class="form-control p-1 text-center"
-                                        x-model="packages[packageId]['description']">
-                                </td>
-                                <td>
-                                    <div class="btn btn-primary p-1" @click="persist(packageId)">@lang('Update')</div>
-                                </td>
-                            </tr>
-                        </template>
-                    </template>
-                </tbody>
-                <tbody x-show="loading.indexPackages">
-                    <tr>
-                        <td colspan="99">
-                            <div class="spinner-border text-secondary"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.unit,
+                                                packages_const[packageId]?.unit,
+                                                'strval')">
+                                            <input class="form-control p-1 text-center"
+                                                x-model="packages[packageId]['unit']">
+                                        </td>
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.color_id,
+                                                packages_const[packageId]?.color_id,
+                                                'parseInt')">
+                                            <select class="form-select p-1 text-center"
+                                                x-model="packages[packageId]['color_id']">
+                                                <option></option>
+                                                <template x-for="color in colors" :key="color.id">
+                                                    <option :selected="color.id == packages[packageId]['color_id']"
+                                                        :value="color.id" x-text="color.name"
+                                                        :style="{
+                                                            'color': getReverseColorCode(color.code),
+                                                            'background-color': color.code,
+                                                        }">
+                                                    </option>
+                                                </template>
+                                            </select>
+                                        </td>
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.guaranty,
+                                                packages_const[packageId]?.guaranty,
+                                                'parseInt')">
+                                            <input class="form-control p-1 text-center"
+                                                x-model="packages[packageId]['guaranty']">
+                                        </td>
+                                        <td
+                                            :class="detectBgColor(packageId,
+                                                packages[packageId]?.description,
+                                                packages_const[packageId]?.description,
+                                                'strval')">
+                                            <input class="form-control p-1 text-center"
+                                                x-model="packages[packageId]['description']">
+                                        </td>
+                                        <td>
+                                            <div class="btn btn-primary p-1" @click="persist(packageId)">@lang('Update')
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                            <tbody x-show="loading.indexPackages">
+                                <tr>
+                                    <td colspan="99">
+                                        <div class="spinner-border text-secondary"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 
@@ -245,7 +257,7 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.syncPackage(gameResJson.data, tempId, true);
+                            this.syncPackage(gameResJson.data.package, tempId);
                         } else {
                             this.alertError(gameResJson.message);
                         }
@@ -259,6 +271,7 @@
                 },
                 async updatePackage(data, id) {
                     try {
+                        console.log(data);
                         if (this.loading.updatePackage) return;
                         this.loading.updatePackage = true;
 
@@ -276,7 +289,7 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.syncPackage(gameResJson.data.package, null, true);
+                            this.syncPackage(gameResJson.data.package);
                         } else {
                             this.alertError(gameResJson.message);
                         }
@@ -291,20 +304,16 @@
                 syncPackage(package, removeId = null, addPackageId = false) {
                     this.packages[package.id] = this.cloneJson(package);
                     this.packages_const[package.id] = this.cloneJson(package);
-                    if (removeId) {
-                        const idx = this.productIdToPackageIds[package.product_id].indexOf(removeId);
-                        if (idx !== -1) this.productIdToPackageIds[package.product_id].splice(idx, 1);
+                    console.log(package, removeId, addPackageId);
+                    if (
+                        removeId &&
+                        ((index = this.productIdToPackageIds[package.product_id].indexOf(removeId)) !== -1)
+                    ) {
+                        this.productIdToPackageIds[package.product_id][index] = package.id;
                     }
                     if (addPackageId) {
                         this.productIdToPackageIds[package.product_id].push(package.id);
                     }
-                },
-                checkEmptyProductIdToPackageIds() {
-                    this.products.forEach(product => {
-                        if (this.productIdToPackageIds[product.id].length == 0) {
-                            this.addEmpty(product.id);
-                        }
-                    });
                 },
                 async indexPackages() {
                     try {
@@ -332,8 +341,6 @@
                         packages.forEach(package => {
                             this.syncPackage(package, null, true);
                         });
-
-                        this.checkEmptyProductIdToPackageIds();
 
                         colors.forEach(color => {
                             this.colors[color.id] = color;
