@@ -78,23 +78,23 @@
                                     <tr :class="packageIndex === 0 ? 'border-top' : ''">
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.price,
                                                 packages[packageId]?.price,
-                                                packages_const[packageId]?.price,
                                                 'strval')">
                                             <input class="form-control p-1 text-center"
-                                                x-bind:value="formattedPrice(packages[packageId]['price'])"
-                                                @input="packages[packageId]['price'] = unformatPrice($event.target.value)">
+                                                x-bind:value="formattedPrice(packages_input[packageId]['price'])"
+                                                @input="packages_input[packageId]['price'] = unformatPrice($event.target.value)">
                                         </td>
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.show_price,
                                                 packages[packageId]?.show_price,
-                                                packages_const[packageId]?.show_price,
                                                 'boolval')">
                                             <select class="form-select p-1 text-center"
-                                                x-model="packages[packageId]['show_price']">
+                                                x-model="packages_input[packageId]['show_price']">
                                                 <template x-for="(show_price, show_price_key) in show_prices">
                                                     <option
-                                                        :selected="boolval(show_price_key) == boolval(packages[packageId]
+                                                        :selected="boolval(show_price_key) == boolval(packages_input[packageId]
                                                             .show_price)"
                                                         :value="boolval(show_price_key)" x-text="show_price">
                                                     </option>
@@ -103,15 +103,16 @@
                                         </td>
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.package_status.value,
                                                 packages[packageId]?.package_status.value,
-                                                packages_const[packageId]?.package_status.value,
                                                 '')">
                                             <select class="form-select p-1 text-center"
-                                                x-model="packages[packageId].package_status.value">
+                                                x-model="packages_input[packageId].package_status.value">
                                                 <template x-for="(package_status, package_status_key) in package_statuses"
                                                     :key="package_status_key">
                                                     <option
-                                                        :selected="package_status_key == packages[packageId]?.package_status?.value"
+                                                        :selected="package_status_key == packages_input[packageId]?.package_status
+                                                            ?.value"
                                                         :value="package_status_key" x-text="package_status">
                                                     </option>
                                                 </template>
@@ -120,22 +121,22 @@
 
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.unit,
                                                 packages[packageId]?.unit,
-                                                packages_const[packageId]?.unit,
                                                 'strval')">
                                             <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
-                                                x-model="packages[packageId]['unit']">
+                                                x-model="packages_input[packageId]['unit']">
                                         </td>
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.color_id,
                                                 packages[packageId]?.color_id,
-                                                packages_const[packageId]?.color_id,
                                                 'parseInt')">
                                             <select class="form-select p-1 text-center" :disabled="!isNewId(packageId)"
-                                                x-model="packages[packageId]['color_id']">
+                                                x-model="packages_input[packageId]['color_id']">
                                                 <option></option>
                                                 <template x-for="color in colors" :key="color.id">
-                                                    <option :selected="color.id == packages[packageId]['color_id']"
+                                                    <option :selected="color.id == packages_input[packageId]['color_id']"
                                                         :value="color.id" x-text="color.name"
                                                         :style="{
                                                             'color': getReverseColorCode(color.code),
@@ -147,19 +148,19 @@
                                         </td>
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.guaranty,
                                                 packages[packageId]?.guaranty,
-                                                packages_const[packageId]?.guaranty,
                                                 'parseInt')">
                                             <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
-                                                x-model="packages[packageId]['guaranty']">
+                                                x-model="packages_input[packageId]['guaranty']">
                                         </td>
                                         <td
                                             :class="detectBgColor(packageId,
+                                                packages_input[packageId]?.description,
                                                 packages[packageId]?.description,
-                                                packages_const[packageId]?.description,
                                                 'strval')">
                                             <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
-                                                x-model="packages[packageId]['description']">
+                                                x-model="packages_input[packageId]['description']">
                                         </td>
                                         <td :class="detectBgColor(packageId, null, null, '')">
                                             <div class="btn w-100 p-1 border-dark" @click="persist(packageId)"
@@ -200,8 +201,8 @@
                 urls: null,
                 trans: [],
                 products: [],
+                packages_input: [],
                 packages: [],
-                packages_const: [],
                 colors: [],
                 list: [],
                 package_statuses: [],
@@ -242,18 +243,18 @@
                     this.syncPackage(data, null, true);
                 },
                 reset(packageId, productId) {
-                    this.packages[packageId] = this.cloneJson(this.packages_const[packageId]);
+                    this.packages_input[packageId] = this.cloneJson(this.packages[packageId]);
                 },
                 persist(packageId) {
                     data = {
-                        product_id: this.packages[packageId].product_id,
-                        price: this.packages[packageId].price,
-                        show_price: this.packages[packageId].show_price,
-                        package_status: this.packages[packageId].package_status.value,
-                        unit: this.packages[packageId].unit,
-                        color_id: this.packages[packageId].color_id,
-                        guaranty: this.packages[packageId].guaranty,
-                        description: this.packages[packageId].description,
+                        product_id: this.packages_input[packageId].product_id,
+                        price: this.packages_input[packageId].price,
+                        show_price: this.packages_input[packageId].show_price,
+                        package_status: this.packages_input[packageId].package_status.value,
+                        unit: this.packages_input[packageId].unit,
+                        color_id: this.packages_input[packageId].color_id,
+                        guaranty: this.packages_input[packageId].guaranty,
+                        description: this.packages_input[packageId].description,
                     };
 
                     if (this.isNewId(packageId)) {
@@ -406,8 +407,8 @@
                     this.productIdToPackageIds[productId].splice(index, 1);
                 },
                 syncPackage(package, removeId = null, addPackageId = false) {
+                    this.packages_input[package.id] = this.cloneJson(package);
                     this.packages[package.id] = this.cloneJson(package);
-                    this.packages_const[package.id] = this.cloneJson(package);
                     if (
                         removeId &&
                         ((index = this.productIdToPackageIds[package.product_id].indexOf(removeId)) !== -1)
@@ -420,15 +421,11 @@
                 },
                 async indexPackages() {
                     try {
-                        if (this.loading.indexPackages) {
-                            return;
-                        }
+                        if (this.loading.indexPackages) return;
                         this.loading.indexPackages = true;
 
                         let res = await fetch(this.urls.packages.list);
-                        if (!res.ok) {
-                            return;
-                        }
+                        if (!res.ok) return;
 
                         let json = await res.json();
 
@@ -457,7 +454,7 @@
                     }
                 },
                 detectBgColor(packageId, newValue, oldValue, fnc) {
-                    if (this.isNewId(this.packages[packageId].id)) {
+                    if (this.isNewId(this.packages_input[packageId].id)) {
                         return 'bg-success-subtle';
                     }
 
@@ -469,11 +466,11 @@
                         return 'bg-info-subtle';
                     }
 
-                    if (this.packages_const[packageId]?.package_status.value === 'deactive') {
+                    if (this.packages[packageId]?.package_status.value === 'deactive') {
                         return 'bg-danger-subtle';
                     }
 
-                    if (this.packages_const[packageId]?.package_status.value === 'out_of_stock') {
+                    if (this.packages[packageId]?.package_status.value === 'out_of_stock') {
                         return 'bg-warning-subtle';
                     }
 
