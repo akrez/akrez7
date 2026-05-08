@@ -47,7 +47,7 @@
     <div class="row" x-data="data()" x-init="initData({{ json_encode($params) }})">
         <div class="col-12">
             <table class="table table-borderless align-middle text-center m-0 table-sm">
-                <thead>
+                <thead class="sticky-top">
                     <tr class="table-light">
                         <th class="fw-normal"></th>
                         <th class="fw-normal" x-text="trans.validation.attributes.price"></th>
@@ -62,7 +62,7 @@
                         <th class="fw-normal"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody x-show="!loading.indexPackages">
                     <template x-for="product in products" :key="'productId-' + '-' + product.id">
                         <template x-for="(packageId, packageIndex) in relations[product.id]"
                             :key="'packageId-' + '-' + packageId">
@@ -186,6 +186,13 @@
                             </tr>
                         </template>
                     </template>
+                </tbody>
+                <tbody x-show="loading.indexPackages">
+                    <tr>
+                        <td colspan="99" class="p-4">
+                            <div class="spinner-border text-secondary"></div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
