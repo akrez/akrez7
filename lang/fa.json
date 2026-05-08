@@ -317,5 +317,7 @@
     "total :name": "مجموع :name",
     ":name id": "شناسه :name",
     ":name uuid": "شناسه جهانی :name",
+    "Are you sure?": "آیا مطمئن هستید؟",
+    "Reset": "ریست",
     "Upload :name Attribute": "آپلود اطلاعات :name"
 }

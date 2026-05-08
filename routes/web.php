@@ -6,6 +6,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayvoiceController;
 use App\Http\Controllers\Product\PackageController as ProductPackageController;
 use App\Http\Controllers\ProductController;
@@ -17,6 +18,7 @@ use App\Http\Middleware\CheckActiveBlogMiddleware;
 use App\Http\Middleware\CheckPresenterMiddleware;
 use App\Providers\AppServiceProvider;
 use App\Services\DomainService;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +70,14 @@ Route::middleware('auth')->group(function () {
             //
             Route::get('{product_id}/product_properties', [ProductPropertyController::class, 'create'])->name('product_properties.create');
             Route::post('{product_id}/product_properties', [ProductPropertyController::class, 'store'])->name('product_properties.store');
+        });
+        //
+        Route::prefix('packages')->as('packages.')->group(function () {
+            Route::get('/', [PackageController::class, 'index'])->name('index');
+            Route::get('/list', [PackageController::class, 'list'])->name('list');
+            Route::post('/', [PackageController::class, 'store'])->name('store')->withoutMiddleware(VerifyCsrfToken::class);
+            Route::put('/{id}', [PackageController::class, 'update'])->name('update')->withoutMiddleware(VerifyCsrfToken::class);
+            Route::delete('/{id}', [PackageController::class, 'destroy'])->name('destroy')->withoutMiddleware(VerifyCsrfToken::class);
         });
     });
 });

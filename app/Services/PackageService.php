@@ -76,11 +76,11 @@ class PackageService extends Service
 
     public function storePackage(StorePackageData $storePackageData)
     {
-        $webResponse = WebResponse::new()->input($storePackageData);
+        $apiResponse = ApiResponse::new()->input($storePackageData);
 
         $validation = $storePackageData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $webResponse->status(422)->errors($validation->errors());
+            return $apiResponse->status(422)->errors($validation->errors());
         }
 
         $package = Package::create([
@@ -95,12 +95,15 @@ class PackageService extends Service
             'description' => $storePackageData->description,
         ]);
         if (! $package) {
-            return $webResponse->status(500);
+            return $apiResponse->status(500);
         }
 
-        return $webResponse->status(201)->data($package)->message(__(':name is created successfully', [
-            'name' => __('Package'),
-        ]));
+        return $apiResponse
+            ->status(201)
+            ->data(['package' => (new PackageResource($package))->toArr()])
+            ->message(__(':name is created successfully', [
+                'name' => __('Package'),
+            ]));
     }
 
     public function getPackage(int $blogId, int $id)
@@ -119,16 +122,16 @@ class PackageService extends Service
 
     public function updatePackage(UpdatePackageData $updatePackageData)
     {
-        $webResponse = WebResponse::new()->input($updatePackageData);
+        $apiResponse = ApiResponse::new()->input($updatePackageData);
 
         $validation = $updatePackageData->validate();
         if ($validation->errors()->isNotEmpty()) {
-            return $webResponse->status(422)->errors($validation->errors());
+            return $apiResponse->status(422)->errors($validation->errors());
         }
 
         $package = $this->getLatestBlogQuery($updatePackageData->blog_id)->where('id', $updatePackageData->id)->first();
         if (! $package) {
-            return $webResponse->status(404);
+            return $apiResponse->status(404);
         }
 
         $package->update([
@@ -137,11 +140,11 @@ class PackageService extends Service
             'show_price' => $updatePackageData->show_price,
         ]);
         if (! $package->save()) {
-            return $webResponse->status(500);
+            return $apiResponse->status(500);
         }
 
-        return $webResponse
-            ->status(201)
+        return $apiResponse
+            ->status(200)
             ->data(['package' => (new PackageResource($package))->toArr()])
             ->message(__(':name is updated successfully', [
                 'name' => $package->name,
@@ -150,19 +153,22 @@ class PackageService extends Service
 
     public function destroyPackage(int $blogId, int $id)
     {
-        $webResponse = WebResponse::new();
+        $apiResponse = ApiResponse::new();
 
         $package = $this->getLatestBlogQuery($blogId)->where('id', $id)->first();
         if (! $package) {
-            return $webResponse->status(404);
+            return $apiResponse->status(404);
         }
 
         if (! $package->delete()) {
-            return $webResponse->status(500);
+            return $apiResponse->status(500);
         }
 
-        return WebResponse::new(200)->message(__(':name is deleted successfully', [
-            'name' => __('Package'),
-        ]));
+        return $apiResponse
+            ->status(200)
+            ->data(['package' => (new PackageResource($package))->toArr()])
+            ->message(__(':name is deleted successfully', [
+                'name' => $package->name,
+            ]));
     }
 }
