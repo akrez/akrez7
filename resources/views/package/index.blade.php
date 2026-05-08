@@ -329,7 +329,7 @@
                             this.alertSuccess(gameResJson.message);
                             this.replceRelation(gameResJson.data.package, tempId);
                         } else {
-                            this.alertError(gameResJson.message);
+                            this.renderCallError(gameResJson);
                         }
 
                     } catch (err) {
@@ -358,7 +358,7 @@
                             this.alertSuccess(gameResJson.message);
                             this.removeRelation(id, productId);
                         } else {
-                            this.alertError(gameResJson.message);
+                            this.renderCallError(gameResJson);
                         }
 
                     } catch (err) {
@@ -389,7 +389,7 @@
                             this.alertSuccess(gameResJson.message);
                             this.setPackage(gameResJson.data.package);
                         } else {
-                            this.alertError(gameResJson.message);
+                            this.renderCallError(gameResJson);
                         }
 
                     } catch (err) {
@@ -409,6 +409,7 @@
                 },
                 replceRelation(package, oldId) {
                     this.setPackage(package);
+                    if (!package?.id) return;
                     index = this.relations[package.product_id].indexOf(oldId);
                     if (index === -1) return;
                     this.relations[package.product_id][index] = package.id;
@@ -476,16 +477,22 @@
 
                     return '';
                 },
-                alertError(text) {
+                renderCallError(res) {
+                    const items = Object.entries(res.errors || {}).flatMap(([field, messages]) => {
+                        return (messages || []).map(msg => `${field}: ${msg}`);
+                    });
+                    const html = (items ? `<ul class="text-start m-0"> ${items.map(i => `<li>${i}</li>`).join("")} </ul>` : ``);
+                    this.alertError(res.message, html);
+                },
+                alertError(title, html) {
                     Swal.fire({
-                        text: text,
+                        title: title,
                         icon: 'error',
-                        timer: 1500,
                         showCloseButton: true,
                         showConfirmButton: false,
                         timerProgressBar: true,
-                        toast: true,
-                        position: 'bottom',
+                        html: html,
+                        position: 'center',
                     });
                 },
                 alertSuccess(text) {
