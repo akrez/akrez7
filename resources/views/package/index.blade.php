@@ -46,12 +46,12 @@
 
     <div class="row" x-data="data()" x-init="initData({{ json_encode($params) }})">
         <div class="col-12">
-            <template x-for="(productId, productIndex) in Object.keys(relations)" :key="'productId-' + '-' + productId">
+            <template x-for="product in products" :key="'productId-' + '-' + product.id">
                 <div class="card text-bg-light rounded-0">
                     <div class="card-header d-flex p-0 rounded-0">
-                        <span class="flex-grow-1 p-2 text-center" x-text="products[productId].name">
+                        <span class="flex-grow-1 p-2 text-center" x-text="products[product.id].name">
                         </span>
-                        <span class="flex-grow-0 p-1 pt-2 border-start btn rounded-0" @click="addEmpty(productId)">
+                        <span class="flex-grow-0 p-1 pt-2 border-start btn rounded-0" @click="addEmpty(product.id)">
                             <div class="p-0 px-1">➕</div>
                         </span>
                     </div>
@@ -72,7 +72,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="(packageId, packageIndex) in relations[productId]"
+                                <template x-for="(packageId, packageIndex) in relations[product.id]"
                                     :key="'packageId-' + '-' + packageId">
                                     <tr :class="packageIndex === 0 ? 'border-top' : ''">
                                         <td
