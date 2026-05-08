@@ -168,13 +168,15 @@
                                             </div>
                                         </td>
                                         <td :class="detectBgColor(packageId, null, null, '')">
-                                            <div class="btn w-100 p-1 border-dark bg-danger-subtle"
-                                                @click="destroy(packageId, productId)" x-text="trans.Delete">
+                                            <div class="btn w-100 p-1 border-dark bg-warning-subtle"
+                                                @click="reset(packageId, packages_input[packageId].product_id)"
+                                                x-text="trans.Reset">
                                             </div>
                                         </td>
                                         <td :class="detectBgColor(packageId, null, null, '')">
-                                            <div class="btn w-100 p-1 border-dark bg-warning-subtle"
-                                                @click="reset(packageId, productId)" x-text="trans.Reset">
+                                            <div class="btn w-100 p-1 border-dark bg-danger-subtle"
+                                                @click="destroy(packageId, packages_input[packageId].product_id)"
+                                                x-text="trans.Delete">
                                             </div>
                                         </td>
                                     </tr>
