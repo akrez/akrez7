@@ -46,8 +46,7 @@
 
     <div class="row" x-data="data()" x-init="initData({{ json_encode($params) }})">
         <div class="col-12">
-            <template x-for="(productId, productIndex) in Object.keys(productIdToPackageIds)"
-                :key="'productId-' + '-' + productId">
+            <template x-for="(productId, productIndex) in Object.keys(relations)" :key="'productId-' + '-' + productId">
                 <div class="card text-bg-light rounded-0">
                     <div class="card-header d-flex p-0 rounded-0">
                         <span class="flex-grow-1 p-2 text-center" x-text="products[productId].name">
@@ -73,7 +72,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="(packageId, packageIndex) in productIdToPackageIds[productId]"
+                                <template x-for="(packageId, packageIndex) in relations[productId]"
                                     :key="'packageId-' + '-' + packageId">
                                     <tr :class="packageIndex === 0 ? 'border-top' : ''">
                                         <td
@@ -207,7 +206,7 @@
                 list: [],
                 package_statuses: [],
                 show_prices: [],
-                productIdToPackageIds: [],
+                relations: [],
                 loading: {
                     indexPackages: false,
                     updatePackage: false,
@@ -240,7 +239,7 @@
                         guaranty: null,
                         description: null,
                     };
-                    this.syncPackage(data, null, true);
+                    this.pushRelation(data);
                 },
                 reset(packageId, productId) {
                     this.packages_input[packageId] = this.cloneJson(this.packages[packageId]);
@@ -272,7 +271,7 @@
                                 return;
                             }
                             if (that.isNewId(packageId)) {
-                                that.removePackage(packageId, productId);
+                                that.removeRelation(packageId, productId);
                             } else {
                                 that.destroyPackage(packageId, productId);
                             }
@@ -328,7 +327,7 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.syncPackage(gameResJson.data.package, tempId);
+                            this.replceRelation(gameResJson.data.package, tempId);
                         } else {
                             this.alertError(gameResJson.message);
                         }
@@ -357,7 +356,7 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.removePackage(id, productId);
+                            this.removeRelation(id, productId);
                         } else {
                             this.alertError(gameResJson.message);
                         }
@@ -388,7 +387,7 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.syncPackage(gameResJson.data.package);
+                            this.setPackage(gameResJson.data.package);
                         } else {
                             this.alertError(gameResJson.message);
                         }
@@ -400,24 +399,25 @@
                         this.loading.updatePackage = false;
                     }
                 },
-                removePackage(packageId, productId) {
-                    if (!packageId) return;
-                    index = this.productIdToPackageIds[productId].indexOf(packageId);
-                    if (index === -1) return;
-                    this.productIdToPackageIds[productId].splice(index, 1);
-                },
-                syncPackage(package, removeId = null, addPackageId = false) {
+                setPackage(package) {
                     this.packages_input[package.id] = this.cloneJson(package);
                     this.packages[package.id] = this.cloneJson(package);
-                    if (
-                        removeId &&
-                        ((index = this.productIdToPackageIds[package.product_id].indexOf(removeId)) !== -1)
-                    ) {
-                        this.productIdToPackageIds[package.product_id][index] = package.id;
-                    }
-                    if (addPackageId) {
-                        this.productIdToPackageIds[package.product_id].push(package.id);
-                    }
+                },
+                pushRelation(package) {
+                    this.setPackage(package);
+                    this.relations[package.product_id].push(package.id);
+                },
+                replceRelation(package, oldId) {
+                    this.setPackage(package);
+                    index = this.relations[package.product_id].indexOf(oldId);
+                    if (index === -1) return;
+                    this.relations[package.product_id][index] = package.id;
+                },
+                removeRelation(packageId, productId) {
+                    if (!packageId) return;
+                    index = this.relations[productId].indexOf(packageId);
+                    if (index === -1) return;
+                    this.relations[productId].splice(index, 1);
                 },
                 async indexPackages() {
                     try {
@@ -435,11 +435,11 @@
 
                         products.forEach(product => {
                             this.products[product.id] = product;
-                            this.productIdToPackageIds[product.id] = [];
+                            this.relations[product.id] = [];
                         });
 
                         packages.forEach(package => {
-                            this.syncPackage(package, null, true);
+                            this.pushRelation(package);
                         });
 
                         colors.forEach(color => {
