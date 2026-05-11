@@ -4,8 +4,10 @@
 
 @php
     $params = [
-        'package_statuses' => \App\Enums\PackageStatusEnum::toArray(),
-        'show_prices' => ['' => __('No'), '1' => __('Yes')],
+        'enums' => [
+            'package_statuses' => \App\Enums\PackageStatusEnum::toArray(),
+            'show_prices' => ['' => __('No'), '1' => __('Yes')],
+        ],
         'urls' => [
             'packages' => [
                 'list' => route('packages.index') . '/list',
@@ -95,7 +97,7 @@
                                         'boolval')">
                                     <select class="form-select p-1 text-center"
                                         x-model="packages_input[packageId]['show_price']">
-                                        <template x-for="(show_price, show_price_key) in show_prices">
+                                        <template x-for="(show_price, show_price_key) in enums.show_prices">
                                             <option
                                                 :selected="boolval(show_price_key) == boolval(packages_input[packageId]
                                                     .show_price)"
@@ -111,7 +113,7 @@
                                         '')">
                                     <select class="form-select p-1 text-center"
                                         x-model="packages_input[packageId].package_status.value">
-                                        <template x-for="(package_status, package_status_key) in package_statuses"
+                                        <template x-for="(package_status, package_status_key) in enums.package_statuses"
                                             :key="package_status_key">
                                             <option
                                                 :selected="package_status_key == packages_input[packageId]?.package_status
@@ -208,22 +210,17 @@
                 packages: [],
                 colors: [],
                 list: [],
-                package_statuses: [],
-                show_prices: [],
+                enums: [],
                 relations: [],
                 loading: {
                     indexPackages: false,
                     updatePackage: false,
                     destroyPackage: false,
                 },
-                unformatPrice(str) {
-                    const digits = String(str).replace(/,/g, '').replace(/[^\d]/g, '');
-                    return digits === '' ? '' : Number(digits);
-                },
                 addEmpty(productId) {
                     id = 'id-' + (Math.random() * 100000);
-                    psv = Object.keys(this.package_statuses)[0];
-                    psn = this.package_statuses[psv];
+                    psv = Object.keys(this.enums.package_statuses)[0];
+                    psn = this.enums.package_statuses[psv];
                     data = {
                         id: id,
                         product_id: productId,
@@ -265,15 +262,17 @@
                     that = this;
                     this.alertConfirm(
                         that.trans['Are you sure?'],
-                        function(result) {
+                        async function(result) {
                             if (!result.isConfirmed) {
                                 return;
                             }
-                            if (that.isNewId(packageId)) {
-                                that.removeRelation(packageId, productId);
-                            } else {
-                                that.callDestroyPackage(packageId, productId);
+                            if (!that.isNewId(packageId)) {
+                                gameRes = await that.callDestroyPackage(packageId, productId);
+                                if (!gameRes.ok) {
+                                    return;
+                                }
                             }
+                            that.removeRelation(packageId, productId);
                         }
                     );
                 },
@@ -285,8 +284,7 @@
                 },
                 async initData(initParams) {
                     this.urls = initParams.urls;
-                    this.package_statuses = initParams.package_statuses;
-                    this.show_prices = initParams.show_prices;
+                    this.enums = initParams.enums;
                     this.trans = initParams.trans;
                     await this.callIndexPackages();
                 },
@@ -376,10 +374,11 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.removeRelation(id, productId);
                         } else {
                             this.renderCallError(gameResJson);
                         }
+
+                        return gameRes;
 
                     } catch (err) {
                         console.log(err);
@@ -495,6 +494,10 @@
                     if (v === null || v === undefined || v === '') return '';
                     const s = String(v);
                     return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                },
+                unformatPrice(str) {
+                    const digits = String(str).replace(/,/g, '').replace(/[^\d]/g, '');
+                    return digits === '' ? '' : Number(digits);
                 },
                 alertError(title, html) {
                     Swal.fire({
