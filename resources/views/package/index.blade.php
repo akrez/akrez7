@@ -66,8 +66,8 @@
                 </thead>
                 <tbody x-show="!loading.indexPackages">
                     <template x-for="product in products" :key="'productId-' + '-' + product.id">
-                        <template x-for="(packageId, packageIndex) in relations[product.id]"
-                            :key="'packageId-' + '-' + packageId">
+                        <template x-for="(package ,packageIndex) in relations[product.id]"
+                            :key="'packageId-' + '-' + package.id">
                             <tr :class="packageIndex === 0 ? 'border-top' : ''">
                                 <template x-if="packageIndex === 0">
                                     <td x-bind:rowspan="relations[product.id].length"
@@ -82,24 +82,22 @@
                                     </td>
                                 </template>
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.price,
-                                        packages[packageId]?.price,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.price,
+                                        packages[package.id]?.price,
                                         'strval')">
-                                    <input class="form-control p-1 text-center"
-                                        x-bind:value="renderPrice(packages_input[packageId]['price'])"
-                                        @input="packages_input[packageId]['price'] = unformatPrice($event.target.value)">
+                                    <input class="form-control p-1 text-center" x-bind:value="renderPrice(package['price'])"
+                                        @input="package['price'] = unformatPrice($event.target.value)">
                                 </td>
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.show_price,
-                                        packages[packageId]?.show_price,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.show_price,
+                                        packages[package.id]?.show_price,
                                         'boolval')">
-                                    <select class="form-select p-1 text-center"
-                                        x-model="packages_input[packageId]['show_price']">
+                                    <select class="form-select p-1 text-center" x-model="package['show_price']">
                                         <template x-for="(show_price, show_price_key) in enums.show_prices">
                                             <option
-                                                :selected="boolval(show_price_key) == boolval(packages_input[packageId]
+                                                :selected="boolval(show_price_key) == boolval(package
                                                     .show_price)"
                                                 :value="boolval(show_price_key)" x-text="show_price">
                                             </option>
@@ -107,16 +105,15 @@
                                     </select>
                                 </td>
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.package_status.value,
-                                        packages[packageId]?.package_status.value,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.package_status.value,
+                                        packages[package.id]?.package_status.value,
                                         '')">
-                                    <select class="form-select p-1 text-center"
-                                        x-model="packages_input[packageId].package_status.value">
+                                    <select class="form-select p-1 text-center" x-model="package.package_status.value">
                                         <template x-for="(package_status, package_status_key) in enums.package_statuses"
                                             :key="package_status_key">
                                             <option
-                                                :selected="package_status_key == packages_input[packageId]?.package_status
+                                                :selected="package_status_key == package?.package_status
                                                     ?.value"
                                                 :value="package_status_key" x-text="package_status">
                                             </option>
@@ -125,24 +122,24 @@
                                 </td>
 
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.unit,
-                                        packages[packageId]?.unit,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.unit,
+                                        packages[package.id]?.unit,
                                         'strval')">
-                                    <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
-                                        x-model="packages_input[packageId]['unit']">
+                                    <input class="form-control p-1 text-center" :disabled="!isNewId(package.id)"
+                                        x-model="package['unit']">
                                 </td>
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.color_id,
-                                        packages[packageId]?.color_id,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.color_id,
+                                        packages[package.id]?.color_id,
                                         'parseInt')">
-                                    <select class="form-select p-1 text-center" :disabled="!isNewId(packageId)"
-                                        x-model="packages_input[packageId]['color_id']">
+                                    <select class="form-select p-1 text-center" :disabled="!isNewId(package.id)"
+                                        x-model="package['color_id']">
                                         <option></option>
                                         <template x-for="color in colors" :key="color.id">
-                                            <option :selected="color.id == packages_input[packageId]['color_id']"
-                                                :value="color.id" x-text="color.name"
+                                            <option :selected="color.id == package['color_id']" :value="color.id"
+                                                x-text="color.name"
                                                 :style="{
                                                     'color': getReverseColorCode(color.code),
                                                     'background-color': color.code,
@@ -152,37 +149,35 @@
                                     </select>
                                 </td>
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.guaranty,
-                                        packages[packageId]?.guaranty,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.guaranty,
+                                        packages[package.id]?.guaranty,
                                         'parseInt')">
-                                    <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
-                                        x-model="packages_input[packageId]['guaranty']">
+                                    <input class="form-control p-1 text-center" :disabled="!isNewId(package.id)"
+                                        x-model="package['guaranty']">
                                 </td>
                                 <td
-                                    :class="renderBgColor(packageId,
-                                        packages_input[packageId]?.description,
-                                        packages[packageId]?.description,
+                                    :class="renderBgColor(product.id, package.id,
+                                        package?.description,
+                                        packages[package.id]?.description,
                                         'strval')">
-                                    <input class="form-control p-1 text-center" :disabled="!isNewId(packageId)"
-                                        x-model="packages_input[packageId]['description']">
+                                    <input class="form-control p-1 text-center" :disabled="!isNewId(package.id)"
+                                        x-model="package['description']">
                                 </td>
-                                <td :class="renderBgColor(packageId, null, null, '')">
-                                    <div class="btn w-100 p-1 border-dark" @click="persist(packageId)"
-                                        :class="isNewId(packageId) ? 'bg-success-subtle' : 'bg-primary-subtle'"
-                                        x-text="isNewId(packageId) ? trans.Create : trans.Edit">
+                                <td :class="renderBgColor(product.id, package.id, null, null, '')">
+                                    <div class="btn w-100 p-1 border-dark" @click="persist(package.id, product.id)"
+                                        :class="isNewId(package.id) ? 'bg-success-subtle' : 'bg-primary-subtle'"
+                                        x-text="isNewId(package.id) ? trans.Create : trans.Edit">
                                     </div>
                                 </td>
-                                <td :class="renderBgColor(packageId, null, null, '')">
+                                <td :class="renderBgColor(product.id, package.id, null, null, '')">
                                     <div class="btn w-100 p-1 border-dark bg-warning-subtle"
-                                        @click="reset(packageId, packages_input[packageId].product_id)"
-                                        x-text="trans.Reset">
+                                        @click="reset(package.id, product.id)" x-text="trans.Reset">
                                     </div>
                                 </td>
-                                <td :class="renderBgColor(packageId, null, null, '')">
+                                <td :class="renderBgColor(product.id, package.id, null, null, '')">
                                     <div class="btn w-100 p-1 border-dark bg-danger-subtle"
-                                        @click="destroy(packageId, packages_input[packageId].product_id)"
-                                        x-text="trans.Delete">
+                                        @click="destroy(package.id, product.id)" x-text="trans.Delete">
                                     </div>
                                 </td>
                             </tr>
@@ -206,7 +201,6 @@
                 urls: null,
                 trans: [],
                 products: [],
-                packages_input: [],
                 packages: [],
                 colors: [],
                 list: [],
@@ -217,12 +211,11 @@
                     updatePackage: false,
                     destroyPackage: false,
                 },
-                addEmpty(productId) {
-                    id = 'id-' + (Math.random() * 100000);
+                getEmpty(productId, packageId = null) {
                     psv = Object.keys(this.enums.package_statuses)[0];
                     psn = this.enums.package_statuses[psv];
-                    data = {
-                        id: id,
+                    return {
+                        id: packageId ?? 'id-' + (Math.random() * 100000),
                         product_id: productId,
                         price: null,
                         show_price: null,
@@ -235,21 +228,32 @@
                         guaranty: null,
                         description: null,
                     };
-                    this.pushRelation(data);
+                },
+                addEmpty(productId) {
+                    this.addRelation(this.getEmpty(productId));
                 },
                 reset(packageId, productId) {
-                    this.packages_input[packageId] = this.cloneJson(this.packages[packageId]);
+                    index = this.getRelationIndex(productId, packageId);
+                    if (index === -1) return '';
+                    if (this.isNewId(packageId)) {
+                        this.relations[productId][index] = this.getEmpty(productId, packageId);
+                    } else {
+                        this.relations[productId][index] = this.cloneJson(this.packages[packageId]);
+                    }
                 },
-                persist(packageId) {
+                async persist(packageId, productId) {
+                    index = this.getRelationIndex(productId, packageId);
+                    if (index === -1) return '';
+                    package = this.relations[productId][index];
                     data = {
-                        product_id: this.packages_input[packageId].product_id,
-                        price: this.packages_input[packageId].price,
-                        show_price: this.packages_input[packageId].show_price,
-                        package_status: this.packages_input[packageId].package_status.value,
-                        unit: this.packages_input[packageId].unit,
-                        color_id: this.packages_input[packageId].color_id,
-                        guaranty: this.packages_input[packageId].guaranty,
-                        description: this.packages_input[packageId].description,
+                        product_id: package.product_id,
+                        price: package.price,
+                        show_price: package.show_price,
+                        package_status: package.package_status.value,
+                        unit: package.unit,
+                        color_id: package.color_id,
+                        guaranty: package.guaranty,
+                        description: package.description,
                     };
 
                     if (this.isNewId(packageId)) {
@@ -305,24 +309,30 @@
                     if (value === null) return '';
                     return String(value);
                 },
-                setPackage(package) {
-                    this.packages_input[package.id] = this.cloneJson(package);
-                    this.packages[package.id] = this.cloneJson(package);
+                getRelationIndex(productId, packageId) {
+                    return this.relations[productId].findIndex(package => package.id === packageId);
                 },
-                pushRelation(package) {
-                    this.setPackage(package);
-                    this.relations[package.product_id].push(package.id);
+                addPackage(package) {
+                    this.packages[package.id] = package;
                 },
-                replceRelation(package, oldId) {
-                    this.setPackage(package);
-                    if (!package?.id) return;
-                    index = this.relations[package.product_id].indexOf(oldId);
-                    if (index === -1) return;
-                    this.relations[package.product_id][index] = package.id;
+                addRelation(package, oldId = null) {
+                    index = this.getRelationIndex(package.product_id, package.id);
+                    if (index !== -1) {
+                        this.relations[package.product_id][index] = this.cloneJson(package);
+                        return;
+                    }
+                    if (oldId) {
+                        index = this.getRelationIndex(package.product_id, oldId);
+                        if (index !== -1) {
+                            this.relations[package.product_id][index] = this.cloneJson(package);
+                            return;
+                        }
+                    }
+                    this.relations[package.product_id].push(this.cloneJson(package));
                 },
                 removeRelation(packageId, productId) {
                     if (!packageId) return;
-                    index = this.relations[productId].indexOf(packageId);
+                    index = this.getRelationIndex(productId, packageId);
                     if (index === -1) return;
                     this.relations[productId].splice(index, 1);
                 },
@@ -345,7 +355,8 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.replceRelation(gameResJson.data.package, tempId);
+                            this.addPackage(gameResJson.data.package);
+                            this.addRelation(gameResJson.data.package, tempId);
                         } else {
                             this.renderCallError(gameResJson);
                         }
@@ -406,7 +417,8 @@
 
                         if (gameRes.ok) {
                             this.alertSuccess(gameResJson.message);
-                            this.setPackage(gameResJson.data.package);
+                            this.addPackage(gameResJson.data.package);
+                            this.addRelation(gameResJson.data.package);
                         } else {
                             this.renderCallError(gameResJson);
                         }
@@ -438,7 +450,8 @@
                         });
 
                         packages.forEach(package => {
-                            this.pushRelation(package);
+                            this.addPackage(package);
+                            this.addRelation(package);
                         });
 
                         colors.forEach(color => {
@@ -458,8 +471,11 @@
                         this.loading.indexPackages = false;
                     }
                 },
-                renderBgColor(packageId, newValue, oldValue, fnc) {
-                    if (this.isNewId(this.packages_input[packageId].id)) {
+                renderBgColor(productId, packageId, newValue, oldValue, fnc) {
+                    index = this.getRelationIndex(productId, packageId);
+                    if (index === -1) return '';
+
+                    if (this.isNewId(this.relations[productId][index].id)) {
                         return 'bg-success-subtle';
                     }
 
