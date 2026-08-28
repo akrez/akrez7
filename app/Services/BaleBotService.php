@@ -223,7 +223,7 @@ class BaleBotService extends Service
 
         $subject = [];
         foreach ($invoiceData as $key => $value) {
-            $subject[] = '<b>'.$key.'</b>'.' '.$value;
+            $subject[] = '**'.$key.':**'.' '.$value;
         }
         $text = implode("\n", $subject);
 
@@ -231,8 +231,7 @@ class BaleBotService extends Service
             $baleApi = new BaleApi($baleBot->bale_token);
             $baleApi->sendMessage(
                 $baleBot->admin,
-                $text,
-                ['parse_mode' => 'HTML']
+                $text
             );
         }
     }
