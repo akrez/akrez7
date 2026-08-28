@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BaleMessageController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\TelegramMessageController;
 use Illuminate\Support\Facades\Route;
@@ -7,4 +8,5 @@ use Illuminate\Support\Facades\Route;
 Route::name('api.')->group(function () {
     Route::get('/blogs/{blog_id}', [BlogController::class, 'show']);
     Route::post('/blogs/{blog_id}/telegram_messages/{telegram_token}/webhook', [TelegramMessageController::class, 'webhook'])->name('telegram_messages.webhook');
+    Route::post('/blogs/{blog_id}/bale_messages/{bale_token}/webhook', [BaleMessageController::class, 'webhook'])->name('bale_messages.webhook');
 });

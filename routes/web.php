@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PresenterEnum;
+use App\Http\Controllers\BaleBotController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
@@ -58,6 +59,10 @@ Route::middleware('auth')->group(function () {
         //
         Route::post('telegram_bots/{id}/upload', [TelegramBotController::class, 'upload'])->name('telegram_bots.upload');
         Route::resource('telegram_bots', TelegramBotController::class)->parameter('telegram_bots', 'id');
+        //
+        Route::post('bale_bots/{id}/upload', [BaleBotController::class, 'upload'])->name('bale_bots.upload');
+        Route::resource('bale_bots', BaleBotController::class)->parameter('bale_bots', 'id');
+        //
         Route::resource('colors', ColorController::class)->parameter('colors', 'id');
         Route::resource('contacts', ContactController::class)->parameter('contacts', 'id');
         Route::resource('products', ProductController::class)->parameter('products', 'id');

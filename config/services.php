@@ -22,6 +22,10 @@ return [
         'base_url' => env('TELEGRAM_BOT_BASE_URL', 'https://api.telegram.org'),
     ],
 
+    'bale_bot' => [
+        'base_url' => env('BALE_BOT_BASE_URL', 'https://tapi.bale.ai'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
