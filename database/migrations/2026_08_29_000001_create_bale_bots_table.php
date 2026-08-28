@@ -19,8 +19,8 @@ return new class extends Migration
                 BaleBotStatusEnum::DEACTIVE->value,
             ]);
             $table->string('bale_token', 64);
-            $table->boolean('user_service')->default(false);
-            $table->boolean('notify_admin_on_invoice')->default(false);
+            $table->boolean('user_service')->nullable()->default(false);
+            $table->boolean('notify_admin_on_invoice')->nullable()->default(false);
             $table->string('admin', 128)->nullable();
             $table->unsignedBigInteger('blog_id')->index();
             $table->timestamps();
