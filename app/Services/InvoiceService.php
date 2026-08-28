@@ -15,6 +15,7 @@ use App\Support\ApiResponse;
 use App\Support\Arr;
 use App\Support\WebResponse;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -52,7 +53,7 @@ class InvoiceService extends Service
         ]);
     }
 
-    protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
+    protected function getLatestBaseQuery($blogId): Builder
     {
         return Invoice::query()
             ->where('blog_id', $blogId)
@@ -192,12 +193,13 @@ class InvoiceService extends Service
                 return $apiResponse->status(422)->errors($validation->errors());
             }
 
+            $invoiceDescription = $storeInvoiceData->invoice['invoice_description'] ?? null;
             $invoice = Invoice::create([
                 'invoice_uuid' => Str::uuid7(),
                 'blog_id' => $storeInvoiceData->blog_id,
                 'invoice_status' => $storeInvoiceData->invoice['invoice_status'],
                 'invoice_params' => [
-                    'invoice_description' => $storeInvoiceData->invoice['invoice_description'] ?? null,
+                    'invoice_description' => $invoiceDescription,
                     'present_info' => $presentInfo,
 
                 ],
@@ -248,6 +250,7 @@ class InvoiceService extends Service
                 __('validation.attributes.mobile') => $invoiceDelivery->mobile,
                 __('validation.attributes.city') => $invoiceDelivery->invoice_delivery_params['city'] ?? '-',
                 __('validation.attributes.invoice_items') => count($invoiceItems),
+                __('validation.attributes.invoice.invoice_description') => $invoiceDescription,
             ]);
 
             return $apiResponse->status(201)->data([
