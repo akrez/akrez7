@@ -223,7 +223,7 @@ class BaleBotService extends Service
 
         $subject = [];
         foreach ($invoiceData as $key => $value) {
-            $subject[] = '**'.$key.':**'.' '.$value;
+            $subject[] = '*'.$key.':*'.' '.$value;
         }
         $text = implode("\n", $subject);
 
