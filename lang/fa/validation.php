@@ -310,6 +310,11 @@ return [
         //
         'telegram_token' => 'توکن بات تلگرام',
         //
+        'bale_token' => 'توکن بات بله',
+        'user_service' => 'پاسخگویی به کاربر',
+        'notify_admin_on_invoice' => 'اطلاع‌رسانی پیش فاکتور به ادمین',
+        'admin' => 'ادمین',
+        //
         'invoice' => [
             'invoice_status' => 'وضعیت پیش فاکتور',
             'invoice_description' => 'توضیحات پیش فاکتور',

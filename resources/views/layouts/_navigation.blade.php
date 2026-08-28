@@ -91,6 +91,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('bale_bots.index') }}">
+                            {{ __('BaleBots') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ route('contacts.index') }}">
                             {{ __('Contacts') }}
                         </a>
