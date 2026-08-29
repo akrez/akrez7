@@ -12,6 +12,7 @@ use App\Models\BaleBot;
 use App\Support\ApiResponse;
 use App\Support\BaleApi;
 use App\Support\WebResponse;
+use Illuminate\Database\Eloquent\Builder;
 
 class BaleBotService extends Service
 {
@@ -47,7 +48,7 @@ class BaleBotService extends Service
             ->where('bale_bot_status', BaleBotStatusEnum::ACTIVE->value);
     }
 
-    protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
+    protected function getLatestBaseQuery($blogId): Builder
     {
         return BaleBot::query()
             ->where('blog_id', $blogId)
@@ -212,7 +213,7 @@ class BaleBotService extends Service
         return WebResponse::new(500);
     }
 
-    public function notifyAdminForInvoice(int $blogId, array $invoiceData)
+    public function notifyAdminForInvoice(int $blogId, array $markDownLines)
     {
         $baleBots = $this->getLatestBaseQuery($blogId)
             ->where('bale_bot_status', BaleBotStatusEnum::ACTIVE->value)
@@ -221,11 +222,7 @@ class BaleBotService extends Service
             ->where('admin', '<>', '')
             ->get();
 
-        $subject = [];
-        foreach ($invoiceData as $key => $value) {
-            $subject[] = '*'.$key.':*'.' '.$value;
-        }
-        $text = implode("\n", $subject);
+        $text = implode("\n", $markDownLines);
 
         foreach ($baleBots as $baleBot) {
             $baleApi = new BaleApi($baleBot->bale_token);

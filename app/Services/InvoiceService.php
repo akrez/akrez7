@@ -30,6 +30,7 @@ class InvoiceService extends Service
         protected ProductService $productService,
         protected ColorService $colorService,
         protected PackageService $packageService,
+        protected PresentService $presentService,
     ) {}
 
     public function getApiResource(int $blogId, int $id): ApiResponse
@@ -245,12 +246,19 @@ class InvoiceService extends Service
             DB::commit();
 
             BaleBotService::new()->notifyAdminForInvoice($storeInvoiceData->blog_id, [
-                __('Invoice UUID') => $invoice->invoice_uuid,
-                __('validation.attributes.name') => $invoiceDelivery->name,
-                __('validation.attributes.mobile') => $invoiceDelivery->mobile,
-                __('validation.attributes.city') => $invoiceDelivery->invoice_delivery_params['city'] ?? '-',
-                __('validation.attributes.invoice_items') => count($invoiceItems),
-                __('validation.attributes.invoice.invoice_description') => $invoiceDescription,
+                '*'.__('Invoice UUID').':* '.$invoice->invoice_uuid,
+                '*'.__('validation.attributes.name').':* '.$invoiceDelivery->name,
+                '*'.__('validation.attributes.mobile').':* '.$invoiceDelivery->mobile,
+                '*'.__('validation.attributes.city').':* '.$invoiceDelivery->invoice_delivery_params['city'] ?? '-',
+                '*'.__('validation.attributes.invoice_items').':* '.count($invoiceItems),
+                '*'.__('validation.attributes.invoice.invoice_description').':* '.$invoiceDescription,
+                '',
+                $this->presentService->routeByPresentInfo(
+                    $presentInfo,
+                    'invoices.show',
+                    ['invoice_uuid' => $invoice->invoice_uuid],
+                    true,
+                ),
             ]);
 
             return $apiResponse->status(201)->data([
