@@ -68,41 +68,46 @@
                 border-bottom: 3px solid rgb(220, 53, 69);
             }
 
-            .max-height-52px {
-                max-height: 52px
+            .wh-48 {
+                width: 48px;
+                height: 48px;
+            }
+
+            .fs-7 {
+                font-size: 0.875em !important;
+            }
+
+            .fs-8 {
+                font-size: 0.75em !important;
             }
         </style>
 
         @yield('POS_HEAD')
     </head>
 
-    <body dir="rtl" class="bg">
+    <body dir="rtl" class="">
         @yield('POS_BEGIN')
 
-        <nav class="navbar navbar-expand-sm p-0 py-2 bg-body-tertiary sticky-top border-bottom">
-            <div class="container">
-                <div class="row align-items-center w-100">
-                    <div class="col-auto">
-                        <div class="d-flex align-items-center text-center">
-                            @if ($logoUrl)
-                                <img class="img-fluid max-height-52px" alt="{{ $title }}" src="{{ $logoUrl }}">
-                            @endif
-                        </div>
+        <div class="container sticky-top bg-white shadow border border-light-subtle border-top-0">
+            <div class="row py-2">
+                <div class="col-12 d-flex w-100 justify-content-between gap-3">
+                    <div class="d-flex align-items-center text-center">
+                        @if ($logoUrl)
+                            <img class="wh-48" alt="{{ $title }}" src="{{ $logoUrl }}">
+                        @endif
                     </div>
-                    <div class="col-auto">
-                        <div class="d-flex flex-column text-center text-danger gap-2">
-                            <h1 class="h5 m-0">{{ $title }}</h1>
-                            <h2 class="h6 m-0">{{ $shortDescription }}</h2>
-                        </div>
+                    <div class="d-flex flex-column text-center text-danger gap-2">
+                        <h1 class="h5 m-0 text-nowrap fs-6 fw-bold">{{ $title }}</h1>
+                        <h2 class="h6 m-0 text-nowrap fs-6">{{ $shortDescription }}</h2>
                     </div>
-                    <div class="col">
+                    <div class="flex-grow-1">
                         <div class="row">
-                            <div class="col-12 col-md-9 col-lg-6">
-                                <input type="text" class="form-control form-control-lg rounded-pill">
+                            <div class="col-12 col-md-9 col-lg-6 order-5 order-md-3">
+                                <input type="text" class="form-control form-control-lg rounded-pill bg-body-tertiary">
                             </div>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="order-4 order-md-5">
                         <button class="btn btn-outline-danger flex-shrink-0 p-2" href="#invoice-form" data-bs-toggle="modal"
                             data-bs-target="#invoice-modal">
                             <span class="d-none d-md-inline pe-1">
@@ -113,137 +118,144 @@
                     </div>
                 </div>
             </div>
-        </nav>
-
-        <nav class="navbar navbar-expand-sm py-2 p-md-0 bg-body-tertiary">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="navbar navbar-expand-lg bg-white py-0">
+                        <button class="navbar-toggler my-2 fs-6" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                            aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                             دسته‌بندی کالاها
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <nav class="nav nav-underline gap-0">
-                                <button class="btn p-2 m-0 me-2 rounded-0 category-menu fw-bold" data-filter-tag="">
-                                    {{ 'همه محصولات ' . $title }}
-                                </button>
+                            <ul class="navbar-nav flex-row flex-wrap list-unstyled fs-7">
+                                <li class="nav-item">
+                                    <a class="nav-link category-menu text-nowrap p-2 fw-bold" data-filter-tag=""
+                                        href="#">
+                                        {{ 'همه محصولات' }}
+                                    </a>
+                                </li>
                                 @foreach ($tags as $tagKey => $tag)
-                                    <button class="btn p-2 m-0 me-2 rounded-0 category-menu"
-                                        data-filter-tag="{{ md5($tag) }}">{{ $tag }}</button>
+                                    <li class="nav-item">
+                                        <a class="nav-link category-menu text-nowrap p-2"
+                                            data-filter-tag="{{ md5($tag) }}" href="#">{{ $tag }}</a>
+                                    </li>
                                 @endforeach
-                            </nav>
+                            </ul>
                         </div>
-                    </div>
+                    </nav>
                 </div>
             </div>
-        </nav>
+        </div>
+        <div class="container shadow">
+            <div class="row">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-0">
+                    @foreach ($products as $productKey => $product)
+                        <div class="col"
+                            data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
+                            <div class="card rounded-0 h-100 border-0 border-light-subtle border-start border-end">
 
-        <div class="container">
-            <div class="row mt-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 mb-3 g-0">
-                @foreach ($products as $productKey => $product)
-                    <div class="col" data-filter-tags="{{ json_encode(array_map('md5', $product['product_tags'])) }}">
-                        <div class="card rounded-0 h-100">
-
-                            @if (count($product['galleries']['product_image']) > 0)
-                                <div class="p-3">
-                                    @if (count($product['galleries']['product_image']) == 1)
-                                        <img class="w-100 rounded"
-                                            src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
-                                            alt="{{ $product['name'] }}">
-                                    @elseif (count($product['galleries']['product_image']) > 1)
-                                        <div id="product-carousel-{{ $productKey }}"
-                                            class="carousel carousel-dark slide">
-                                            <div class="carousel-inner">
-                                                @foreach ($product['galleries']['product_image'] as $productImage)
-                                                    <div
-                                                        class="carousel-item @if ($loop->first) active @endif">
-                                                        <img class="w-100 rounded"
-                                                            src="{{ $productImage['base_url'] . '/576__contain/' . $productImage['name'] }}"
-                                                            alt="{{ $product['name'] }}">
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                            <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#product-carousel-{{ $productKey }}"
-                                                data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button"
-                                                data-bs-target="#product-carousel-{{ $productKey }}"
-                                                data-bs-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Next</span>
-                                            </button>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endif
-
-                            <div class="card-body">
-                                <h5 class="h6 card-title fw-bold">{{ $product['name'] }}</h5>
-                                <div class="card-text">
-                                    @foreach ($product['product_properties'] as $property)
-                                        <div>
-                                            <span class="fw-bold">{{ $property['property_key'] }}</span>
-                                            {{ implode(', ', $property['property_values']) }}
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @if ($product['packages'])
-                                @foreach ($product['packages'] as $package)
-                                    <div class="card-footer text-body-secondary d-flex flex-column">
-                                        @if ($package['show_price'])
-                                            <div>
-                                                <b class="d-inline-block">
-                                                    {{ number_format($package['price']) }}
-                                                </b>
-                                                <span class="ms-1 d-inline-block">﷼</span>
-                                            </div>
-                                        @endif
-                                        @if ($package['guaranty'])
-                                            <div class="pt-1">
-                                                <b class="d-inline-block">گارانتی</b>
-                                                <span class="ms-1 d-inline-block">{{ $package['guaranty'] }}</span>
-                                            </div>
-                                        @endif
-                                        @if ($package['color'])
-                                            <div class="pt-1">
-                                                <span class="d-inline-block rounded"
-                                                    style="border: 1px black solid; background-color: {{ $package['color']['code'] }};">⠀⠀⠀</span><span
-                                                    class="d-inline-block ms-1">{{ $package['color']['name'] }}</span>
-                                            </div>
-                                        @endif
-                                        @if ($package['description'])
-                                            <div class="pt-1 d-inline-block">{{ $package['description'] }}</div>
-                                        @endif
-
-                                        @if ($package['package_status']['value'] === 'active')
-                                            <div class="pt-1 input-group input-group-sm">
-                                                <button
-                                                    class="col-3 btn btn-light text-center border border-secondary-subtle plus-btn"
-                                                    type="button">➕</button>
-                                                <input class="col-6 form-control text-center input-spin-none"
-                                                    type="number"
-                                                    value="{{ old('invoice_items[' . $package['id'] . ']cnt', 0) }}"
-                                                    name="invoice_items[{{ $package['id'] }}][cnt]" form="invoice-form">
-                                                @if ($package['unit'])
-                                                    <span class="input-group-text">{{ $package['unit'] }}</span>
-                                                @endif
-                                                <button
-                                                    class="col-3 btn btn-light text-center border border-secondary-subtle minus-btn"
-                                                    type="button">➖</button>
+                                @if (count($product['galleries']['product_image']) > 0)
+                                    <div class="p-3">
+                                        @if (count($product['galleries']['product_image']) == 1)
+                                            <img class="w-100 rounded"
+                                                src="{{ $product['galleries']['product_image'][0]['base_url'] . '/576__contain/' . $product['galleries']['product_image'][0]['name'] }}"
+                                                alt="{{ $product['name'] }}">
+                                        @elseif (count($product['galleries']['product_image']) > 1)
+                                            <div id="product-carousel-{{ $productKey }}"
+                                                class="carousel carousel-dark slide">
+                                                <div class="carousel-inner">
+                                                    @foreach ($product['galleries']['product_image'] as $productImage)
+                                                        <div
+                                                            class="carousel-item @if ($loop->first) active @endif">
+                                                            <img class="w-100 rounded"
+                                                                src="{{ $productImage['base_url'] . '/576__contain/' . $productImage['name'] }}"
+                                                                alt="{{ $product['name'] }}">
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <button class="carousel-control-prev" type="button"
+                                                    data-bs-target="#product-carousel-{{ $productKey }}"
+                                                    data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button"
+                                                    data-bs-target="#product-carousel-{{ $productKey }}"
+                                                    data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
                                             </div>
                                         @endif
                                     </div>
-                                @endforeach
-                            @endif
+                                @endif
+
+                                <div class="card-body border-0 border-light-subtle border-bottom">
+                                    <h5 class="h6 card-title fw-bold">{{ $product['name'] }}</h5>
+                                    <div class="card-text">
+                                        @foreach ($product['product_properties'] as $property)
+                                            <div>
+                                                <span class="fw-bold">{{ $property['property_key'] }}</span>
+                                                {{ implode(', ', $property['property_values']) }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @if ($product['packages'])
+                                    @foreach ($product['packages'] as $package)
+                                        <div
+                                            class="card-footer rounded-0 border-bottom border-light-subtle text-body-secondary d-flex flex-column">
+                                            @if ($package['show_price'])
+                                                <div>
+                                                    <b class="d-inline-block">
+                                                        {{ number_format($package['price']) }}
+                                                    </b>
+                                                    <span class="ms-1 d-inline-block">﷼</span>
+                                                </div>
+                                            @endif
+                                            @if ($package['guaranty'])
+                                                <div class="pt-1">
+                                                    <b class="d-inline-block">گارانتی</b>
+                                                    <span class="ms-1 d-inline-block">{{ $package['guaranty'] }}</span>
+                                                </div>
+                                            @endif
+                                            @if ($package['color'])
+                                                <div class="pt-1">
+                                                    <span class="d-inline-block rounded"
+                                                        style="border: 1px black solid; background-color: {{ $package['color']['code'] }};">⠀⠀⠀</span><span
+                                                        class="d-inline-block ms-1">{{ $package['color']['name'] }}</span>
+                                                </div>
+                                            @endif
+                                            @if ($package['description'])
+                                                <div class="pt-1 d-inline-block">{{ $package['description'] }}</div>
+                                            @endif
+
+                                            @if ($package['package_status']['value'] === 'active')
+                                                <div class="pt-1 input-group input-group-sm">
+                                                    <button
+                                                        class="col-3 btn btn-light text-center border border-secondary-subtle plus-btn"
+                                                        type="button">➕</button>
+                                                    <input class="col-6 form-control text-center input-spin-none"
+                                                        type="number"
+                                                        value="{{ old('invoice_items[' . $package['id'] . ']cnt', 0) }}"
+                                                        name="invoice_items[{{ $package['id'] }}][cnt]"
+                                                        form="invoice-form">
+                                                    @if ($package['unit'])
+                                                        <span class="input-group-text">{{ $package['unit'] }}</span>
+                                                    @endif
+                                                    <button
+                                                        class="col-3 btn btn-light text-center border border-secondary-subtle minus-btn"
+                                                        type="button">➖</button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
 
