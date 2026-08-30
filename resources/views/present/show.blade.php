@@ -68,8 +68,8 @@
                 border-bottom: 3px solid rgb(220, 53, 69);
             }
 
-            .max-height-40px {
-                max-height: 40px
+            .max-height-48px {
+                max-height: 48px
             }
         </style>
 
@@ -81,25 +81,41 @@
 
         <nav class="navbar navbar-expand-sm p-0 py-2 bg-body-tertiary sticky-top border-bottom">
             <div class="container">
-                <div class="d-flex align-items-center justify-content-between w-100">
-                    <div class="d-flex align-items-center flex-grow-1">
-                        @if ($logoUrl)
-                            <img class="img-fluid p-0 ps-2 m-0 max-height-40px" alt="{{ $title }}"
-                                src="{{ $logoUrl }}">
-                        @endif
-                        <h1 class="h4 text-danger p-0 ps-2 m-0 flex-shrink-0">{{ $title }}</h1>
-                        <h2 class="h5 text-danger p-0 px-2 m-0 flex-shrink-0 m-0 d-none d-md-inline">{{ $shortDescription }}
-                        </h2>
-                        <input class="form-control p-2 m-0 mx-2" type="text">
+                <div class="row align-items-center w-100">
+                    <div class="col">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center me-3">
+                                        @if ($logoUrl)
+                                            <img class="img-fluid max-height-48px" alt="{{ $title }}"
+                                                src="{{ $logoUrl }}">
+                                        @endif
+                                    </div>
+                                    <div class="d-flex flex-column text-center text-danger gap-2">
+                                        <h1 class="h5 m-0">{{ $title }}</h1>
+                                        <h2 class="h6 m-0">{{ $shortDescription }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-12 col-md-9 col-lg-6">
+                                        <input type="text" class="form-control form-control-lg rounded-pill">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <button class="btn btn-outline-danger flex-shrink-0 p-2" href="#invoice-form" data-bs-toggle="modal"
-                        data-bs-target="#invoice-modal">
-                        <span class="d-none d-md-inline pe-1">
-                            ثبت پیش فاکتور
-                        </span>
-                        <i class="bi bi-cart mx-1"></i>
-                    </button>
+                    <div class="col-auto">
+                        <button class="btn btn-outline-danger flex-shrink-0 p-2" href="#invoice-form" data-bs-toggle="modal"
+                            data-bs-target="#invoice-modal">
+                            <span class="d-none d-md-inline pe-1">
+                                ثبت پیش فاکتور
+                            </span>
+                            <i class="bi bi-cart mx-1"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
