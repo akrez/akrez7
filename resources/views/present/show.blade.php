@@ -68,8 +68,8 @@
                 border-bottom: 3px solid rgb(220, 53, 69);
             }
 
-            .max-height-48px {
-                max-height: 48px
+            .max-height-52px {
+                max-height: 52px
             }
         </style>
 
@@ -82,28 +82,23 @@
         <nav class="navbar navbar-expand-sm p-0 py-2 bg-body-tertiary sticky-top border-bottom">
             <div class="container">
                 <div class="row align-items-center w-100">
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center text-center">
+                            @if ($logoUrl)
+                                <img class="img-fluid max-height-52px" alt="{{ $title }}" src="{{ $logoUrl }}">
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex flex-column text-center text-danger gap-2">
+                            <h1 class="h5 m-0">{{ $title }}</h1>
+                            <h2 class="h6 m-0">{{ $shortDescription }}</h2>
+                        </div>
+                    </div>
                     <div class="col">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center me-3">
-                                        @if ($logoUrl)
-                                            <img class="img-fluid max-height-48px" alt="{{ $title }}"
-                                                src="{{ $logoUrl }}">
-                                        @endif
-                                    </div>
-                                    <div class="d-flex flex-column text-center text-danger gap-2">
-                                        <h1 class="h5 m-0">{{ $title }}</h1>
-                                        <h2 class="h6 m-0">{{ $shortDescription }}</h2>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="row">
-                                    <div class="col-12 col-md-9 col-lg-6">
-                                        <input type="text" class="form-control form-control-lg rounded-pill">
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-12 col-md-9 col-lg-6">
+                                <input type="text" class="form-control form-control-lg rounded-pill">
                             </div>
                         </div>
                     </div>
