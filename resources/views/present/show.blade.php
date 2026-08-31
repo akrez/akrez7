@@ -90,22 +90,20 @@
 
         <div class="container sticky-top bg-white shadow border border-light-subtle border-top-0">
             <div class="row py-2">
-                <div class="col-12 d-flex w-100 justify-content-between gap-3">
-                    <div class="d-flex align-items-center text-center">
+                <div class="col-12 d-flex w-100 justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center text-center order-1">
                         @if ($logoUrl)
                             <img class="wh-48" alt="{{ $title }}" src="{{ $logoUrl }}">
                         @endif
                     </div>
-                    <div class="d-flex flex-column text-center text-danger gap-2">
+                    <div class="d-flex flex-column text-center text-danger gap-2 order-2">
                         <h1 class="h5 m-0 text-nowrap fs-6 fw-bold">{{ $title }}</h1>
                         <h2 class="h6 m-0 text-nowrap fs-6">{{ $shortDescription }}</h2>
                     </div>
-                    <div class="flex-grow-1">
-                        <div class="row">
-                            <div class="col-12 col-md-9 col-lg-6 order-5 order-md-3">
-                                <input type="text" class="form-control form-control-lg rounded-pill bg-body-tertiary">
-                            </div>
-                        </div>
+                    <div class="flex-grow-1 order-5 order-md-3 w-md-auto">
+                        <input type="text" class="form-control form-control-lg rounded-pill bg-body-tertiary">
+                    </div>
+                    <div class="flex-grow-1 order-3 order-md-4 w-md-auto d-none d-lg-block">
                     </div>
                     <div class="order-4 order-md-5">
                         <button class="btn btn-outline-danger flex-shrink-0 p-2" href="#invoice-form" data-bs-toggle="modal"
