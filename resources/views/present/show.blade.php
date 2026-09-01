@@ -85,12 +85,12 @@
         @yield('POS_HEAD')
     </head>
 
-    <body dir="rtl" class="">
+    <body dir="rtl" class="d-flex flex-column justify-content-between min-vh-100">
         @yield('POS_BEGIN')
 
-        <div class="container sticky-top bg-white shadow border border-light-subtle border-top-0">
-            <div class="row py-2">
-                <div class="col-12 d-flex w-100 justify-content-between flex-wrap gap-3">
+        <div class="container-fluid">
+            <div class="row sticky-top bg-white border border-light-subtle border-top-0 shadow">
+                <div class="col-12 d-flex w-100 justify-content-between flex-wrap gap-3 py-2">
                     <div class="d-flex align-items-center text-center order-1">
                         @if ($logoUrl)
                             <img class="wh-48" alt="{{ $title }}" src="{{ $logoUrl }}">
@@ -115,8 +115,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-12">
                     <nav class="navbar navbar-expand-lg bg-white py-0">
                         <button class="navbar-toggler my-2 fs-6" type="button" data-bs-toggle="collapse"
@@ -144,8 +142,7 @@
                     </nav>
                 </div>
             </div>
-        </div>
-        <div class="container shadow">
+
             <div class="row">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-0">
                     @foreach ($products as $productKey => $product)
@@ -257,35 +254,6 @@
             </div>
         </div>
 
-        <div class="modal" id="invoice-modal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">ثبت پیش فاکتور</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <x-form method="POST" action="{{ $storeInvoiceAction }}" id="invoice-form">
-                            <x-input :label="__('validation.attributes.invoice_delivery.name')" :md="12" name="invoice_delivery[name]" :errors="$errors"
-                                :value="isset($invoice_delivery['name']) ? $invoice_delivery['name'] : ''" :mt="0" />
-                            <x-input :label="__('validation.attributes.invoice_delivery.mobile')" :md="12" name="invoice_delivery[mobile]" :errors="$errors"
-                                :value="isset($invoice_delivery['mobile']) ? $invoice_delivery['mobile'] : ''" />
-                            <x-input :label="__('validation.attributes.invoice_delivery.city')" :md="12" name="invoice_delivery[city]" :errors="$errors"
-                                :value="isset($invoice_delivery['city']) ? $invoice_delivery['city'] : ''" />
-                            <x-input type="textarea" rows="2" :label="__('validation.attributes.invoice_delivery.address')" :md="12"
-                                name="invoice_delivery[address]" :errors="$errors" :value="isset($invoice_delivery['address']) ? $invoice_delivery['address'] : ''" />
-                            <x-input type="textarea" rows="2" :label="__('validation.attributes.invoice.invoice_description')" :md="12"
-                                name="invoice[invoice_description]" :errors="$errors" :value="isset($invoice['invoice_description'])
-                                    ? $invoice['invoice_description']
-                                    : ''" />
-                            <x-button-submit :md="8" name="submit" :errors="$errors"
-                                :class="'btn-success'">ثبت</x-button-submit>
-                        </x-form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         @if ($presenterContacts->count())
             <footer class="footer mt-auto py-3 bg-light">
                 <div class="container-fluid">
@@ -329,6 +297,35 @@
                 </div>
             </footer>
         @endif
+
+        <div class="modal" id="invoice-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">ثبت پیش فاکتور</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <x-form method="POST" action="{{ $storeInvoiceAction }}" id="invoice-form">
+                            <x-input :label="__('validation.attributes.invoice_delivery.name')" :md="12" name="invoice_delivery[name]" :errors="$errors"
+                                :value="isset($invoice_delivery['name']) ? $invoice_delivery['name'] : ''" :mt="0" />
+                            <x-input :label="__('validation.attributes.invoice_delivery.mobile')" :md="12" name="invoice_delivery[mobile]" :errors="$errors"
+                                :value="isset($invoice_delivery['mobile']) ? $invoice_delivery['mobile'] : ''" />
+                            <x-input :label="__('validation.attributes.invoice_delivery.city')" :md="12" name="invoice_delivery[city]" :errors="$errors"
+                                :value="isset($invoice_delivery['city']) ? $invoice_delivery['city'] : ''" />
+                            <x-input type="textarea" rows="2" :label="__('validation.attributes.invoice_delivery.address')" :md="12"
+                                name="invoice_delivery[address]" :errors="$errors" :value="isset($invoice_delivery['address']) ? $invoice_delivery['address'] : ''" />
+                            <x-input type="textarea" rows="2" :label="__('validation.attributes.invoice.invoice_description')" :md="12"
+                                name="invoice[invoice_description]" :errors="$errors" :value="isset($invoice['invoice_description'])
+                                    ? $invoice['invoice_description']
+                                    : ''" />
+                            <x-button-submit :md="8" name="submit" :errors="$errors"
+                                :class="'btn-success'">ثبت</x-button-submit>
+                        </x-form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
