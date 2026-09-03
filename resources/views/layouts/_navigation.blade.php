@@ -1,5 +1,5 @@
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg z-1030">
-    <div class="container">
+    <div class="container-md">
         <a class="navbar-brand" href="{{ route('home') }}">وبـلاگ فروشـگاهـی اکــرز</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1"
             aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@
 
 @if (app('ActiveBlog')->has())
     <nav class="navbar navbar-light bg-light navbar-expand-lg z-1030">
-        <div class="container">
+        <div class="container-md">
             <a class="navbar-brand" href="{{ route('payvoices.index') }}">
                 {{ app('ActiveBlog')->name() }}
             </a>
