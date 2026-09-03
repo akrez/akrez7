@@ -27,9 +27,9 @@
                     <div class="card-body">
                         @include('invoice.__tables', ['invoice' => $invoice])
                         <div class="row mt-3">
-                            <div class="col-md-4">
+                            <div class="col-12">
                                 <x-form method="PUT" :action="route('invoices.update', ['id' => $invoice['id']])"
-                                    class="row row-cols-lg-auto g-3 align-items-center mt-0">
+                                    class="row row-cols-lg-auto g-2 align-items-center mt-0">
                                     <x-input :md="12" :mt="0" :row="false" :errors="$errors"
                                         name="invoice[invoice_status]"
                                         label="{{ __('validation.attributes.invoice.invoice_status') }}" :value="Arr::get($invoice, 'invoice_status.value')"
@@ -40,34 +40,32 @@
                                     </x-button-submit>
                                 </x-form>
                             </div>
-                            <div class="col-md-8">
-                                <div class="row row-cols-1 gy-3">
-                                    @foreach ($presentInfos as $presentInfo)
-                                        <div class="col">
-                                            @php
-                                                $invoiceUrl = $presentService->routeByPresentInfo(
-                                                    $presentInfo,
-                                                    'invoices.show',
-                                                    ['invoice_uuid' => $invoice['invoice_uuid']],
-                                                    true,
-                                                );
-                                            @endphp
-                                            <div class="input-group mb-0">
-                                                <a class="input-group-text" target="_blank" href="{{ $invoiceUrl }}">
-                                                    <i class="bi bi-box-arrow-up-right"></i>
-                                                </a>
-                                                @if ($presentInfo == $invoice['present_info'])
-                                                    <span class="input-group-text text-color-warning">
-                                                        <i class="bi bi-star"></i>
-                                                    </span>
-                                                @endif
-                                                <input type="text" class="form-control text-end" disabled="disabled"
-                                                    value="{{ $invoiceUrl }}">
-                                            </div>
-                                        </div>
-                                    @endforeach
+                        </div>
+                        <div class="row">
+                            @foreach ($presentInfos as $presentInfo)
+                                <div class="col-12 mt-3">
+                                    @php
+                                        $invoiceUrl = $presentService->routeByPresentInfo(
+                                            $presentInfo,
+                                            'invoices.show',
+                                            ['invoice_uuid' => $invoice['invoice_uuid']],
+                                            true,
+                                        );
+                                    @endphp
+                                    <div class="input-group mb-0">
+                                        <a class="input-group-text" target="_blank" href="{{ $invoiceUrl }}">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                        </a>
+                                        @if ($presentInfo == $invoice['present_info'])
+                                            <span class="input-group-text text-color-warning">
+                                                <i class="bi bi-star"></i>
+                                            </span>
+                                        @endif
+                                        <input type="text" class="form-control text-end" disabled="disabled"
+                                            value="{{ $invoiceUrl }}">
+                                    </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
