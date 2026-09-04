@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $name
  * @property string|null $code
  * @property int $blog_id
+ * @property int|null $category_id
  * @property ProductStatusEnum $product_status
  * @property float|null $product_order
  * @property Carbon|null $created_at
@@ -27,6 +28,7 @@ class Product extends Model
 
     protected $casts = [
         'blog_id' => 'int',
+        'category_id' => 'int',
         'product_order' => 'float',
         'product_status' => ProductStatusEnum::class,
     ];
@@ -35,6 +37,7 @@ class Product extends Model
         'name',
         'code',
         'blog_id',
+        'category_id',
         'product_status',
         'product_order',
     ];
@@ -48,6 +51,7 @@ class Product extends Model
     public function scopeDefaultOrder(Builder $query): void
     {
         $query = $query
+            ->orderBy('category_id', 'DESC')
             ->orderBy('product_order', 'DESC')
             ->orderBy('name', 'ASC')
             ->orderBy('created_at', 'ASC');

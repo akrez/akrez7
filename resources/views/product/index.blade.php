@@ -3,6 +3,9 @@
 @section('header', __('Products'))
 
 @section('content')
+    @php
+        $categoriesById = collect($categories ?? [])->keyBy('id');
+    @endphp
     <div class="row pb-2">
         @include('product._form', ['isVertical' => true])
     </div>
@@ -14,6 +17,7 @@
                         <th scope="col">@lang('product_images')</th>
                         <th scope="col">@lang('validation.attributes.code')</th>
                         <th scope="col">@lang('validation.attributes.name')</th>
+                        <th scope="col">@lang('validation.attributes.category')</th>
                         <th scope="col">@lang('validation.attributes.status')</th>
                         <th scope="col">@lang('validation.attributes.created_at')</th>
                         <th scope="col">@lang('validation.attributes.updated_at')</th>
@@ -38,6 +42,7 @@
                             </td>
                             <td>{{ $product['code'] }}</td>
                             <td>{{ $product['name'] }}</td>
+                            <td>{{ $categoriesById[$product['category_id']]['name'] ?? '' }}</td>
                             <td>{{ \Arr::get($product, 'product_status.trans') }}</td>
                             <td>{{ $product['created_at']['fa'] }}</td>
                             <td>{{ $product['updated_at']['fa'] }}</td>

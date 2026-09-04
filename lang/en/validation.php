@@ -171,6 +171,8 @@ return [
         'body' => 'body',
         'city' => 'city',
         'company' => 'company',
+        'category' => 'category',
+        'category_id' => 'category',
         'compilation' => 'compilation',
         'concept' => 'concept',
         'conditions' => 'conditions',

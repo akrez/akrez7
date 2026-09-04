@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Product;
+namespace App\Http\Resources\Category;
 
 use App\Http\Resources\JsonResource;
 use Illuminate\Http\Request;
 
-class ProductResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,6 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'code' => $this->code,
-            'category_id' => $this->category_id,
-            'product_order' => $this->product_order,
-            'product_status' => $this->product_status ? $this->product_status->toResource() : null,
             'created_at' => $this->formatCarbonDateTime($this->created_at),
             'updated_at' => $this->formatCarbonDateTime($this->updated_at),
         ];

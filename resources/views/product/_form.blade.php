@@ -6,11 +6,13 @@
     @if ($isVertical)
         <div class="row">
     @endif
+    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="category_id" :errors="$errors" :value="isset($product) ? $product['category_id'] : ''"
+        type="select" :options="collect($categories ?? [])->pluck('name', 'id')->all()" />
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="code" :errors="$errors" :value="isset($product) ? $product['code'] : ''" />
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="name" :errors="$errors" :value="isset($product) ? $product['name'] : ''" />
+    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="product_order" :errors="$errors" :value="isset($product) ? $product['product_order'] : ''" />
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="product_status" :errors="$errors" :value="isset($product) ? \Arr::get($product, 'product_status.value') : ''"
         type="select" :options="\App\Enums\ProductStatusEnum::toArray()" :label="__('validation.attributes.status')" />
-    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="product_order" :errors="$errors" :value="isset($product) ? $product['product_order'] : ''" />
     @if ($isVertical)
         </div>
     @endif

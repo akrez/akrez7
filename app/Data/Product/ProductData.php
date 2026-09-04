@@ -15,7 +15,8 @@ class ProductData extends Data
         public $code,
         public $name,
         public $product_status,
-        public $product_order
+        public $product_order,
+        public $category_id
     ) {}
 
     public function rules($context)
@@ -33,6 +34,7 @@ class ProductData extends Data
             'code' => ['required', 'max:32', new SimpleWordRule, $uniqueRule],
             'product_status' => [Rule::in(ProductStatusEnum::values())],
             'product_order' => ['nullable', 'numeric'],
+            'category_id' => ['required', 'integer'],
         ];
     }
 }

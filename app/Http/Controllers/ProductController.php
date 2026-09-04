@@ -6,13 +6,16 @@ use App\Data\Gallery\IndexCategoryGalleryData;
 use App\Data\Product\StoreProductData;
 use App\Data\Product\UpdateProductData;
 use App\Enums\GalleryCategoryEnum;
+use App\Services\CategoryService;
 use App\Services\GalleryService;
 use App\Services\ProductService;
+use App\Support\WebResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function __construct(
+        protected CategoryService $categoryService,
         protected GalleryService $galleryService,
         protected ProductService $productService
     ) {}
@@ -33,6 +36,7 @@ class ProductController extends Controller
 
         return view('product.index', [
             'products' => $latestProductsResponse->getData('products'),
+            'categories' => $this->categoryService->getLatestCategories($this->blogId())->getData('categories'),
             'galleries' => [
                 GalleryCategoryEnum::PRODUCT_IMAGE->value => $latestCategoryGalleriesResponse->getData('galleries'),
             ],
@@ -44,7 +48,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.create');
+        return view('product.create', [
+            'categories' => $this->categoryService->getLatestCategories($this->blogId())->getData('categories'),
+        ]);
     }
 
     /**
@@ -52,13 +58,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $blogId = $this->blogId();
+
+        $categoryId = intval($request->category_id);
+        if (! $categoryId) {
+            return WebResponse::new(404);
+        }
+
+        $this->categoryService->getCategory($blogId, $categoryId)->abortUnSuccessful();
+
         $storeProductData = new StoreProductData(
             null,
             $this->blogId(),
             $request->code,
             $request->name,
             $request->product_status,
-            $request->product_order
+            $request->product_order,
+            $categoryId
         );
 
         $response = $this->productService->storeProduct($storeProductData);
@@ -75,6 +91,7 @@ class ProductController extends Controller
 
         return view('product.edit', [
             'product' => $response->getData('product'),
+            'categories' => $this->categoryService->getLatestCategories($this->blogId())->getData('categories'),
         ]);
     }
 
@@ -83,13 +100,23 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $id)
     {
+        $blogId = $this->blogId();
+
+        $categoryId = intval($request->category_id);
+        if (! $categoryId) {
+            return WebResponse::new(404);
+        }
+
+        $this->categoryService->getCategory($blogId, $categoryId)->abortUnSuccessful();
+
         $updateProductData = new UpdateProductData(
             $id,
             $this->blogId(),
             $request->code,
             $request->name,
             $request->product_status,
-            $request->product_order
+            $request->product_order,
+            $categoryId
         );
 
         $response = $this->productService->updateProduct($updateProductData);

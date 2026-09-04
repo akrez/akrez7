@@ -84,6 +84,7 @@ class ProductService extends Service
             'name' => $storeProductData->name,
             'product_status' => $storeProductData->product_status,
             'product_order' => $storeProductData->product_order,
+            'category_id' => $storeProductData->category_id,
             'blog_id' => $storeProductData->blog_id,
         ]);
         if (! $product) {
@@ -128,6 +129,7 @@ class ProductService extends Service
             'name' => $updateProductData->name,
             'product_status' => $updateProductData->product_status,
             'product_order' => $updateProductData->product_order,
+            'category_id' => $updateProductData->category_id,
             'blog_id' => $updateProductData->blog_id,
         ]);
         if (! $product->save()) {

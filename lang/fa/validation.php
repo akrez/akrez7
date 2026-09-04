@@ -168,6 +168,8 @@ return [
         'body' => 'بدن',
         'city' => 'شهر',
         'company' => 'شرکت',
+        'category' => 'دسته‌بندی',
+        'category_id' => 'دسته‌بندی',
         'compilation' => 'تلفیقی',
         'concept' => 'مفهوم',
         'conditions' => 'شرایط',
