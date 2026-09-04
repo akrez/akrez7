@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\Category\StoreCategoryData;
 use App\Data\Category\UpdateCategoryData;
+use App\Enums\CategoryStatusEnum;
 use App\Http\Resources\Category\CategoryCollection;
 use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
@@ -38,6 +39,12 @@ class CategoryService extends Service
         ]);
     }
 
+    protected function getLatestApiQuery($blogId)
+    {
+        return $this->getLatestBaseQuery($blogId)
+            ->where('status', CategoryStatusEnum::ACTIVE->value);
+    }
+
     protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
     {
         return Category::query()
@@ -65,6 +72,8 @@ class CategoryService extends Service
 
         $category = Category::create([
             'name' => $storeCategoryData->name,
+            'status' => $storeCategoryData->status,
+            'category_order' => $storeCategoryData->category_order,
             'blog_id' => $storeCategoryData->blog_id,
         ]);
         if (! $category) {
@@ -104,6 +113,8 @@ class CategoryService extends Service
 
         $category->update([
             'name' => $updateCategoryData->name,
+            'status' => $updateCategoryData->status,
+            'category_order' => $updateCategoryData->category_order,
         ]);
         if (! $category->save()) {
             return $webResponse->status(500);

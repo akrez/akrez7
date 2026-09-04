@@ -7,6 +7,9 @@
         <div class="row">
     @endif
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="name" :errors="$errors" :value="isset($category) ? $category['name'] : ''" />
+    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="category_status" :errors="$errors" :value="isset($category) ? \Arr::get($category, 'category_status.value') : ''"
+        type="select" :options="\App\Enums\CategoryStatusEnum::toArray()" :label="__('validation.attributes.status')" />
+    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="category_order" :errors="$errors" :value="isset($category) ? $category['category_order'] : ''" />
     @if ($isVertical)
         </div>
     @endif

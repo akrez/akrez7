@@ -12,6 +12,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">@lang('validation.attributes.name')</th>
+                        <th scope="col">@lang('validation.attributes.status')</th>
+                        <th scope="col">@lang('validation.attributes.category_order')</th>
                         <th scope="col">@lang('validation.attributes.created_at')</th>
                         <th scope="col">@lang('validation.attributes.updated_at')</th>
                         <th scope="col"></th>
@@ -19,8 +21,10 @@
                 </thead>
                 <tbody>
                     @forelse ($categories as $category)
-                        <tr>
+                        <tr class="{{ \Arr::get($category, 'category_status.value') === \App\Enums\CategoryStatusEnum::DEACTIVE->value ? 'table-danger' : '' }}">
                             <td>{{ $category['name'] }}</td>
+                            <td>{{ \Arr::get($category, 'category_status.trans') }}</td>
+                            <td>{{ $category['category_order'] }}</td>
                             <td>{{ $category['created_at']['fa'] }}</td>
                             <td>{{ $category['updated_at']['fa'] }}</td>
                             <td>

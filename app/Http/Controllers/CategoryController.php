@@ -39,7 +39,9 @@ class CategoryController extends Controller
         $storeCategoryData = new StoreCategoryData(
             null,
             $this->blogId(),
-            $request->name
+            $request->name,
+            $request->status,
+            $request->category_order
         );
 
         $response = $this->categoryService->storeCategory($storeCategoryData);
@@ -67,7 +69,9 @@ class CategoryController extends Controller
         $updateCategoryData = new UpdateCategoryData(
             $id,
             $this->blogId(),
-            $request->name
+            $request->name,
+            $request->status,
+            $request->category_order
         );
 
         $response = $this->categoryService->updateCategory($updateCategoryData);

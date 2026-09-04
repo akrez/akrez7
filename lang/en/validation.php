@@ -173,6 +173,7 @@ return [
         'company' => 'company',
         'category' => 'category',
         'category_id' => 'category',
+        'category_order' => 'category order',
         'compilation' => 'compilation',
         'concept' => 'concept',
         'conditions' => 'conditions',

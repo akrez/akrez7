@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64);
+            $table->enum('category_status', ['active', 'deactive'])->nullable();
+            $table->decimal('category_order')->nullable();
             $table->unsignedBigInteger('blog_id')->index();
             $table->timestamps();
             $table->index(['blog_id', 'name']);

@@ -170,6 +170,7 @@ return [
         'company' => 'شرکت',
         'category' => 'دسته‌بندی',
         'category_id' => 'دسته‌بندی',
+        'category_order' => 'ترتیب دسته‌بندی',
         'compilation' => 'تلفیقی',
         'concept' => 'مفهوم',
         'conditions' => 'شرایط',
