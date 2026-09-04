@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'status' => $this->status ? $this->status->toResource() : null,
+            'category_status' => $this->category_status ? $this->category_status->toResource() : null,
             'category_order' => $this->category_order,
             'created_at' => $this->formatCarbonDateTime($this->created_at),
             'updated_at' => $this->formatCarbonDateTime($this->updated_at),

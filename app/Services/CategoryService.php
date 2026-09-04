@@ -42,7 +42,7 @@ class CategoryService extends Service
     protected function getLatestApiQuery($blogId)
     {
         return $this->getLatestBaseQuery($blogId)
-            ->where('status', CategoryStatusEnum::ACTIVE->value);
+            ->where('category_status', CategoryStatusEnum::ACTIVE->value);
     }
 
     protected function getLatestBaseQuery($blogId): \Illuminate\Database\Eloquent\Builder
@@ -72,7 +72,7 @@ class CategoryService extends Service
 
         $category = Category::create([
             'name' => $storeCategoryData->name,
-            'status' => $storeCategoryData->status,
+            'category_status' => $storeCategoryData->category_status,
             'category_order' => $storeCategoryData->category_order,
             'blog_id' => $storeCategoryData->blog_id,
         ]);
@@ -113,7 +113,7 @@ class CategoryService extends Service
 
         $category->update([
             'name' => $updateCategoryData->name,
-            'status' => $updateCategoryData->status,
+            'category_status' => $updateCategoryData->category_status,
             'category_order' => $updateCategoryData->category_order,
         ]);
         if (! $category->save()) {

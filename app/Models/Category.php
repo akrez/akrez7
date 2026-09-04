@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @property int $id
  * @property string $name
- * @property CategoryStatusEnum $status
+ * @property CategoryStatusEnum $category_status
  * @property float|null $category_order
  * @property int $blog_id
  * @property Carbon|null $created_at
@@ -23,13 +23,13 @@ class Category extends Model
 
     protected $casts = [
         'blog_id' => 'int',
-        'status' => CategoryStatusEnum::class,
+        'category_status' => CategoryStatusEnum::class,
         'category_order' => 'float',
     ];
 
     protected $fillable = [
         'name',
-        'status',
+        'category_status',
         'category_order',
         'blog_id',
     ];

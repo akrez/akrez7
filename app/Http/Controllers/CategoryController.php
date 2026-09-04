@@ -40,7 +40,7 @@ class CategoryController extends Controller
             null,
             $this->blogId(),
             $request->name,
-            $request->status,
+            $request->category_status,
             $request->category_order
         );
 
@@ -70,7 +70,7 @@ class CategoryController extends Controller
             $id,
             $this->blogId(),
             $request->name,
-            $request->status,
+            $request->category_status,
             $request->category_order
         );
 
