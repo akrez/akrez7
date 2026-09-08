@@ -203,8 +203,7 @@ class BaleMessageService
                     }
                     $baleApi->sendMediaGroup(
                         $baleMessage->chat_id,
-                        $medias,
-                        $this->getReplyMarkup($apiResponse)
+                        $medias
                     );
                 } else {
                     $baleApi->sendMessage(
