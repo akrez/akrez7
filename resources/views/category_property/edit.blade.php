@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header', __('Edit :name', ['name' => __('Property')]))
-@section('subheader', $category_property['name'])
+@section('subheader', $category_property['property_key'])
 
 @section('content')
     @include('category_property._form', [

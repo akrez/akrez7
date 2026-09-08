@@ -15,7 +15,7 @@
     @endif
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="category_id" :errors="$errors" :value="isset($category_property) ? $category_property['category_id'] : ''" type="select"
         :options="$categoryOptions" />
-    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="name" :errors="$errors" :value="isset($category_property) ? $category_property['name'] : ''" />
+    <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="property_key" :errors="$errors" :value="isset($category_property) ? $category_property['property_key'] : ''" />
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="filter_type" :errors="$errors" :value="isset($category_property) ? \Arr::get($category_property, 'filter_type.value') : ''"
         type="select" :options="['' => ''] + \App\Enums\CategoryPropertyTypeEnum::toArray()" />
     <x-input :md="$isVertical ? 3 : 12" :row="!$isVertical" name="unit" :errors="$errors" :value="isset($category_property) ? $category_property['unit'] : ''" />

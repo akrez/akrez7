@@ -12,7 +12,7 @@ class CategoryPropertyResource extends JsonResource
         return [
             'id' => $this->id,
             'category_id' => $this->category_id,
-            'name' => $this->name,
+            'property_key' => $this->property_key,
             'filter_type' => $this->filter_type ? $this->filter_type->toResource() : null,
             'unit' => $this->unit,
         ];

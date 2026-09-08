@@ -239,6 +239,7 @@ return [
         'preview' => 'preview',
         'price' => 'price',
         'product_id' => 'product ID',
+        'property_key' => 'property key',
         'product_uid' => 'product UID',
         'product_uuid' => 'product UUID',
         'promo_code' => 'promo code',

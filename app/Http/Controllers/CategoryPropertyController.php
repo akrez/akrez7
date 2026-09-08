@@ -38,7 +38,7 @@ class CategoryPropertyController extends Controller
             null,
             $this->blogId(),
             $request->category_id,
-            $request->name,
+            $request->property_key,
             $request->filter_type,
             $request->unit
         );
@@ -65,7 +65,7 @@ class CategoryPropertyController extends Controller
             $id,
             $this->blogId(),
             $request->category_id,
-            $request->name,
+            $request->property_key,
             $request->filter_type,
             $request->unit
         );

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int $id
  * @property int $blog_id
  * @property int|null $category_id
- * @property string $name
+ * @property string $property_key
  * @property CategoryPropertyTypeEnum $filter_type
  * @property string|null $unit
  * @property Carbon|null $created_at
@@ -30,7 +30,7 @@ class CategoryProperty extends Model
     protected $fillable = [
         'blog_id',
         'category_id',
-        'name',
+        'property_key',
         'filter_type',
         'unit',
     ];
@@ -51,7 +51,7 @@ class CategoryProperty extends Model
         $query = $query
             ->orderByRaw('category_id IS NULL')
             ->orderBy('category_id', 'ASC')
-            ->orderBy('name', 'ASC')
+            ->orderBy('property_key', 'ASC')
             ->orderBy('created_at', 'ASC');
     }
 }

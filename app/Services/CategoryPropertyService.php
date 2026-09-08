@@ -79,7 +79,7 @@ class CategoryPropertyService extends Service
         $categoryProperty = CategoryProperty::create([
             'blog_id' => $storeCategoryPropertyData->blog_id,
             'category_id' => $storeCategoryPropertyData->category_id,
-            'name' => $storeCategoryPropertyData->name,
+            'property_key' => $storeCategoryPropertyData->property_key,
             'filter_type' => $storeCategoryPropertyData->filter_type,
             'unit' => $storeCategoryPropertyData->unit,
         ]);
@@ -120,7 +120,7 @@ class CategoryPropertyService extends Service
 
         $categoryProperty->update([
             'category_id' => $updateCategoryPropertyData->category_id,
-            'name' => $updateCategoryPropertyData->name,
+            'property_key' => $updateCategoryPropertyData->property_key,
             'filter_type' => $updateCategoryPropertyData->filter_type,
             'unit' => $updateCategoryPropertyData->unit,
         ]);
@@ -132,7 +132,7 @@ class CategoryPropertyService extends Service
             ->status(201)
             ->data(['category_property' => (new CategoryPropertyResource($categoryProperty))->toArr()])
             ->message(__(':name is updated successfully', [
-                'name' => $categoryProperty->name,
+                'name' => $categoryProperty->property_key,
             ]));
     }
 }

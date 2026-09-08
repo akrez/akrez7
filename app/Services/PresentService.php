@@ -231,15 +231,11 @@ class PresentService
             ];
         }
 
-        foreach ($raw['categoryProperties'] as $categoryProperty) {
-            $output['category_properties'][] = [
-                'category_id' => $categoryProperty['category_id'],
-                'name' => $categoryProperty['name'],
-                'type' => $categoryProperty['type'],
-                'unit' => $categoryProperty['unit'],
-                'options' => $categoryProperty['options'],
-            ];
-        }
+        $output['category_properties'] = $this->buildCategoryProperties(
+            $raw['categoryProperties'],
+            $raw['products'],
+            $raw['productProperties']
+        );
 
         foreach ($raw['products'] as $product) {
             $output['products'][] = [
@@ -256,6 +252,45 @@ class PresentService
         }
 
         return ApiResponse::new()->data($output);
+    }
+
+    protected function buildCategoryProperties(array $categoryProperties, array $products, array $productProperties): array
+    {
+        $productIdToCategoryId = [];
+        foreach ($products as $product) {
+            $productIdToCategoryId[$product['id']] = $product['category_id'];
+        }
+
+        $categoryIdToProperty = [];
+        foreach ($productProperties as $property) {
+            $categoryId = $productIdToCategoryId[$property['product_id']] ?? '';
+            $propertyKey = $property['property_key'];
+            $propertyValue = $property['property_value'];
+            $count = ($categoryIdToProperty[$categoryId][$propertyKey][$propertyValue]['property_value_count'] ?? 0);
+
+            $categoryIdToProperty[$categoryId][$propertyKey][$propertyValue] = [
+                'property_value' => $propertyValue,
+                'property_value_count' => $count + 1,
+            ];
+        }
+
+        $result = [];
+        foreach ($categoryProperties as $categoryProperty) {
+            $categoryId = $categoryProperty['category_id'];
+            $propertyKey = $categoryProperty['property_key'];
+            $propertyValues = array_values($categoryIdToProperty[$categoryId][$propertyKey] ?? []);
+            $result[] = [
+                'category_id' => $categoryId,
+                'property_key' => $propertyKey,
+                'filter_type' => $categoryProperty['filter_type'],
+                'unit' => $categoryProperty['unit'],
+                'property_values' => $propertyValues,
+                'max_value' => max(array_column($propertyValues, 'property_value')),
+                'min_value' => min(array_column($propertyValues, 'property_value')),
+            ];
+        }
+
+        return $result;
     }
 
     protected function getOrganizedGalleries(&$galleries, $galleryCategory, $galleryId, $default = [])

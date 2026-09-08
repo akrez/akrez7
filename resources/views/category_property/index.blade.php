@@ -12,7 +12,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">@lang('validation.attributes.category_id')</th>
-                        <th scope="col">@lang('validation.attributes.name')</th>
+                        <th scope="col">@lang('validation.attributes.property_key')</th>
                         <th scope="col">@lang('validation.attributes.filter_type')</th>
                         <th scope="col">@lang('validation.attributes.unit')</th>
                         <th scope="col"></th>
@@ -28,7 +28,7 @@
                                     <span class="badge bg-secondary">@lang('Global')</span>
                                 @endif
                             </td>
-                            <td>{{ $category_property['name'] }}</td>
+                            <td>{{ $category_property['property_key'] }}</td>
                             <td>{{ \Arr::get($category_property, 'filter_type.trans') ?? '' }}</td>
                             <td>{{ $category_property['unit'] ?? '' }}</td>
                             <td>

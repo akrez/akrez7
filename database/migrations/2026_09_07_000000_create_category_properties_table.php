@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id('id');
             $table->unsignedBigInteger('blog_id')->index();
             $table->unsignedBigInteger('category_id')->nullable()->index();
-            $table->string('name');
+            $table->string('property_key');
             $table->string('filter_type')->nullable();
             $table->string('unit')->nullable();
             $table->timestamps();
