@@ -125,7 +125,7 @@ class BaleMessageService
 
         $text = [];
         foreach ($contacts as $contactUs) {
-            $text[] = '<b>'.$contactUs['contact_key'].'</b>'.' '.$contactUs['contact_value'];
+            $text[] = '*'.$contactUs['contact_key'].'*'.' '.$contactUs['contact_value'];
         }
 
         return $baleApi->sendMessage(
@@ -150,7 +150,7 @@ class BaleMessageService
             $baleMessage,
             $apiResponse,
             $filteredProducts->toArray(),
-            'محصول با دسته بندی'.'<b>'.$filterText.'</b>'.'یافت نشد'
+            'محصول با دسته بندی '.'*'.$filterText.'*'.' یافت نشد'
         );
     }
 
@@ -169,7 +169,7 @@ class BaleMessageService
             $baleMessage,
             $apiResponse,
             $filteredProducts->toArray(),
-            'محصول با عنوانی که شامل'.'<b>'.$filterText.'</b>'.'باشد یافت نشد'
+            'محصول با عنوانی که شامل '.'*'.$filterText.'*'.' باشد یافت نشد'
         );
     }
 
@@ -177,13 +177,13 @@ class BaleMessageService
     {
         if ($products) {
             foreach ($products as $product) {
-                $caption = ['<b>'.$product['name'].'</b>'];
+                $caption = ['*'.$product['name'].'*'];
 
                 if ($product['product_properties']) {
                     $caption[] = '';
                     foreach ($product['product_properties'] as $productProperty) {
                         if ($productProperty['property_values']) {
-                            $caption[] = '<b>'.$productProperty['property_key'].'</b>'.' '.implode(', ', $productProperty['property_values']);
+                            $caption[] = '*'.$productProperty['property_key'].'*'.' '.implode(', ', $productProperty['property_values']);
                         }
                     }
                 }
@@ -197,7 +197,7 @@ class BaleMessageService
                         ];
                         if ($caption) {
                             $medias[$productImageKey]['caption'] = implode("\n", $caption);
-                            $medias[$productImageKey]['parse_mode'] = 'HTML';
+                            // $medias[$productImageKey]['parse_mode'] = 'HTML';
                             $caption = [];
                         }
                     }
