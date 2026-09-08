@@ -4,6 +4,7 @@ use App\Enums\PresenterEnum;
 use App\Http\Controllers\BaleBotController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryPropertyController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GalleryController;
@@ -66,6 +67,8 @@ Route::middleware('auth')->group(function () {
         //
         Route::resource('colors', ColorController::class)->parameter('colors', 'id');
         Route::resource('categories', CategoryController::class)->parameter('categories', 'id');
+        Route::resource('category_properties', CategoryPropertyController::class)->parameter('category_properties', 'id')
+            ->except(['show', 'destroy']);
         Route::resource('contacts', ContactController::class)->parameter('contacts', 'id');
         Route::resource('products', ProductController::class)->parameter('products', 'id');
         //

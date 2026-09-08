@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Enums\CacheKeyEnum;
 use App\Enums\GalleryCategoryEnum;
 use App\Enums\PresenterEnum;
-use App\Models\Blog;
-use App\Models\Product;
 use App\Support\ApiResponse;
 use App\Support\Arr;
 use DateTime;
@@ -87,7 +85,7 @@ class PresentService
         Cache::forget($this->showBlogCacheKey($blogId));
     }
 
-    public function getCachedApiResponse(int $blogId, \Illuminate\Http\Request $request, bool $forgetCache = false): ApiResponse
+    public function getCachedApiResponse(int $blogId, Request $request, bool $forgetCache = false): ApiResponse
     {
         if ($forgetCache) {
             $this->forgetCachedApiResponse($blogId);
@@ -104,7 +102,7 @@ class PresentService
         return $response;
     }
 
-    public function getSitemapResponse(int $blogId, \Illuminate\Http\Request $request, bool $forgetCache = false): ApiResponse
+    public function getSitemapResponse(int $blogId, Request $request, bool $forgetCache = false): ApiResponse
     {
         $blogResponse = $this->getCachedApiResponse($blogId, $request, $forgetCache);
         if (! $blogResponse->isSuccessful()) {
@@ -152,6 +150,7 @@ class PresentService
             'galleries' => GalleryService::new()->getApiCollection($blogId)->getData('galleries'),
             'productTags' => ProductTagService::new()->getApiCollection($blogId)->getData('product_tags'),
             'productProperties' => ProductPropertyService::new()->getApiCollection($blogId)->getData('product_properties'),
+            'categoryProperties' => CategoryPropertyService::new()->getApiCollection($blogId)->getData('category_properties'),
         ];
 
         $organized = [
@@ -210,6 +209,7 @@ class PresentService
             'blog' => null,
             'contacts' => [],
             'products' => [],
+            'category_properties' => [],
         ];
 
         $output['blog'] = [
@@ -231,11 +231,22 @@ class PresentService
             ];
         }
 
+        foreach ($raw['categoryProperties'] as $categoryProperty) {
+            $output['category_properties'][] = [
+                'category_id' => $categoryProperty['category_id'],
+                'name' => $categoryProperty['name'],
+                'type' => $categoryProperty['type'],
+                'unit' => $categoryProperty['unit'],
+                'options' => $categoryProperty['options'],
+            ];
+        }
+
         foreach ($raw['products'] as $product) {
             $output['products'][] = [
                 'id' => $product['id'],
                 'name' => $product['name'],
                 'code' => $product['code'],
+                'category_id' => $product['category_id'],
                 'product_order' => $product['product_order'],
                 'product_tags' => array_values(Arr::get($organized['productTags'], $product['id'], [])),
                 'product_properties' => array_values(Arr::get($organized['productProperties'], $product['id'], [])),

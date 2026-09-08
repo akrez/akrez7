@@ -86,6 +86,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('category_properties.index') }}">
+                            {{ __('Category Properties') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ route('colors.index') }}">
                             {{ __('Colors') }}
                         </a>
