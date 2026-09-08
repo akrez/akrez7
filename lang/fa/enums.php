@@ -6,6 +6,9 @@ return [
     'active' => 'فعال',
     'deactive' => 'غیر فعال',
     //
+    'options' => 'گزینه‌ها',
+    'range' => 'بازه',
+    //
     'product_image' => 'عکس محصول',
     'blog_logo' => 'لوگو',
     //

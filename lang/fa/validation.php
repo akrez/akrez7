@@ -195,6 +195,7 @@ return [
         'email' => 'ایمیل',
         'excerpt' => 'گزیده مطلب',
         'filter' => 'فیلتر',
+        'filter_type' => 'نوع فیلتر',
         'finished_at' => 'به پایان رسید در',
         'first_name' => 'نام',
         'gender' => 'جنسیت',
