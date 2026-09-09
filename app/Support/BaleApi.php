@@ -68,6 +68,19 @@ class BaleApi
         ));
     }
 
+    public function sendPhoto($chatId, $photo, $optionalParameters = [])
+    {
+        $requiredParameters = [
+            'chat_id' => $chatId,
+            'photo' => $photo,
+        ];
+
+        return $this->sendPostForm('sendPhoto', array_replace_recursive(
+            $optionalParameters,
+            $requiredParameters
+        ));
+    }
+
     public function setMyName($name, $optionalParameters = [])
     {
         $requiredParameters = [

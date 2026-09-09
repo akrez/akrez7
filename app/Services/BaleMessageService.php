@@ -188,28 +188,25 @@ class BaleMessageService
                     }
                 }
 
-                if ($product['galleries']['product_image']) {
-                    $medias = [];
-                    foreach ($product['galleries']['product_image'] as $productImageKey => $productImage) {
-                        $medias[$productImageKey] = [
-                            'type' => 'photo',
-                            'media' => $productImage['url'],
-                        ];
-                        if ($caption) {
-                            $medias[$productImageKey]['caption'] = implode("\n", $caption);
-                            // $medias[$productImageKey]['parse_mode'] = 'HTML';
-                            $caption = [];
-                        }
-                    }
-                    $baleApi->sendMediaGroup(
+                $captionText = implode("\n", $caption);
+                $photo = ($product['galleries']['product_image'][0]['url'] ?? null);
+
+                if ($photo) {
+                    $baleApi->sendPhoto(
                         $baleMessage->chat_id,
-                        $medias
+                        $photo,
+                        [
+                            'parse_mode' => 'Markdown',
+                            'caption' => $captionText,
+                        ] + $this->getReplyMarkup($apiResponse)
                     );
                 } else {
                     $baleApi->sendMessage(
                         $baleMessage->chat_id,
-                        implode("\n", $caption),
-                        $this->getReplyMarkup($apiResponse)
+                        $captionText,
+                        [
+                            'parse_mode' => 'Markdown',
+                        ] + $this->getReplyMarkup($apiResponse)
                     );
                 }
             }
