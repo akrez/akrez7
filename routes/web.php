@@ -11,7 +11,6 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayvoiceController;
-use App\Http\Controllers\Product\PackageController as ProductPackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPropertyController;
 use App\Http\Controllers\ProductTagController;
@@ -73,8 +72,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class)->parameter('products', 'id');
         //
         Route::prefix('products')->as('products.')->group(function () {
-            Route::resource('{product_id}/packages', ProductPackageController::class)->parameter('packages', 'id')->names('packages');
-            //
             Route::get('{product_id}/product_tags', [ProductTagController::class, 'create'])->name('product_tags.create');
             Route::post('{product_id}/product_tags', [ProductTagController::class, 'store'])->name('product_tags.store');
             //
