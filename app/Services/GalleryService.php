@@ -131,7 +131,7 @@ class GalleryService extends Service
         }
         //
         $manager = new ImageManager(Driver::class);
-        $image = $manager->read($realPath);
+        $image = $manager->decode($realPath);
         //
         $uploadResponse = $this->upload(
             $image,
@@ -205,7 +205,7 @@ class GalleryService extends Service
         );
         //
         $manager = new ImageManager(Driver::class);
-        $image = $manager->read($this->getStorageContent($sourceFilePath));
+        $image = $manager->decode($this->getStorageContent($sourceFilePath));
         //
         $width = $effectGalleryData->getWidth();
         $height = $effectGalleryData->getHeight();
@@ -222,7 +222,7 @@ class GalleryService extends Service
         //
         if ($effectGalleryData->getMode() === self::MODE_CONTAIN) {
             $width = $height = max($width, $height);
-            $image->contain(width: $width, height: $height, background: $image->pickColor(0, 0));
+            $image->contain(width: $width, height: $height, background: $image->colorAt(0, 0));
         } else {
             $image->resize(width: $width, height: $height);
         }
