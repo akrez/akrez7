@@ -29,7 +29,7 @@ class CategoryData extends Data
         return [
             'blog_id' => ['required', 'integer'],
             'name' => ['required', 'max:64', $uniqueRule],
-            'category_status' => [Rule::in(CategoryStatusEnum::values())],
+            'category_status' => ['required', Rule::in(CategoryStatusEnum::values())],
             'category_order' => ['nullable', 'numeric'],
         ];
     }

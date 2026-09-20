@@ -141,17 +141,20 @@ class PresentService
             return ApiResponse::new($blogResponse->getStatus());
         }
 
+        $categories = CategoryService::new()->getApiCollection($blogId)->getData('categories');
+        $categoryIds = array_column($categories, 'id');
+
         $raw = [
             'blog' => $blogResponse->getData('blog'),
             'colors' => ColorService::new()->getApiCollection($blogId)->getData('colors'),
             'contacts' => ContactService::new()->getApiCollection($blogId)->getData('contacts'),
             'packages' => PackageService::new()->getApiCollection($blogId)->getData('packages'),
-            'products' => ProductService::new()->getApiCollection($blogId)->getData('products'),
+            'products' => ProductService::new()->getApiCollectionByCategoryIds($blogId, $categoryIds)->getData('products'),
             'galleries' => GalleryService::new()->getApiCollection($blogId)->getData('galleries'),
             'productTags' => ProductTagService::new()->getApiCollection($blogId)->getData('product_tags'),
             'productProperties' => ProductPropertyService::new()->getApiCollection($blogId)->getData('product_properties'),
             'categoryProperties' => CategoryPropertyService::new()->getApiCollection($blogId)->getData('category_properties'),
-            'categories' => CategoryService::new()->getLatestCategories($blogId)->getData('categories'),
+            'categories' => $categories,
         ];
 
         $organized = [
@@ -233,11 +236,14 @@ class PresentService
             ];
         }
 
+        $productCategoryIds = array_column($raw['products'], 'category_id');
         foreach ($raw['categories'] as $category) {
-            $output['categories'][] = [
-                'id' => $category['id'],
-                'name' => $category['name'],
-            ];
+            if (in_array($category['id'], $productCategoryIds)) {
+                $output['categories'][] = [
+                    'id' => $category['id'],
+                    'name' => $category['name'],
+                ];
+            }
         }
 
         $output['category_properties'] = $this->buildCategoryProperties(

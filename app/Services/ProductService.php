@@ -39,6 +39,17 @@ class ProductService extends Service
         ]);
     }
 
+    public function getApiCollectionByCategoryIds(int $blogId, array $categoryIds): ApiResponse
+    {
+        $models = $this->getLatestApiQuery($blogId)
+            ->whereIn('category_id', $categoryIds)
+            ->get();
+
+        return ApiResponse::new(200)->data([
+            'products' => (new ProductCollection($models))->toArr(),
+        ]);
+    }
+
     protected function getLatestApiQuery($blogId)
     {
         return $this->getLatestBaseQuery($blogId)
