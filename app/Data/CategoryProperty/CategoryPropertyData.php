@@ -23,7 +23,7 @@ class CategoryPropertyData extends Data
             'blog_id' => ['required', 'integer'],
             'category_id' => ['required', 'integer'],
             'property_key' => ['required', 'max:64'],
-            'filter_type' => ['nullable', Rule::in(implode(',', CategoryPropertyTypeEnum::values()))],
+            'filter_type' => ['nullable', Rule::in(CategoryPropertyTypeEnum::values())],
             'unit' => ['nullable', 'max:31'],
         ];
     }
