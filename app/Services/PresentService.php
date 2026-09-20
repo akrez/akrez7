@@ -151,6 +151,7 @@ class PresentService
             'productTags' => ProductTagService::new()->getApiCollection($blogId)->getData('product_tags'),
             'productProperties' => ProductPropertyService::new()->getApiCollection($blogId)->getData('product_properties'),
             'categoryProperties' => CategoryPropertyService::new()->getApiCollection($blogId)->getData('category_properties'),
+            'categories' => CategoryService::new()->getLatestCategories($blogId)->getData('categories'),
         ];
 
         $organized = [
@@ -208,6 +209,7 @@ class PresentService
         $output = [
             'blog' => null,
             'contacts' => [],
+            'categories' => [],
             'products' => [],
             'category_properties' => [],
         ];
@@ -228,6 +230,13 @@ class PresentService
                 'contact_link' => $contact['contact_link'],
                 'presenter_visible' => $contact['presenter_visible'],
                 'invoice_visible' => $contact['invoice_visible'],
+            ];
+        }
+
+        foreach ($raw['categories'] as $category) {
+            $output['categories'][] = [
+                'id' => $category['id'],
+                'name' => $category['name'],
             ];
         }
 

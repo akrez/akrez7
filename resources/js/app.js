@@ -6,4 +6,5 @@ window.Swal = Swal;
 import "@eastdesire/jscolor"
 
 import Alpine from 'alpinejs';
+import './present';
 Alpine.start();

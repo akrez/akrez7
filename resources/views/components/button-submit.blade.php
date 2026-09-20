@@ -8,7 +8,7 @@
             <label class="form-label" for="{{ $id }}">{{ $label }}</label>
         @endif
         <button name="{{ $name }}" id="{{ $id }}" class="{{ $class }}"
-            type="submit">{{ $slot }}</button>
+            type="submit" {{ $attributes }}>{{ $slot }}</button>
     </div>
 </div>
 
